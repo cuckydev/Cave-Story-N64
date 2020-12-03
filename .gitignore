@@ -1,0 +1,5 @@
+*.out
+*.o
+*.d
+*.n64
+unproc_assets/
