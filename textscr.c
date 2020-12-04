@@ -230,16 +230,21 @@ void ClearTextLine(void)
 }
 
 #include "data/bitmap/textbox.inc.c"
+#include "data/bitmap/yesno.inc.c"
 
 void PutTextScript()
 {
 	static u16 textscr_text_tlut[] = {
 		0x0000, GPACK_RGBA5551(0xFF, 0xFF, 0xFF, 1),
 	};
-	static const RECT rcTextBox = {0, 0, 256, 16};
+	
 	s32 msg_box_y, text_offset;
 	s32 i;
-	RECT rcCursor;
+	
+	static const RECT rcFrame = {0, 0, 256, 16};
+	static const RECT rect_yesno = {16, 0, 128, 32};
+	static const RECT rect_cur = {0, 0, 16, 16};
+	RECT rect;
 	
 	//Make sure we're in a drawable state
 	if (gTS.mode == 0)
@@ -256,18 +261,17 @@ void PutTextScript()
 	//Draw message box frame
 	if (gTS.flags & 2)
 	{
-		//Draw frame
 		LoadTLUT(textbox_tlut);
 		
 		LoadTex_CI4(256, 16, textbox_top_tex);
-		PutBitmap(&rcTextBox, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10);
+		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10);
 		
 		LoadTex_CI4(256, 16, textbox_mid_tex);
-		PutBitmap(&rcTextBox, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 16);
-		PutBitmap(&rcTextBox, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 32);
+		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 16);
+		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 32);
 		
 		LoadTex_CI4(256, 16, textbox_btm_tex);
-		PutBitmap(&rcTextBox, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 48);
+		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 48);
 	}
 	
 	//Draw text
@@ -285,12 +289,29 @@ void PutTextScript()
 	//Draw NOD cursor
 	if ((gTS.wait_beam++ % 20 > 12) && gTS.mode == 2)
 	{
-		rcCursor.left = TEXT_LEFT + text_offset + GetTextWidth(text[gTS.line % 4]) + 1;
-		rcCursor.top = msg_box_y + gTS.ypos_line[gTS.line % 4];
-		rcCursor.right = rcCursor.left + 5;
-		rcCursor.bottom = rcCursor.top + 11;
-		CortBox(&rcCursor, RGB(0xFF, 0xFF, 0xFE));
+		rect.left = TEXT_LEFT + text_offset + GetTextWidth(text[gTS.line % 4]) + 1;
+		rect.top = msg_box_y + gTS.ypos_line[gTS.line % 4];
+		rect.right = rect.left + 5;
+		rect.bottom = rect.top + 11;
+		CortBox(&rect, RGB(0xFF, 0xFF, 0xFE));
 	}
+	
+	//Draw Yes/No dialogue
+	if (gTS.mode == 6)
+	{
+		LoadTLUT(yesno_tlut);
+		LoadTex_CI4(128, 32, yesno_tex);
+		
+		if (gTS.wait < 2)
+			i = (SCREEN_HEIGHT - 96) + (2 - gTS.wait) * 4;
+		else
+			i = SCREEN_HEIGHT - 96;
+
+		PutBitmap(&rect_yesno, (SCREEN_WIDTH / 2) + 56, i);
+		if (gTS.wait == 16)
+			PutBitmap(&rect_cur, (gTS.select * 41) + (SCREEN_WIDTH / 2) + 51, SCREEN_HEIGHT - 86);
+	}
+	
 }
 
 s32 TextScriptProc()

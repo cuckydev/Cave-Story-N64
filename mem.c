@@ -1,12 +1,3 @@
-/*
-Project: N64Jam
-
-File: mem.c
-Purpose: Basic memory heap allocator for N64 homebrew projects
-
-Authors: Regan "cuckydev" Green
-*/
-
 #include "mem.h"
 
 #define MEM_ALIGN(x) (((size_t)x + 0xF) & ~0xF)
@@ -48,6 +39,7 @@ void *Mem_Alloc(size_t size)
 	size_t header_size;
 	size_t next_pos;
 	Mem_Header *new_header;
+	void *new_block;
 	
 	//Get block to allocate in front of
 	Mem_Header *header = mem;
@@ -84,7 +76,7 @@ void *Mem_Alloc(size_t size)
 	new_header = (Mem_Header*)next_pos;
 	new_header->size = size;
 	
-	void *new_block = (void*)(next_pos + sizeof(Mem_Header));
+	new_block = (void*)(next_pos + sizeof(Mem_Header));
 	
 	//Link header to previous and next headers
 	new_header->prev = (void*)((size_t)header + sizeof(Mem_Header));

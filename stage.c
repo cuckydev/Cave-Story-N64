@@ -50,12 +50,13 @@ s32 gStageNo;
 //Stage functions
 void TransferStage(s32 no, s32 w, s32 x, s32 y)
 {
+	const StageData *stage_data = gTMT[no].stage_data;
+	const TilesetData *tileset_data = gTMT[no].tileset_data;
+	
 	//Move character
 	SetMyCharPosition(x * 0x10 * 0x200, y * 0x10 * 0x200);
 	
 	//Load stage data
-	const StageData *stage_data = gTMT[no].stage_data;
-	const TilesetData *tileset_data = gTMT[no].tileset_data;
 	LoadMapData(stage_data->width, stage_data->height, stage_data->map);
 	LoadTilesetData(tileset_data->tex, tileset_data->tlut, tileset_data->attr);
 	LoadEvent(stage_data->events, stage_data->event);

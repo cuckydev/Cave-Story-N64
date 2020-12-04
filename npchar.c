@@ -285,16 +285,18 @@ static const RECT rctest = {0, 0, 16, 16};
 
 void PutNpChar(s32 fx, s32 fy)
 {
+	s32 i;
 	LoadTLUT(snack_tlut);
 	LoadTex_CI4(32, 32, snack_tex);
-	for (s32 i = 0; i < NPC_MAX; i++)
+	for (i = 0; i < NPC_MAX; i++)
 		if (gNPC[i].cond & 0x80)
 			PutBitmap(&rctest, (gNPC[i].x / 0x200) - (fx / 0x200) - 8, (gNPC[i].y / 0x200) - (fy / 0x200) - 8);
 }
 
 void ActNpChar()
 {
-	for (s32 i = 0; i < NPC_MAX; i++)
+	s32 i;
+	for (i = 0; i < NPC_MAX; i++)
 	{
 		if (gNPC[i].cond & 0x80)
 		{
@@ -308,7 +310,6 @@ void ActNpChar()
 void ChangeNpCharByEvent(s32 code_event, s32 code_char, s32 dir)
 {
 	s32 n;
-	
 	for (n = 0; n < NPC_MAX; n++)
 	{
 		if ((gNPC[n].cond & 0x80) && gNPC[n].code_event == code_event)
@@ -503,7 +504,8 @@ void BackStepMyChar(s32 code_event)
 
 void DeleteNpCharEvent(s32 code)
 {
-	for (s32 i = 0; i < NPC_MAX; i++)
+	s32 i;
+	for (i = 0; i < NPC_MAX; i++)
 	{
 		if ((gNPC[i].cond & 0x80) && gNPC[i].code_event == code)
 		{
@@ -515,7 +517,8 @@ void DeleteNpCharEvent(s32 code)
 
 void DeleteNpCharCode(s32 code, BOOL bSmoke)
 {
-	for (s32 n = 0; n < NPC_MAX; n++)
+	s32 n;
+	for (n = 0; n < NPC_MAX; n++)
 	{
 		if ((gNPC[n].cond & 0x80) && gNPC[n].code_char == code)
 		{
@@ -553,7 +556,8 @@ void GetNpCharPosition(s32 *x, s32 *y, s32 i)
 
 BOOL IsNpCharCode(s32 code)
 {
-	for (s32 i = 0; i < NPC_MAX; i++)
+	s32 i;
+	for (i = 0; i < NPC_MAX; i++)
 		if ((gNPC[i].cond & 0x80) && gNPC[i].code_char == code)
 			return TRUE;
 	return FALSE;

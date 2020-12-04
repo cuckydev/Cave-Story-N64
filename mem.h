@@ -2,7 +2,7 @@
 #define MEM_H
 
 #include <ultra64.h>
-#include <stddef.h>
+//typedef unsigned long long size_t;
 
 u8 Mem_Init(void *ptr, size_t size);
 void *Mem_Alloc(size_t size);

@@ -268,49 +268,49 @@ static const u8 font_space[32*3] = {
 s32 GetTextWidth(const char *text)
 {
 	s32 x = 0;
-	char v;
-	while (v = *text++)
-		if ((v -= 0x20) >= 0x00 && v <= 0x60)
+	u8 v;
+	while ((v = (u8)*text++ - 0x20) != 0xE0)
+		if (v <= 0x60)
 			x += font_space[v];
 	return x - ((x != 0) ? 1 : 0);
 }
 
 void PutText(s32 x, s32 y, const char *text, u16 *tlut)
 {
+	static u8 *font_pages[] = {
+		font0_tex,
+		font1_tex,
+		font2_tex,
+	};
+	RECT rect = {0, 0, 0, 12};
+	
 	//Render text character by character
-	char v;
+	u8 v;
 	u8 ppy = 0xFF;
 	
 	LoadTLUT(tlut);
-	while (v = *text++)
+	while ((v = (u8)*text++ - 0x20) != 0xE0)
 	{
-		if ((v -= 0x20) >= 0x00 && v <= 0x60)
+		if (v == 0)
 		{
-			if(v == 0x20)
+			//Don't render spaces, waste of time
+			x += font_space[v];
+		}
+		else if (v <= 0x60)
+		{
+			//Switch page
+			u8 py = v / 32;
+			if (py != ppy)
 			{
-				//Don't render spaces, waste of time
-				x += font_space[v];
+				LoadTex_CI4(256, 12, font_pages[py]);
+				ppy = py;
 			}
-			else
-			{
-				//Switch page
-				u8 py = v / 32;
-				if (py != ppy)
-				{
-					static u8 *font_pages[] = {
-						font0_tex,
-						font1_tex,
-						font2_tex,
-					};
-					LoadTex_CI4(256, 12, font_pages[py]);
-					ppy = py;
-				}
-				
-				//Render character
-				RECT rect = {(v & 0x1F) << 3, 0, ((v & 0x1F) + 1) << 3, 12};
-				PutBitmap(&rect, x, y);
-				x += font_space[v];
-			}
+			
+			//Render character
+			rect.left = (v & 0x1F) << 3;
+			rect.right = rect.left + 8;
+			PutBitmap(&rect, x, y);
+			x += font_space[v];
 		}
 	}
 }

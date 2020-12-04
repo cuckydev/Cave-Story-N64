@@ -33,7 +33,7 @@ void InitMyChar()
 
 void AnimationMyChar(BOOL bKey)
 {
-	RECT rcLeft[12] = {
+	static const RECT rcLeft[12] = {
 		{0, 0, 16, 16},
 		{16, 0, 32, 16},
 		{0, 0, 16, 16},
@@ -48,7 +48,7 @@ void AnimationMyChar(BOOL bKey)
 		{112, 0, 128, 16},
 	};
 	
-	RECT rcRight[12] = {
+	static const RECT rcRight[12] = {
 		{0, 16, 16, 32},
 		{16, 16, 32, 32},
 		{0, 16, 16, 32},

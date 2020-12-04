@@ -65,14 +65,16 @@ void InitCaret()
 
 void ActCaret()
 {
-	for (s32 i = 0; i < CARET_MAX; i++)
+	s32 i;
+	for (i = 0; i < CARET_MAX; i++)
 		if (gCrt[i].cond & 0x80)
 			gpCaretFuncTbl[gCrt[i].code].act(&gCrt[i]);
 }
 
 void PutCaret(s32 fx, s32 fy)
 {
-	for (s32 i = 0; i < CARET_MAX; i++)
+	s32 i;
+	for (i = 0; i < CARET_MAX; i++)
 		if (gCrt[i].cond & 0x80)
 			gpCaretFuncTbl[gCrt[i].code].put(&gCrt[i], fx, fy);
 }
