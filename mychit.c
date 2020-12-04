@@ -2,6 +2,7 @@
 #include "mychar.h"
 #include "keycontrol.h"
 #include "map.h"
+#include "caret.h"
 
 void ResetMyCharFlag()
 {
@@ -13,8 +14,8 @@ static void PutlittleStar()
 	if (!(gMC.cond & 2) && gMC.ym < -0x200)
 	{
 		//PlaySoundObject(3, SOUND_MODE_PLAY);
-		//SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, DIR_LEFT);
-		//SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, DIR_LEFT);
+		SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, 0);
+		SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, 0);
 	}
 }
 

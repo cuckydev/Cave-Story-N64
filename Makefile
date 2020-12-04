@@ -14,7 +14,7 @@ LCINCS =  -I. -I$(NUSYSINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS =  -G 0
 LDIRT =   $(APP)
 LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -s -lnusys -lultra -L$(N64_LIBGCCDIR) -lgcc -lnustd
-OPTIMIZER = -O3 -pedantic
+OPTIMIZER = -O3
 
 # Target directory
 APP =     cave.out
@@ -34,12 +34,17 @@ CODEFILES = \
 	mode_opening.c \
 	mode_title.c \
 	mode_action.c \
+	profile.c \
+	flags.c \
 	mychar.c \
 	mychit.c \
 	npchar.c \
+	caret.c \
+	carets.c \
 	stage.c \
 	map.c \
-	mapname.c
+	mapname.c \
+	frame.c
 
 # Output objects
 CODEOBJECTS = $(CODEFILES:.c=.o)  $(NUSYSLIBDIR)/nusys.o

@@ -3,14 +3,18 @@
 #include "mychar.h"
 #include "map.h"
 #include "mapname.h"
+#include "frame.h"
+#include "caret.h"
 
 //Stage table
 #include "data/stage/eggs.inc.c"
 #include "data/stage/cave.inc.c"
 #include "data/stage/start.inc.c"
+#include "data/stage/shelt.inc.c"
 
 #include "data/tilesets/prt_cave.inc.c"
 #include "data/tilesets/prt_eggs.inc.c"
+#include "data/tilesets/prt_store.inc.c"
 
 struct 
 {
@@ -32,6 +36,11 @@ struct
 	{NULL, NULL, "Mimiga Village"},
 	{&cave_data, &prt_cave, "First Cave"},
 	{&start_data, &prt_cave, "Start Point"},
+	{NULL, NULL, "Shack"},
+	{NULL, NULL, "Reservoir"},
+	{NULL, NULL, "Graveyard"},
+	{NULL, NULL, "Yamashita Farm"},
+	{&shelt_data, &prt_store, "Shelter"},
 };
 
 //Stage globals
@@ -48,16 +57,17 @@ void TransferStage(s32 no, s32 w, s32 x, s32 y)
 	const TilesetData *tileset_data = gTMT[no].tileset_data;
 	LoadMapData(stage_data->width, stage_data->height, stage_data->map);
 	LoadTilesetData(tileset_data->tex, tileset_data->tlut, tileset_data->attr);
+	LoadEvent(stage_data->events, stage_data->event);
 	
 	//Initialize map state
 	ReadyMapName(gTMT[no].name);
 	
 	//StartTextScript(w);
-	//SetFrameMyChar();
+	SetFrameMyChar();
 	//ClearBullet();
-	//InitCaret();
+	InitCaret();
 	//ClearValueView();
-	//ResetQuake();
+	ResetQuake();
 	//InitBossChar(gTMT[no].boss_no);
 	//ResetFlash();
 	gStageNo = no;

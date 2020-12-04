@@ -53,6 +53,8 @@ void PutTile(s32 x, s32 y)
 
 void UpdateMapPlane(s32 fx, s32 fy)
 {
+	s32 gx, gy;
+	
 	//Convert frame position to pixel coordinates
 	fx /= 0x200;
 	fx += 8;
@@ -63,16 +65,16 @@ void UpdateMapPlane(s32 fx, s32 fy)
 	if (map_plane_dirty == TRUE)
 	{
 		//Reload entire screen
-		for (int gx = (fx >> 4); gx <= (fx >> 4) + VIEW_W; gx++)
-			for (int gy = (fy >> 4); gy <= (fy >> 4) + VIEW_H; gy++)
+		for (gx = (fx >> 4); gx <= (fx >> 4) + VIEW_W; gx++)
+			for (gy = (fy >> 4); gy <= (fy >> 4) + VIEW_H; gy++)
 				PutTile(gx, gy);
 		map_plane_dirty = FALSE;
 	}
 	else
 	{
-		for (int gx = (fx >> 4); gx <= (fx >> 4) + VIEW_W; gx++)
+		for (gx = (fx >> 4); gx <= (fx >> 4) + VIEW_W; gx++)
 		{
-			for (int gy = (fy >> 4); gy <= (fy >> 4) + VIEW_H; gy++)
+			for (gy = (fy >> 4); gy <= (fy >> 4) + VIEW_H; gy++)
 			{
 				if (gx < (map_plane_fx >> 4) || gx > (map_plane_fx >> 4) + VIEW_W ||
 				    gy < (map_plane_fy >> 4) || gy > (map_plane_fy >> 4) + VIEW_H)
@@ -142,8 +144,8 @@ void ChangeMapParts(s32 x, s32 y, u8 no)
 	if (map_data[x + y * map_width] != no)
 		return;
 	map_data[x + y * map_width] = no;
-	//for (i = 0; i < 3; ++i)
-	//	SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, 0, 0, 0, NULL, 0);
+	for (i = 0; i < 3; ++i)
+		SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, 0, 0, 0, NULL, 0);
 }
 
 #include "data/bitmap/snack.inc.c"
@@ -188,7 +190,7 @@ void PutStage_Front(s32 fx, s32 fy)
 	
 	//Render additional foreground tiles
 	LoadTLUT(snack_tlut);
-	LoadTex_CI4(16, 16, snack_tex);
+	LoadTex_CI4(32, 32, snack_tex);
 	for (x = (fx >> 4); x <= (fx >> 4) + VIEW_W; x++)
 		for (y = (fy >> 4); y <= (fy >> 4) + VIEW_H; y++)
 			if (GetAttribute(x, y) == 0x43)

@@ -112,5 +112,24 @@ extern s32 gSuperYpos;
 
 //NPC functions
 void InitNpChar();
+void LoadEvent(u32 events, const EVENT *event);
+void SetNpChar(s32 code_char, s32 x, s32 y, s32 xm, s32 ym, s32 dir, NPCHAR *npc, s32 start_index);
+void SetDestroyNpChar(s32 x, s32 y, s32 w, s32 num);
+void SetDestroyNpCharUp(s32 x, s32 y, s32 w, s32 num);
+void SetExpObjects(s32 x, s32 y, s32 exp);
+BOOL SetBulletObject(s32 x, s32 y, s32 val);
+BOOL SetLifeObject(s32 x, s32 y, s32 val);
+void VanishNpChar(NPCHAR *npc);
+void PutNpChar(s32 fx, s32 fy);
+void ActNpChar();
+void ChangeNpCharByEvent(s32 code_event, s32 code_char, s32 dir);
+void ChangeCheckableNpCharByEvent(s32 code_event, s32 code_char, s32 dir);
+void SetNpCharActionNo(s32 code_event, s32 act_no, s32 dir);
+void MoveNpChar(s32 code_event, s32 x, s32 y, s32 dir);
+void BackStepMyChar(s32 code_event);
+void DeleteNpCharEvent(s32 code);
+void DeleteNpCharCode(s32 code, BOOL bSmoke);
+void GetNpCharPosition(s32 *x, s32 *y, s32 i);
+BOOL IsNpCharCode(s32 code);
 
 #endif

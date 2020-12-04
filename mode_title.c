@@ -1,6 +1,7 @@
 #include "mode_title.h"
 #include "draw.h"
 #include "keycontrol.h"
+#include "profile.h"
 
 #include "data/bitmap/title.inc.c"
 #include "data/bitmap/title_quote.inc.c"
@@ -153,5 +154,7 @@ void ModeTitle_Draw()
 
 void ModeTitle_Quit()
 {
-	
+	//Load or start new game
+	if (bContinue || !LoadProfile())
+		InitializeGame();
 }

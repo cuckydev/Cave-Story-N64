@@ -2,10 +2,9 @@
 #include "keycontrol.h"
 #include "draw.h"
 #include "game.h"
-
+#include "flags.h"
+#include "caret.h"
 #include <string.h>
-
-#include "data/bitmap/mychar.inc.c"
 
 MYCHAR gMC;
 
@@ -28,6 +27,8 @@ void InitMyChar()
 	gMC.life = 3;
 	gMC.max_life = 3;
 	gMC.unit = 0;
+	
+	gMC.equip = EQUIP_BOOSTER_2_0;
 }
 
 void AnimationMyChar(BOOL bKey)
@@ -147,6 +148,8 @@ void ShowMyChar(BOOL bShow)
 	else
 		gMC.cond |= 2;
 }
+
+#include "data/bitmap/mychar.inc.c"
 
 void PutMyChar(s32 fx, s32 fy)
 {
@@ -476,10 +479,10 @@ void ActMyChar_Normal(BOOL bKey)
 			//Boost particles (and sound)
 			if (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1)
 			{
-				//if (gMC.direct == 0)
-				//	SetCaret(gMC.x + (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, DIR_RIGHT);
-				//if (gMC.direct == 2)
-				//	SetCaret(gMC.x - (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, DIR_LEFT);
+				if (gMC.direct == 0)
+					SetCaret(gMC.x + (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, 2);
+				if (gMC.direct == 2)
+					SetCaret(gMC.x - (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, 0);
 				
 				//PlaySoundObject(113, SOUND_MODE_PLAY);
 			}
@@ -492,14 +495,14 @@ void ActMyChar_Normal(BOOL bKey)
 			//Boost particles (and sound)
 			if (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1)
 			{
-				//SetCaret(gMC.x, gMC.y + (6 * 0x200), CARET_EXHAUST, DIR_DOWN);
+				SetCaret(gMC.x, gMC.y + (6 * 0x200), CARET_EXHAUST, 3);
 				//PlaySoundObject(113, SOUND_MODE_PLAY);
 			}
 		}
 		else if (gMC.boost_sw == 3 && (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1))
 		{
 			//Boost particles (and sound)
-			//SetCaret(gMC.x, gMC.y - (6 * 0x200), CARET_EXHAUST, DIR_UP);
+			SetCaret(gMC.x, gMC.y - (6 * 0x200), CARET_EXHAUST, 1);
 			//PlaySoundObject(113, SOUND_MODE_PLAY);
 		}
 	}
@@ -516,7 +519,7 @@ void ActMyChar_Normal(BOOL bKey)
 		
 		if (gMC.boost_cnt % 3 == 0)
 		{
-			//SetCaret(gMC.x, gMC.y + (gMC.hit.bottom / 2), CARET_EXHAUST, DIR_DOWN);
+			SetCaret(gMC.x, gMC.y + (gMC.hit.bottom / 2), CARET_EXHAUST, 3);
 			//PlaySoundObject(113, SOUND_MODE_PLAY);
 		}
 		
@@ -588,7 +591,7 @@ void ActMyChar_Normal(BOOL bKey)
 			for (a = 0; a < 8; ++a)
 			{
 				x = gMC.x + (Random(-8, 8) * 0x200);
-				//SetNpChar(73, x, gMC.y, gMC.xm + Random(-0x200, 0x200), Random(-0x200, 0x80) - (gMC.ym / 2), dir, NULL, 0);
+				SetNpChar(73, x, gMC.y, gMC.xm + Random(-0x200, 0x200), Random(-0x200, 0x80) - (gMC.ym / 2), dir, NULL, 0);
 			}
 			
 			//PlaySoundObject(56, SOUND_MODE_PLAY);
@@ -600,7 +603,7 @@ void ActMyChar_Normal(BOOL bKey)
 				for (a = 0; a < 8; ++a)
 				{
 					x = gMC.x + (Random(-8, 8) * 0x200);
-					//SetNpChar(73, x, gMC.y, gMC.xm + Random(-0x200, 0x200), Random(-0x200, 0x80), dir, NULL, 0);
+					SetNpChar(73, x, gMC.y, gMC.xm + Random(-0x200, 0x200), Random(-0x200, 0x80), dir, NULL, 0);
 				}
 				
 				//PlaySoundObject(56, SOUND_MODE_PLAY);
@@ -724,10 +727,10 @@ void ActMyChar_Stream(BOOL bKey)
 			gMC.ym += 0x80;
 	}
 	
-	//if (gMC.ym < -0x200 && gMC.flag & 2)
-	//	SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, DIR_OTHER);
-	//if (gMC.ym > 0x200 && gMC.flag & 8)
-	//	SetCaret(gMC.x, gMC.y + gMC.hit.bottom, CARET_TINY_PARTICLES, DIR_OTHER);
+	if (gMC.ym < -0x200 && gMC.flag & 2)
+		SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, 5);
+	if (gMC.ym > 0x200 && gMC.flag & 8)
+		SetCaret(gMC.x, gMC.y + gMC.hit.bottom, CARET_TINY_PARTICLES, 5);
 	
 	//Limit speed
 	if (gMC.xm > 0x400)
@@ -794,7 +797,7 @@ void AirProcess()
 		{
 			if (--gMC.air <= 0)
 			{
-				if (0)//GetNPCFlag(4000))
+				if (GetNPCFlag(4000))
 				{
 					// Core cutscene
 					//StartTextScript(1100);
@@ -804,10 +807,10 @@ void AirProcess()
 					// Drown
 					//StartTextScript(41);
 					
-					//if (gMC.direct == 0)
-					//	SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, DIR_LEFT);
-					//else
-					//	SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, DIR_RIGHT);
+					if (gMC.direct == 0)
+						SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, 0);
+					else
+						SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, 2);
 					
 					gMC.cond &= ~0x80;
 				}

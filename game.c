@@ -2,7 +2,6 @@
 #include "rand.h"
 #include "draw.h"
 
-
 //Game globals
 s32 g_GameFlags = 3;
 

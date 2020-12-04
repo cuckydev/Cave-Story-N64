@@ -173,6 +173,9 @@ void PutBitmap(const RECT *src, s32 x, s32 y)
 	if (src_w == 0 || src_h == 0)
 		return;
 	
+	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
+		return;
+	
 	//Render texrect
 	SetRenderState(RS_Tex);
 	gSPScisTextureRectangle(glistp++, 
