@@ -1,9 +1,11 @@
 #include "mychar.h"
+#include "npchar.h"
 #include "keycontrol.h"
 #include "draw.h"
 #include "game.h"
 #include "flags.h"
 #include "caret.h"
+#include "textscr.h"
 #include <string.h>
 
 MYCHAR gMC;
@@ -27,8 +29,6 @@ void InitMyChar()
 	gMC.life = 3;
 	gMC.max_life = 3;
 	gMC.unit = 0;
-	
-	gMC.equip = EQUIP_BOOSTER_2_0;
 }
 
 void AnimationMyChar(BOOL bKey)
@@ -800,12 +800,12 @@ void AirProcess()
 				if (GetNPCFlag(4000))
 				{
 					// Core cutscene
-					//StartTextScript(1100);
+					StartTextScript(1100);
 				}
 				else
 				{
 					// Drown
-					//StartTextScript(41);
+					StartTextScript(41);
 					
 					if (gMC.direct == 0)
 						SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, 0);

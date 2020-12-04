@@ -1,6 +1,7 @@
 #include "map.h"
 #include "mem.h"
 #include "draw.h"
+#include "npchar.h"
 #include <string.h>
 
 //Map data
@@ -22,10 +23,19 @@ static u8 map_plane[2][VIEW_W + 1][8 * PLANE_PH];
 static s32 map_plane_fx, map_plane_fy;
 static BOOL map_plane_dirty;
 
+BOOL IsTileOnscreen(s32 x, s32 y)
+{
+	if (x < (map_plane_fx >> 4) || x > (map_plane_fx >> 4) + VIEW_W ||
+	    y < (map_plane_fy >> 4) || y > (map_plane_fy >> 4) + VIEW_H)
+		return FALSE;
+	return TRUE;
+}
+
 void PutTile(s32 x, s32 y)
 {
-	//Get tile at coordinate
 	u8 px, py, tile, atrb;
+	
+	//Get tile at coordinate
 	px = x % (VIEW_W + 1);
 	py = y % PLANE_H;
 	tile = map_data[x + y * map_width];
@@ -76,8 +86,7 @@ void UpdateMapPlane(s32 fx, s32 fy)
 		{
 			for (gy = (fy >> 4); gy <= (fy >> 4) + VIEW_H; gy++)
 			{
-				if (gx < (map_plane_fx >> 4) || gx > (map_plane_fx >> 4) + VIEW_W ||
-				    gy < (map_plane_fy >> 4) || gy > (map_plane_fy >> 4) + VIEW_H)
+				if (!IsTileOnscreen(gx, gy))
 				    PutTile(gx, gy);
 			}
 		}
@@ -131,11 +140,15 @@ u8 GetAttribute(s32 x, s32 y)
 void DeleteMapParts(s32 x, s32 y)
 {
 	map_data[x + y * map_width] = 0;
+	if (!IsTileOnscreen(x, y))
+		PutTile(x, y);
 }
 
 void ShiftMapParts(s32 x, s32 y)
 {
 	map_data[x + y * map_width]--;
+	if (!IsTileOnscreen(x, y))
+		PutTile(x, y);
 }
 
 void ChangeMapParts(s32 x, s32 y, u8 no)
@@ -144,6 +157,8 @@ void ChangeMapParts(s32 x, s32 y, u8 no)
 	if (map_data[x + y * map_width] != no)
 		return;
 	map_data[x + y * map_width] = no;
+	if (!IsTileOnscreen(x, y))
+		PutTile(x, y);
 	for (i = 0; i < 3; ++i)
 		SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, 0, 0, 0, NULL, 0);
 }

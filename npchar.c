@@ -2,6 +2,7 @@
 #include "flags.h"
 #include "caret.h"
 #include "mychar.h"
+#include "draw.h"
 #include <string.h>
 
 //NPC globals
@@ -279,14 +280,29 @@ void VanishNpChar(NPCHAR *npc)
 	SetUniqueParameter(npc);
 }
 
+static const RECT rctest = {0, 0, 16, 16};
+#include "data/bitmap/snack.inc.c"
+
 void PutNpChar(s32 fx, s32 fy)
 {
-	
+	LoadTLUT(snack_tlut);
+	LoadTex_CI4(32, 32, snack_tex);
+	for (s32 i = 0; i < NPC_MAX; i++)
+		if (gNPC[i].cond & 0x80)
+			PutBitmap(&rctest, (gNPC[i].x / 0x200) - (fx / 0x200) - 8, (gNPC[i].y / 0x200) - (fy / 0x200) - 8);
 }
 
 void ActNpChar()
 {
-	
+	for (s32 i = 0; i < NPC_MAX; i++)
+	{
+		if (gNPC[i].cond & 0x80)
+		{
+			//gNPC[i].act_wait++;
+			//if (gNPC[i].act_wait >= 30)
+				gNPC[i].cond = 0;
+		}
+	}
 }
 
 void ChangeNpCharByEvent(s32 code_event, s32 code_char, s32 dir)
@@ -556,7 +572,7 @@ BOOL GetNpCharAlive(s32 code_event)
 		return FALSE;
 }
 
-int CountAliveNpChar(void)
+s32 CountAliveNpChar()
 {
 	s32 n;
 	s32 count = 0;

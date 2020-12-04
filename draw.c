@@ -166,13 +166,9 @@ void LoadTex_CI8(u32 width, u32 height, u8 *tex)
 
 void PutBitmap(const RECT *src, s32 x, s32 y)
 {
-	//Get source rect dimensions and make sure it's not 0,0 sized
+	//Get source rect dimensions
 	s32 src_w = src->right - src->left;
 	s32 src_h = src->bottom - src->top;
-	
-	if (src_w == 0 || src_h == 0)
-		return;
-	
 	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
 		return;
 	
@@ -184,6 +180,63 @@ void PutBitmap(const RECT *src, s32 x, s32 y)
 		G_TX_RENDERTILE, 
 		src->left << 5, src->top << 5, 
 		1 << 10, 1 << 10
+	);
+}
+
+void PutBitmap_X(const RECT *src, s32 x, s32 y)
+{
+	//Get source rect dimensions
+	s32 src_w = src->right - src->left;
+	s32 src_h = src->bottom - src->top;
+	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
+		return;
+	
+	//Render texrect
+	SetRenderState(RS_Tex);
+	gSPScisTextureRectangle(glistp++, 
+		x << 2, y << 2, 
+		(x + src_w) << 2, (y + src_h) << 2,
+		G_TX_RENDERTILE, 
+		src->right << 5, src->top << 5, 
+		-1 << 10, 1 << 10
+	);
+}
+
+void PutBitmap_Y(const RECT *src, s32 x, s32 y)
+{
+	//Get source rect dimensions
+	s32 src_w = src->right - src->left;
+	s32 src_h = src->bottom - src->top;
+	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
+		return;
+	
+	//Render texrect
+	SetRenderState(RS_Tex);
+	gSPScisTextureRectangle(glistp++, 
+		x << 2, y << 2, 
+		(x + src_w) << 2, (y + src_h) << 2,
+		G_TX_RENDERTILE, 
+		src->left << 5, src->bottom << 5, 
+		1 << 10, -1 << 10
+	);
+}
+
+void PutBitmap_XY(const RECT *src, s32 x, s32 y)
+{
+	//Get source rect dimensions
+	s32 src_w = src->right - src->left;
+	s32 src_h = src->bottom - src->top;
+	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
+		return;
+	
+	//Render texrect
+	SetRenderState(RS_Tex);
+	gSPScisTextureRectangle(glistp++, 
+		x << 2, y << 2, 
+		(x + src_w) << 2, (y + src_h) << 2,
+		G_TX_RENDERTILE, 
+		src->right << 5, src->bottom << 5, 
+		-1 << 10, -1 << 10
 	);
 }
 

@@ -1,5 +1,6 @@
 #include "stage.h"
 #include "draw.h"
+#include "textscr.h"
 #include "mychar.h"
 #include "map.h"
 #include "mapname.h"
@@ -58,11 +59,12 @@ void TransferStage(s32 no, s32 w, s32 x, s32 y)
 	LoadMapData(stage_data->width, stage_data->height, stage_data->map);
 	LoadTilesetData(tileset_data->tex, tileset_data->tlut, tileset_data->attr);
 	LoadEvent(stage_data->events, stage_data->event);
+	LoadTextScript_Stage(stage_data->script);
 	
 	//Initialize map state
 	ReadyMapName(gTMT[no].name);
 	
-	//StartTextScript(w);
+	StartTextScript(w);
 	SetFrameMyChar();
 	//ClearBullet();
 	InitCaret();

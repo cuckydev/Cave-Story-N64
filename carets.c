@@ -8,7 +8,7 @@ static const RECT rctest = {0, 0, 16, 16};
 //Caret 00
 void ActCaret00(CARET *crt)
 {
-	crt->code = 0;
+	(void)crt;
 }
 
 void PutCaret00(CARET *crt, s32 fx, s32 fy)

@@ -131,5 +131,7 @@ void DeleteNpCharEvent(s32 code);
 void DeleteNpCharCode(s32 code, BOOL bSmoke);
 void GetNpCharPosition(s32 *x, s32 *y, s32 i);
 BOOL IsNpCharCode(s32 code);
+BOOL GetNpCharAlive(s32 code_event);
+s32 CountAliveNpChar();
 
 #endif

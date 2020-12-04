@@ -35,6 +35,7 @@ CODEFILES = \
 	mode_title.c \
 	mode_action.c \
 	profile.c \
+	textscr.c \
 	flags.c \
 	mychar.c \
 	mychit.c \
@@ -44,7 +45,9 @@ CODEFILES = \
 	stage.c \
 	map.c \
 	mapname.c \
-	frame.c
+	fade.c \
+	frame.c \
+	flash.c
 
 # Output objects
 CODEOBJECTS = $(CODEFILES:.c=.o)  $(NUSYSLIBDIR)/nusys.o

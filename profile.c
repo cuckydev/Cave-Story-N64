@@ -4,6 +4,7 @@
 #include "frame.h"
 #include "stage.h"
 #include "flags.h"
+#include "fade.h"
 
 //Profile functions
 void SaveProfile()
@@ -31,14 +32,14 @@ BOOL InitializeGame()
 	TransferStage(13, 200, 10, 8);
 	
 	//Initialize game state (stuff after stage's loaded)
-	//ClearFade();
+	ClearFade();
 	SetFrameMyChar();
 	SetFrameTargetMyChar(16);
 	//InitBossLife();
 	CutNoise();
 	//ClearValueView();
 	gCurlyShoot_wait = 0;
-	//SetFadeMask();
+	SetFadeMask();
 	
 	return TRUE;
 }
