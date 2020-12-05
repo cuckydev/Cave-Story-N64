@@ -6,6 +6,7 @@
 #include "draw.h"
 #include "keycontrol.h"
 #include "stage.h"
+#include "selstage.h"
 #include "mapname.h"
 #include "frame.h"
 #include "flash.h"
@@ -562,7 +563,7 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						y = GetTextScriptNo(gTS.p_read + 9);
-						//AddPermitStage(x, y);
+						AddPermitStage(x, y);
 						gTS.p_read += 13;
 					}
 					else if (IS_COMMAND('M','P','+'))
@@ -1053,8 +1054,11 @@ s32 TextScriptProc()
 					}
 					else if (IS_COMMAND('S','V','P'))
 					{
-						SaveProfile(NULL);
-						gTS.p_read += 4;
+						z = GetTextScriptNo(gTS.p_read + 4);
+						if (!SaveProfile(NULL))
+							JumpTextScript(z);
+						else
+							gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('L','D','P'))
 					{

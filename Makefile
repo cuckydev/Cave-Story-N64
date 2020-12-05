@@ -44,6 +44,7 @@ CODEFILES = \
 	caret.c \
 	carets.c \
 	armsitem.c \
+	selstage.c \
 	stage.c \
 	map.c \
 	mapname.c \

@@ -4,9 +4,12 @@
 #include <ultra64.h>
 #include "game_def.h"
 
-//Flags constants
+//Flags globals
 #define NPC_FLAG_BYTES 1000
 #define SKIP_FLAG_BYTES 8
+
+extern u8 gFlagNPC[NPC_FLAG_BYTES];
+extern u8 gSkipFlag[SKIP_FLAG_BYTES];
 
 //Flag functions
 void InitFlags();

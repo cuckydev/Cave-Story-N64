@@ -88,7 +88,6 @@ void ModeOpening_Draw()
 		UpdateMapPlane(fx, fy);
 		PutStage_Back(fx, fy);
 		PutNpChar(fx, fy);
-		PutMyChar(fx, fy);
 		PutStage_Front(fx, fy);
 		PutCaret(fx, fy);
 		

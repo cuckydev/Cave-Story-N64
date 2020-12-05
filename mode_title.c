@@ -26,7 +26,7 @@ void ModeTitle_Init()
 	anime = 0;
 	char_type = 0;
 	black_time = 0;
-	bContinue = FALSE;
+	bContinue = HasProfile();
 }
 
 GameMode ModeTitle_Proc()
@@ -156,6 +156,6 @@ void ModeTitle_Draw()
 void ModeTitle_Quit()
 {
 	//Load or start new game
-	if (bContinue || !LoadProfile())
+	if (!bContinue || !LoadProfile())
 		InitializeGame();
 }

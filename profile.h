@@ -3,9 +3,13 @@
 
 #include "game_def.h"
 
+extern BOOL gGoodEEPROM;
+
 //Profile functions
-void SaveProfile();
+void InitProfile();
+BOOL SaveProfile();
 BOOL LoadProfile();
+BOOL HasProfile();
 BOOL InitializeGame();
 
 #endif

@@ -6,7 +6,8 @@ static const char *head_script = "#0000\n\
 \n\
 #0016\n\
 <PRI<MSG\n\
-Do you want to save?<YNJ0000<FL+0431<SVP<CLRGame saved.<NOD<END\n\
+Do you want to save?<YNJ0000<FL+0431<TUR<CLR\n\
+Saving...<SVP0020<MSGGame saved.<NOD<END\n\
 \n\
 #0017\n\
 <PRI<FLJ0201:0018\n\
@@ -24,6 +25,8 @@ Do you want to rest?<YNJ0000<FAO0004<CMU0000<WAI0020<CLR.....<NOD<CLO\n\
 <LI+1000<SOU0020<MYD0002<MSG\n\
 Health restored.<NOD<CLO<RMU<FAI0004<END\n\
 \n\
+#0020\n\
+<PRI<MSGFailed to save.<NOD<END\n\
 #0030\n\
 <PRI<FLJ0202:0032<FLJ0201:0031<FL+0201<GIT0005<AM+0005:0010\n\
 <CMU0010Got the =Missile Launcher=!<WAI0160<NOD<RMU<CLRThe Missile Launcher is a powerful\n\
