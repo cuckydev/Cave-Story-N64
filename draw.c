@@ -85,6 +85,7 @@ void StartFrame()
 	gSPSegment(glistp++, 0, 0);
 	gSPDisplayList(glistp++, OS_K0_TO_PHYSICAL(dl_init_rsp));
 	gSPDisplayList(glistp++, OS_K0_TO_PHYSICAL(dl_init_rdp));
+	gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, osVirtualToPhysical(nuGfxCfb_ptr));
 	gDPPipeSync(glistp++);
 	
 	//Reset draw state
@@ -112,13 +113,11 @@ static void SetRenderState(RenderState next_render_state)
 	{
 		case RS_Rect:
 			gDPSetCycleType(glistp++, G_CYC_FILL);
-			gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, osVirtualToPhysical(nuGfxCfb_ptr));
+			gDPSetRenderMode(glistp++, G_RM_NOOP, G_RM_NOOP2);
 			gDPPipeSync(glistp++);
 			break;
 		case RS_Tex:
 			gDPSetCycleType(glistp++, G_CYC_1CYCLE);
-			gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, osVirtualToPhysical(nuGfxCfb_ptr));
-			
 			gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
 			gDPSetRenderMode(glistp++, G_RM_AA_TEX_EDGE, G_RM_AA_TEX_EDGE);
 			
@@ -224,7 +223,6 @@ void PutBitmap_Y(const RECT *src, s32 x, s32 y)
 		src->left << 5, src->bottom << 5, 
 		1 << 10, -1 << 10
 	);
-	gDPPipeSync(glistp++);
 }
 
 void PutBitmap_XY(const RECT *src, s32 x, s32 y)
@@ -244,7 +242,6 @@ void PutBitmap_XY(const RECT *src, s32 x, s32 y)
 		src->right << 5, src->bottom << 5, 
 		-1 << 10, -1 << 10
 	);
-	gDPPipeSync(glistp++);
 }
 
 void CortBox(const RECT *rect, u32 col)
