@@ -38,6 +38,7 @@ CODEFILES = \
 	textscr.c \
 	flags.c \
 	mychar.c \
+	mycparam.c \
 	mychit.c \
 	npchar.c \
 	caret.c \

@@ -1,5 +1,6 @@
 #include "mychit.h"
 #include "mychar.h"
+#include "mycparam.h"
 #include "npchar.h"
 #include "textscr.h"
 #include "keycontrol.h"
@@ -770,7 +771,7 @@ void HitMyCharNpChar()
 		if (hit != 0 && gNPC[i].code_char == 87)
 		{
 			//PlaySoundObject(20, SOUND_MODE_PLAY);
-			//AddLifeMyChar(gNPC[i].exp);
+			AddLifeMyChar(gNPC[i].exp);
 			gNPC[i].cond = 0;
 		}
 		

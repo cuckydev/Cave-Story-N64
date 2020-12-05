@@ -1,6 +1,7 @@
 #include "mode_action.h"
 #include "draw.h"
 #include "mychar.h"
+#include "mycparam.h"
 #include "mychit.h"
 #include "npchar.h"
 #include "caret.h"
@@ -65,6 +66,10 @@ void ModeAction_Draw()
 	//Draw HUD
 	PutFade();
 	PutMapName(FALSE);
+	if (g_GameFlags & 2)
+	{
+		PutMyLife(TRUE);
+	}
 	PutTextScript();
 }
 

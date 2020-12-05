@@ -9,11 +9,6 @@
 
 void VBlankCallback(int pending)
 {
-	static u16 font_tlut[] = {
-		0x0000, GPACK_RGBA5551(0xFF, 0xFF, 0xFF, 1),
-	};
-	
-	char test[0x80];
 	if (pending < 1)
 	{
 		//Handle input
@@ -22,8 +17,6 @@ void VBlankCallback(int pending)
 		//Run game frame
 		StartFrame();
 		Game();
-		sprintf(test, "0x%X / 0x%X", glistp - glist, GLIST_LENGTH);
-		PutText(24, 24, test, font_tlut);
 		EndFrame();
 	}
 }

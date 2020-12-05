@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <ultra64.h>
+#include "game_def.h"
 
 //Mode enumeration
 typedef enum
@@ -24,6 +25,7 @@ extern s32 g_GameFlags;
 
 //Game functions
 s32 Random(s32 min, s32 max);
+void PutNumber4(s32 x, s32 y, s32 value, BOOL bZero);
 void InitGame();
 void Game();
 

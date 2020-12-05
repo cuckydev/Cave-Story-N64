@@ -71,6 +71,59 @@ s32 Random(s32 min, s32 max)
 	return (rand() % range) + min;
 }
 
+#include "data/bitmap/numbers.inc.c"
+
+void PutNumber4(s32 x, s32 y, s32 value, BOOL bZero)
+{
+	RECT rect[10] = {
+		{0,  0, 8,  8},
+		{0,  8, 8, 16},
+		{0, 16, 8, 24},
+		{0, 24, 8, 32},
+		{0, 32, 8, 40},
+		{0, 40, 8, 48},
+		{0, 48, 8, 56},
+		{0, 56, 8, 64},
+		{0, 64, 8, 72},
+		{0, 72, 8, 80},
+	};
+	static const s32 tbl[4] = {1000, 100, 10, 1};
+	
+	s32 a;
+	s32 sw;
+	s32 offset;
+	
+	//Limit value
+	if (value > 9999)
+		value = 9999;
+	
+	//Go through number and draw digits
+	offset = 0;
+	sw = 0;
+	
+	LoadTLUT_CI4(numbers_tlut);
+	LoadTex_CI4(16, 96, numbers_tex);
+	while (offset < 4)
+	{
+		//Get the digit that this is
+		a = 0;
+		
+		while (value >= tbl[offset])
+		{
+			value -= tbl[offset];
+			++a;
+			++sw;
+		}
+		
+		//Draw digit
+		if ((bZero && offset == 2) || sw != 0 || offset == 3)
+			PutBitmap(&rect[a], x + 8 * offset, y);
+		
+		//Go to next digit
+		++offset;
+	}
+}
+
 void InitGame()
 {
 	//Start in opening game mode

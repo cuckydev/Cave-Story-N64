@@ -1,6 +1,7 @@
 #include "textscr.h"
 #include "game.h"
 #include "mychar.h"
+#include "mycparam.h"
 #include "npchar.h"
 #include "draw.h"
 #include "keycontrol.h"
@@ -234,36 +235,36 @@ void ClearTextLine(void)
 #include "data/bitmap/armsimage.inc.c"
 #include "data/bitmap/itemimage.inc.c"
 
-#include "data/bitmap/face00.inc.c"
-#include "data/bitmap/face01.inc.c"
-#include "data/bitmap/face02.inc.c"
-#include "data/bitmap/face03.inc.c"
-#include "data/bitmap/face04.inc.c"
-#include "data/bitmap/face10.inc.c"
-#include "data/bitmap/face11.inc.c"
-#include "data/bitmap/face12.inc.c"
-#include "data/bitmap/face13.inc.c"
-#include "data/bitmap/face14.inc.c"
-#include "data/bitmap/face20.inc.c"
-#include "data/bitmap/face21.inc.c"
-#include "data/bitmap/face22.inc.c"
-#include "data/bitmap/face23.inc.c"
-#include "data/bitmap/face24.inc.c"
-#include "data/bitmap/face30.inc.c"
-#include "data/bitmap/face31.inc.c"
-#include "data/bitmap/face32.inc.c"
-#include "data/bitmap/face33.inc.c"
-#include "data/bitmap/face34.inc.c"
-#include "data/bitmap/face40.inc.c"
-#include "data/bitmap/face41.inc.c"
-#include "data/bitmap/face42.inc.c"
-#include "data/bitmap/face43.inc.c"
-#include "data/bitmap/face44.inc.c"
-#include "data/bitmap/face50.inc.c"
-#include "data/bitmap/face51.inc.c"
-#include "data/bitmap/face52.inc.c"
-#include "data/bitmap/face53.inc.c"
-#include "data/bitmap/face54.inc.c"
+#include "data/bitmap/face_00.inc.c"
+#include "data/bitmap/face_10.inc.c"
+#include "data/bitmap/face_20.inc.c"
+#include "data/bitmap/face_30.inc.c"
+#include "data/bitmap/face_40.inc.c"
+#include "data/bitmap/face_50.inc.c"
+#include "data/bitmap/face_01.inc.c"
+#include "data/bitmap/face_11.inc.c"
+#include "data/bitmap/face_21.inc.c"
+#include "data/bitmap/face_31.inc.c"
+#include "data/bitmap/face_41.inc.c"
+#include "data/bitmap/face_51.inc.c"
+#include "data/bitmap/face_02.inc.c"
+#include "data/bitmap/face_12.inc.c"
+#include "data/bitmap/face_22.inc.c"
+#include "data/bitmap/face_32.inc.c"
+#include "data/bitmap/face_42.inc.c"
+#include "data/bitmap/face_52.inc.c"
+#include "data/bitmap/face_03.inc.c"
+#include "data/bitmap/face_13.inc.c"
+#include "data/bitmap/face_23.inc.c"
+#include "data/bitmap/face_33.inc.c"
+#include "data/bitmap/face_43.inc.c"
+#include "data/bitmap/face_53.inc.c"
+#include "data/bitmap/face_04.inc.c"
+#include "data/bitmap/face_14.inc.c"
+#include "data/bitmap/face_24.inc.c"
+#include "data/bitmap/face_34.inc.c"
+#include "data/bitmap/face_44.inc.c"
+#include "data/bitmap/face_54.inc.c"
 
 static const struct
 {
@@ -326,13 +327,13 @@ void PutTextScript()
 		return;
 	if ((gTS.flags & 1) == 0)
 		return;
-
+	
 	//Get textbox position
 	if (gTS.flags & 0x20)
 		msg_box_y = 32;
 	else
 		msg_box_y = SCREEN_HEIGHT - 56;
-
+	
 	//Draw message box frame
 	if (gTS.flags & 2)
 	{
@@ -488,13 +489,13 @@ s32 TextScriptProc()
 					else if (IS_COMMAND('L','I','+'))
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
-						//AddLifeMyChar(x);
+						AddLifeMyChar(x);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('M','L','+'))
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
-						//AddMaxLifeMyChar(z);
+						AddMaxLifeMyChar(z);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('A','E','+'))

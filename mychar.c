@@ -151,6 +151,37 @@ void ShowMyChar(BOOL bShow)
 
 #include "data/bitmap/mychar.inc.c"
 
+#include "data/bitmap/arms_snake.inc.c"
+#include "data/bitmap/arms_polarstar.inc.c"
+#include "data/bitmap/arms_fireball.inc.c"
+#include "data/bitmap/arms_machinegun.inc.c"
+#include "data/bitmap/arms_missilelauncher.inc.c"
+#include "data/bitmap/arms_bubbline.inc.c"
+#include "data/bitmap/arms_supermissilelauncher.inc.c"
+#include "data/bitmap/arms_nemesis.inc.c"
+#include "data/bitmap/arms_spur.inc.c"
+
+static const struct
+{
+	u8 *tex;
+	u16 *tlut;
+} arms_tex[] = {
+	{NULL, NULL},
+	{arms_snake_tex, arms_snake_tlut},
+	{arms_polarstar_tex, arms_polarstar_tlut},
+	{arms_fireball_tex, arms_fireball_tlut},
+	{arms_machinegun_tex, arms_machinegun_tlut},
+	{arms_missilelauncher_tex, arms_missilelauncher_tlut},
+	{NULL, NULL},
+	{arms_bubbline_tex, arms_bubbline_tlut},
+	{NULL, NULL},
+	{NULL, NULL},
+	{arms_supermissilelauncher_tex, arms_supermissilelauncher_tlut},
+	{NULL, NULL},
+	{arms_nemesis_tex, arms_nemesis_tlut},
+	{arms_spur_tex, arms_spur_tlut},
+};
+
 void PutMyChar(s32 fx, s32 fy)
 {
 	s32 arms_offset_y;
@@ -161,57 +192,56 @@ void PutMyChar(s32 fx, s32 fy)
 	
 	lx = (gMC.x / 0x200) - (fx / 0x200);
 	ly = (gMC.y / 0x200) - (fy / 0x200);
-	if (lx <= -24 || ly <= -16 || lx >= (SCREEN_WIDTH + 24) || ly >= (SCREEN_HEIGHT + 16))
+	if (lx <= -16 || ly <= -8 || lx >= (SCREEN_WIDTH + 16) || ly >= (SCREEN_HEIGHT + 12))
 		return;
 	
-	/*
-	//Draw weapon
-	gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 13) * 24;
-	gMC.rect_arms.right = gMC.rect_arms.left + 24;
-	gMC.rect_arms.top = (gArmsData[gSelectedArms].code / 13) * 96;
-	gMC.rect_arms.bottom = gMC.rect_arms.top + 16;
-	
-	if (gMC.direct == 2)
+	if (arms_tex[0].tex != NULL && arms_tex[0].tlut != NULL)
 	{
-		gMC.rect_arms.top += 16;
-		gMC.rect_arms.bottom += 16;
+		//Draw weapon
+		gMC.rect_arms.left = 0;
+		gMC.rect_arms.right = 24;
+		gMC.rect_arms.top = 0;
+		gMC.rect_arms.bottom = 16;
+		
+		if (gMC.direct == 2)
+		{
+			gMC.rect_arms.top += 16;
+			gMC.rect_arms.bottom += 16;
+		}
+		
+		if (gMC.up)
+		{
+			arms_offset_y = -4;
+			gMC.rect_arms.top += 32;
+			gMC.rect_arms.bottom += 32;
+		}
+		else if (gMC.down)
+		{
+			arms_offset_y = 4;
+			gMC.rect_arms.top += 64;
+			gMC.rect_arms.bottom += 64;
+		}
+		else
+		{
+			arms_offset_y = 0;
+		}
+		
+		if (gMC.ani_no == 1 || gMC.ani_no == 3 || gMC.ani_no == 6 || gMC.ani_no == 8)
+			gMC.rect_arms.top++;
+		
+		LoadTLUT_CI4(arms_tex[0].tlut);
+		LoadTex_CI4(32, 96, arms_tex[0].tex);
+		if (gMC.direct == 0)
+			PutBitmap(
+				&gMC.rect_arms,
+				((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200) - 8,
+				((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200) + arms_offset_y);
+		else
+			PutBitmap(
+				&gMC.rect_arms,
+				((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200),
+				((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200) + arms_offset_y);
 	}
-	
-	if (gMC.up)
-	{
-		arms_offset_y = -4;
-		gMC.rect_arms.top += 32;
-		gMC.rect_arms.bottom += 32;
-	}
-	else if (gMC.down)
-	{
-		arms_offset_y = 4;
-		gMC.rect_arms.top += 64;
-		gMC.rect_arms.bottom += 64;
-	}
-	else
-	{
-		arms_offset_y = 0;
-	}
-	
-	if (gMC.ani_no == 1 || gMC.ani_no == 3 || gMC.ani_no == 6 || gMC.ani_no == 8)
-		gMC.rect_arms.top++;
-	
-	if (gMC.direct == 0)
-		PutBitmap3(
-			&grcGame,
-			((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200) - 8,
-			((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200) + arms_offset_y,
-			&gMC.rect_arms,
-			SURFACE_ID_ARMS);
-	else
-		PutBitmap3(
-			&grcGame,
-			((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200),
-			((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200) + arms_offset_y,
-			&gMC.rect_arms,
-			SURFACE_ID_ARMS);
-	*/
 	
 	if (gMC.shock / 2 % 2)
 		return;
