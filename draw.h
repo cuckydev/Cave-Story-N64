@@ -20,6 +20,7 @@ extern const RECT grcFull;
 #define RGB(r, g, b) ((GPACK_RGBA5551((r), (g), (b), 1) << 16) | GPACK_RGBA5551((r), (g), (b), 1))
 
 //Render globals
+extern Gfx glist[GLIST_LENGTH];
 extern Gfx *glistp;
 
 //Render interface

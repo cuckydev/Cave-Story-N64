@@ -67,9 +67,9 @@ void PutFade()
 	static const s32 fout_map[5] = {2, 3, 0, 1, 4};
 	
 	//Draw screen mask
-	if (gFade.bMask)
+	if (1)//gFade.bMask)
 	{
-		CortBox(&grcFull, RGB(0x00, 0x00, 0x20));
+		//CortBox(&grcFull, RGB(0x00, 0x00, 0x20));
 		return;
 	}
 	

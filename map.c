@@ -141,14 +141,14 @@ u8 GetAttribute(s32 x, s32 y)
 void DeleteMapParts(s32 x, s32 y)
 {
 	map_data[x + y * map_width] = 0;
-	if (!IsTileOnscreen(x, y))
+	if (IsTileOnscreen(x, y))
 		PutTile(x, y);
 }
 
 void ShiftMapParts(s32 x, s32 y)
 {
 	map_data[x + y * map_width]--;
-	if (!IsTileOnscreen(x, y))
+	if (IsTileOnscreen(x, y))
 		PutTile(x, y);
 }
 
@@ -158,7 +158,7 @@ void ChangeMapParts(s32 x, s32 y, u8 no)
 	if (map_data[x + y * map_width] != no)
 		return;
 	map_data[x + y * map_width] = no;
-	if (!IsTileOnscreen(x, y))
+	if (IsTileOnscreen(x, y))
 		PutTile(x, y);
 	for (i = 0; i < 3; ++i)
 		SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, 0, 0, 0, NULL, 0);

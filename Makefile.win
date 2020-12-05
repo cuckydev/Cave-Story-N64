@@ -39,7 +39,7 @@ DATAFILES   =
 ############################################################################
 
 
-OPTIMIZER	= -O3
+OPTIMIZER	= -g
 
 NUSYSINCDIR  = $(N64KITDIR)/nusys/include
 NUSYSLIBDIR  = $(N64KITDIR)/nusys/lib
@@ -56,7 +56,7 @@ MAKEROM = mild
 LCDEFS =	-DNDEBUG -D_FINALROM -DF3DEX_GBI_2
 LCINCS =	-I. -I$(NUSYSINCDIR) -I$(NUSTDINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS =	-G 0
-LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) $(NUAUDIOLIB) -lnustd_d -lnusys_d -lgultra_rom -L$(GCCDIR)/mipse/lib -lkmc
+LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) $(NUAUDIOLIB) -lnustd -lnusys -lgultra_rom -L$(GCCDIR)/mipse/lib -lkmc
 
 NUAUDIOLIB = -lnualstl_n_d -ln_gmus_d -ln_gaudio_sc
 OPTIMIZER =	-g

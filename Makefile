@@ -14,7 +14,7 @@ LCINCS =  -I. -I$(NUSYSINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS =  -G 0
 LDIRT =   $(APP)
 LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -s -lnusys -lultra -L$(N64_LIBGCCDIR) -lgcc -lnustd
-OPTIMIZER = -O3
+OPTIMIZER = -g
 
 # Target directory
 APP =     cave.out

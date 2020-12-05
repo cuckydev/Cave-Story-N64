@@ -10,7 +10,7 @@ static RenderState render_state;
 const RECT grcFull = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 //Gfx list
-static Gfx glist[GLIST_LENGTH];
+Gfx glist[GLIST_LENGTH];
 Gfx *glistp;
 
 //RCP initialization DLs
@@ -113,6 +113,7 @@ static void SetRenderState(RenderState next_render_state)
 		case RS_Rect:
 			gDPSetCycleType(glistp++, G_CYC_FILL);
 			gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, osVirtualToPhysical(nuGfxCfb_ptr));
+			gDPPipeSync(glistp++);
 			break;
 		case RS_Tex:
 			gDPSetCycleType(glistp++, G_CYC_1CYCLE);
@@ -148,6 +149,7 @@ void LoadTex_CI4(u32 width, u32 height, u8 *tex)
 		G_TX_NOMASK, G_TX_NOMASK,
 		G_TX_NOLOD, G_TX_NOLOD
 	);
+	gDPPipeSync(glistp++);
 }
 
 void LoadTex_CI8(u32 width, u32 height, u8 *tex)
@@ -162,6 +164,7 @@ void LoadTex_CI8(u32 width, u32 height, u8 *tex)
 		G_TX_NOMASK, G_TX_NOMASK,
 		G_TX_NOLOD, G_TX_NOLOD
 	);
+	gDPPipeSync(glistp++);
 }
 
 void PutBitmap(const RECT *src, s32 x, s32 y)
@@ -181,6 +184,7 @@ void PutBitmap(const RECT *src, s32 x, s32 y)
 		src->left << 5, src->top << 5, 
 		1 << 10, 1 << 10
 	);
+	gDPPipeSync(glistp++);
 }
 
 void PutBitmap_X(const RECT *src, s32 x, s32 y)
@@ -200,6 +204,7 @@ void PutBitmap_X(const RECT *src, s32 x, s32 y)
 		src->right << 5, src->top << 5, 
 		-1 << 10, 1 << 10
 	);
+	gDPPipeSync(glistp++);
 }
 
 void PutBitmap_Y(const RECT *src, s32 x, s32 y)
@@ -219,6 +224,7 @@ void PutBitmap_Y(const RECT *src, s32 x, s32 y)
 		src->left << 5, src->bottom << 5, 
 		1 << 10, -1 << 10
 	);
+	gDPPipeSync(glistp++);
 }
 
 void PutBitmap_XY(const RECT *src, s32 x, s32 y)
@@ -238,6 +244,7 @@ void PutBitmap_XY(const RECT *src, s32 x, s32 y)
 		src->right << 5, src->bottom << 5, 
 		-1 << 10, -1 << 10
 	);
+	gDPPipeSync(glistp++);
 }
 
 void CortBox(const RECT *rect, u32 col)
