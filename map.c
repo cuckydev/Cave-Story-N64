@@ -176,7 +176,7 @@ void PutStage_Back(s32 fx, s32 fy)
 	fy = (fy / 0x200) + 8;
 	
 	//Render foreground plane
-	LoadTLUT(map_tileset_tlut);
+	LoadTLUT_CI4(map_tileset_tlut);
 	for (x = (fx >> 4); x <= (fx >> 4) + VIEW_W; x++)
 	{
 		LoadTex_CI4(16, PLANE_PH, map_plane[0][x % (VIEW_W + 1)]);
@@ -196,7 +196,7 @@ void PutStage_Front(s32 fx, s32 fy)
 	fy = (fy / 0x200) + 8;
 	
 	//Render foreground plane
-	LoadTLUT(map_tileset_tlut);
+	LoadTLUT_CI4(map_tileset_tlut);
 	for (x = (fx >> 4); x <= (fx >> 4) + VIEW_W; x++)
 	{
 		LoadTex_CI4(16, PLANE_PH, map_plane[1][x % (VIEW_W + 1)]);
@@ -205,7 +205,7 @@ void PutStage_Front(s32 fx, s32 fy)
 	}
 	
 	//Render additional foreground tiles
-	LoadTLUT(snack_tlut);
+	LoadTLUT_CI4(snack_tlut);
 	LoadTex_CI4(32, 32, snack_tex);
 	for (x = (fx >> 4); x <= (fx >> 4) + VIEW_W; x++)
 		for (y = (fy >> 4); y <= (fy >> 4) + VIEW_H; y++)

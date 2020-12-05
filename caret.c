@@ -1,5 +1,7 @@
 #include "caret.h"
 #include "carets.h"
+#include "config.h"
+#include "game_def.h"
 #include <string.h>
 
 //Carets structure
@@ -71,11 +73,20 @@ void ActCaret()
 			gpCaretFuncTbl[gCrt[i].code].act(&gCrt[i]);
 }
 
+static BOOL CaretVisible(CARET *crt, s32 fx, s32 fy)
+{
+	s32 lx = (crt->x / 0x200) - (fx / 0x200);
+	s32 ly = (crt->y / 0x200) - (fy / 0x200);
+	s32 pl = crt->view_left / 0x200;
+	s32 pt = crt->view_top / 0x200;
+	return (lx > -pl && ly > -pt && lx < (SCREEN_WIDTH + pl) && ly < (SCREEN_HEIGHT + pt));
+}
+
 void PutCaret(s32 fx, s32 fy)
 {
 	s32 i;
 	for (i = 0; i < CARET_MAX; i++)
-		if (gCrt[i].cond & 0x80)
+		if ((gCrt[i].cond & 0x80) && CaretVisible(&gCrt[i], fx, fy))
 			gpCaretFuncTbl[gCrt[i].code].put(&gCrt[i], fx, fy);
 }
 

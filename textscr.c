@@ -232,6 +232,74 @@ void ClearTextLine(void)
 #include "data/bitmap/textbox.inc.c"
 #include "data/bitmap/yesno.inc.c"
 
+#include "data/bitmap/face00.inc.c"
+#include "data/bitmap/face01.inc.c"
+#include "data/bitmap/face02.inc.c"
+#include "data/bitmap/face03.inc.c"
+#include "data/bitmap/face04.inc.c"
+#include "data/bitmap/face10.inc.c"
+#include "data/bitmap/face11.inc.c"
+#include "data/bitmap/face12.inc.c"
+#include "data/bitmap/face13.inc.c"
+#include "data/bitmap/face14.inc.c"
+#include "data/bitmap/face20.inc.c"
+#include "data/bitmap/face21.inc.c"
+#include "data/bitmap/face22.inc.c"
+#include "data/bitmap/face23.inc.c"
+#include "data/bitmap/face24.inc.c"
+#include "data/bitmap/face30.inc.c"
+#include "data/bitmap/face31.inc.c"
+#include "data/bitmap/face32.inc.c"
+#include "data/bitmap/face33.inc.c"
+#include "data/bitmap/face34.inc.c"
+#include "data/bitmap/face40.inc.c"
+#include "data/bitmap/face41.inc.c"
+#include "data/bitmap/face42.inc.c"
+#include "data/bitmap/face43.inc.c"
+#include "data/bitmap/face44.inc.c"
+#include "data/bitmap/face50.inc.c"
+#include "data/bitmap/face51.inc.c"
+#include "data/bitmap/face52.inc.c"
+#include "data/bitmap/face53.inc.c"
+#include "data/bitmap/face54.inc.c"
+
+static const struct
+{
+	u8 *tex;
+	u16 *tlut;
+} face_tex[] = {
+	{face_00_tex, face_00_tlut},
+	{face_10_tex, face_10_tlut},
+	{face_20_tex, face_20_tlut},
+	{face_30_tex, face_30_tlut},
+	{face_40_tex, face_40_tlut},
+	{face_50_tex, face_50_tlut},
+	{face_01_tex, face_01_tlut},
+	{face_11_tex, face_11_tlut},
+	{face_21_tex, face_21_tlut},
+	{face_31_tex, face_31_tlut},
+	{face_41_tex, face_41_tlut},
+	{face_51_tex, face_51_tlut},
+	{face_02_tex, face_02_tlut},
+	{face_12_tex, face_12_tlut},
+	{face_22_tex, face_22_tlut},
+	{face_32_tex, face_32_tlut},
+	{face_42_tex, face_42_tlut},
+	{face_52_tex, face_52_tlut},
+	{face_03_tex, face_03_tlut},
+	{face_13_tex, face_13_tlut},
+	{face_23_tex, face_23_tlut},
+	{face_33_tex, face_33_tlut},
+	{face_43_tex, face_43_tlut},
+	{face_53_tex, face_53_tlut},
+	{face_04_tex, face_04_tlut},
+	{face_14_tex, face_14_tlut},
+	{face_24_tex, face_24_tlut},
+	{face_34_tex, face_34_tlut},
+	{face_44_tex, face_44_tlut},
+	{face_54_tex, face_54_tlut},
+};
+
 void PutTextScript()
 {
 	static u16 textscr_text_tlut[] = {
@@ -261,7 +329,7 @@ void PutTextScript()
 	//Draw message box frame
 	if (gTS.flags & 2)
 	{
-		LoadTLUT(textbox_tlut);
+		LoadTLUT_CI4(textbox_tlut);
 		
 		LoadTex_CI4(256, 16, textbox_top_tex);
 		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10);
@@ -272,6 +340,21 @@ void PutTextScript()
 		
 		LoadTex_CI4(256, 16, textbox_btm_tex);
 		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 48);
+	}
+	
+	//Draw face
+	if (gTS.face_x > 0)
+		gTS.face_x -= 8;
+	
+	if (gTS.face != 0)
+	{
+		rect.left = gTS.face_x;
+		rect.top = 3;
+		rect.right = 48;
+		rect.bottom = 48;
+		LoadTLUT_CI4(face_tex[gTS.face].tlut);
+		LoadTex_CI4(48, 48, face_tex[gTS.face].tex);
+		PutBitmap(&rect, SCREEN_WIDTH / 2 - 108, msg_box_y);
 	}
 	
 	//Draw text
@@ -299,7 +382,7 @@ void PutTextScript()
 	//Draw Yes/No dialogue
 	if (gTS.mode == 6)
 	{
-		LoadTLUT(yesno_tlut);
+		LoadTLUT_CI4(yesno_tlut);
 		LoadTex_CI4(128, 32, yesno_tex);
 		
 		if (gTS.wait < 2)
@@ -928,7 +1011,7 @@ s32 TextScriptProc()
 						if (gTS.face != z)
 						{
 							gTS.face = z;
-							gTS.face_x = -48;
+							gTS.face_x = 48;
 						}
 						gTS.p_read += 8;
 					}

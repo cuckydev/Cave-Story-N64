@@ -5,6 +5,7 @@
 #include "stage.h"
 #include "flags.h"
 #include "fade.h"
+#include "keycontrol.h"
 
 //Profile functions
 void SaveProfile()
@@ -29,7 +30,7 @@ BOOL InitializeGame()
 	InitFlags();
 	
 	//Load intro scene
-	TransferStage(13, 200, 10, 8);
+	TransferStage(13, (gKey & gKeyMap) ? 94 : 200, 10, 8);
 	
 	//Initialize game state (stuff after stage's loaded)
 	ClearFade();

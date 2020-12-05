@@ -25,6 +25,7 @@ GameMode ModeAction_Proc()
 	//Collision detection
 	ResetMyCharFlag();
 	HitMyCharMap();
+	HitMyCharNpChar();
 	
 	//Update carets
 	ActCaret();

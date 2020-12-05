@@ -195,6 +195,8 @@ void PutCaret08(CARET *crt, s32 fx, s32 fy)
 }
 
 //Caret 09
+#include "data/bitmap/caret09.inc.c"
+
 void ActCaret09(CARET *crt)
 {
 	//Move and delete after 32 frames
@@ -206,7 +208,10 @@ void ActCaret09(CARET *crt)
 
 void PutCaret09(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	static const RECT rcMark = {0, 0, 16, 16};
+	LoadTLUT_CI4(caret09_tlut);
+	LoadTex_CI4(16, 16, caret09_tex);
+	PutBitmap(&rcMark, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 10
@@ -284,6 +289,8 @@ void PutCaret12(CARET *crt, s32 fx, s32 fy)
 }
 
 //Caret 13
+#include "data/bitmap/caret13.inc.c"
+
 void ActCaret13(CARET *crt)
 {
 	//Initial velocity
@@ -323,7 +330,13 @@ void ActCaret13(CARET *crt)
 
 void PutCaret13(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	static const RECT rcStar = {4, 4, 12, 12};
+	if ((crt->ani_wait / 2 % 2) == 0)
+	{
+		LoadTLUT_CI4(caret13_tlut);
+		LoadTex_CI4(16, 16, caret13_tex);
+		PutBitmap(&rcStar, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+	}
 }
 
 //Caret 14

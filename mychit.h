@@ -3,5 +3,6 @@
 
 void ResetMyCharFlag();
 void HitMyCharMap();
+void HitMyCharNpChar();
 
 #endif

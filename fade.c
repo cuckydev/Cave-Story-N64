@@ -60,11 +60,11 @@ void ProcFade()
 void PutFade()
 {
 	s32 i, v;
-	s32 count, mode;
+	s32 count, dir;
 	RECT rect;
 	static const RECT rcFadeH = {0, 0, 256,  16};
 	static const RECT rcFadeV = {0, 0,  16, 256};
-	static const s32 fout_map[5] = {2, 3, 0, 1, 4};
+	static const s8 fout_map[] = {2, 3, 0, 1, 4};
 	
 	//Draw screen mask
 	if (gFade.bMask)
@@ -75,22 +75,22 @@ void PutFade()
 	
 	if (gFade.mode)
 	{
-		//Get count and mode (hacky solution so I don't duplicate a bunch of code lol
+		//Get count and direction (hacky solution so I don't duplicate a bunch of code lol
 		switch (gFade.mode)
 		{
 			case 1:
 				count = gFade.count;
-				mode = gFade.mode;
+				dir = gFade.dir;
 				break;
 			case 2:
 				count = FADE_TIME - gFade.count;
-				mode = fout_map[gFade.mode];
+				dir = fout_map[gFade.dir];
 				break;
 		}
 		
 		//Draw fading in
-		LoadTLUT(fade_tlut);
-		switch (gFade.dir)
+		LoadTLUT_CI4(fade_tlut);
+		switch (dir)
 		{
 			case 0:
 				LoadTex_CI4(256, 16, fade_h_tex);
@@ -137,18 +137,18 @@ void PutFade()
 				for (i = 0; i <= FADE_HEIGHT; i++)
 				{
 					//Get v
-					v = (i < (FADE_HEIGHT / 2)) ? i : (FADE_HEIGHT - i);
+					v = (count - 8 + ((i < (FADE_HEIGHT / 2)) ? i : (FADE_HEIGHT - i)));
 					
 					//Draw left
 					rect.left = 0;
 					rect.top = i * 16;
-					rect.right = (SCREEN_WIDTH / 2) - ((count - 16 + v) * 16);
+					rect.right = (SCREEN_WIDTH / 2) - (v * 16);
 					rect.bottom = rect.top + 16;
 					CortBox(&rect, RGB(0x00, 0x00, 0x20));
 					PutBitmap_X(&rcFadeH, rect.right, i * 16);
 					
 					//Draw right
-					rect.left = (SCREEN_WIDTH / 2) + ((count - 16 + v) * 16);
+					rect.left = (SCREEN_WIDTH / 2) + (v * 16);
 					rect.top = i * 16;
 					rect.right = SCREEN_WIDTH;
 					rect.bottom = rect.top + 16;

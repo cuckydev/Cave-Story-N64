@@ -132,7 +132,12 @@ static void SetRenderState(RenderState next_render_state)
 	}
 }
 
-void LoadTLUT(u16 *tlut)
+void LoadTLUT_CI4(u16 *tlut)
+{
+	gDPLoadTLUT_pal16(glistp++, 0, tlut);
+}
+
+void LoadTLUT_CI8(u16 *tlut)
 {
 	gDPLoadTLUT_pal256(glistp++, tlut);
 }
@@ -264,7 +269,7 @@ void CortBox(const RECT *rect, u32 col)
 
 #include "data/bitmap/font.inc.c"
 static const u8 font_space[32*3] = {
-	2,2,4,8,6,8,7,2,4,4,8,6,3,6,2,4,6,3,6,6,7,6,6,6,6,6,2,3,4,8,4,5,
+	4,2,4,8,6,8,7,2,4,4,8,6,3,6,2,4,6,3,6,6,7,6,6,6,6,6,2,3,4,7,4,5,
 	8,6,6,6,6,5,5,6,6,2,5,6,5,6,6,6,6,6,6,5,6,6,6,6,6,6,5,4,4,4,4,6,
 	3,6,6,6,6,6,5,6,6,2,4,5,3,8,6,6,6,6,5,5,5,6,6,6,6,6,6,5,2,5,6,4,
 };
@@ -281,18 +286,13 @@ s32 GetTextWidth(const char *text)
 
 void PutText(s32 x, s32 y, const char *text, u16 *tlut)
 {
-	static u8 *font_pages[] = {
-		font0_tex,
-		font1_tex,
-		font2_tex,
-	};
 	RECT rect = {0, 0, 0, 12};
 	
 	//Render text character by character
 	u8 v;
 	u8 ppy = 0xFF;
 	
-	LoadTLUT(tlut);
+	LoadTLUT_CI4(tlut);
 	while ((v = (u8)*text++ - 0x20) != 0xE0)
 	{
 		if (v == 0)
@@ -306,7 +306,7 @@ void PutText(s32 x, s32 y, const char *text, u16 *tlut)
 			u8 py = v / 32;
 			if (py != ppy)
 			{
-				LoadTex_CI4(256, 12, font_pages[py]);
+				LoadTex_CI4(256, 12, font_tex + (128 * 12) * py);
 				ppy = py;
 			}
 			

@@ -154,8 +154,14 @@ void ShowMyChar(BOOL bShow)
 void PutMyChar(s32 fx, s32 fy)
 {
 	s32 arms_offset_y;
+	s32 lx, ly;
 	
 	if (!(gMC.cond & 0x80) || gMC.cond & 2)
+		return;
+	
+	lx = (gMC.x / 0x200) - (fx / 0x200);
+	ly = (gMC.y / 0x200) - (fy / 0x200);
+	if (lx <= -24 || ly <= -16 || lx >= (SCREEN_WIDTH + 24) || ly >= (SCREEN_HEIGHT + 16))
 		return;
 	
 	/*
@@ -211,7 +217,7 @@ void PutMyChar(s32 fx, s32 fy)
 		return;
 	
 	//Draw player
-	LoadTLUT(mychar_tlut);
+	LoadTLUT_CI4(mychar_tlut);
 	if (gMC.equip & EQUIP_MIMIGA_MASK)
 		LoadTex_CI4(128, 32, mychar_mask_tex);
 	else

@@ -88,7 +88,7 @@ void ModeTitle_Draw()
 		CortBox(&grcFull, RGB(0x20, 0x20, 0x20));
 		
 		//Draw 'Cave Story' logo
-		LoadTLUT(title_tlut);
+		LoadTLUT_CI4(title_tlut);
 		
 		LoadTex_CI4(128, 32, title_tex1);
 		PutBitmap(&rcTitle1, (SCREEN_WIDTH - 144) / 2, 40);
@@ -96,18 +96,18 @@ void ModeTitle_Draw()
 		PutBitmap(&rcTitle2, (SCREEN_WIDTH - 144) / 2 + 128, 40);
 		
 		//Draw version
-		LoadTLUT(title_version_tlut);
+		LoadTLUT_CI4(title_version_tlut);
 		LoadTex_CI4(128, 8, title_version_tex);
 		PutBitmap(&rcVersion, (SCREEN_WIDTH - 128) / 2, SCREEN_HEIGHT - 24);
 		
 		//Draw options
-		LoadTLUT(title_options_tlut);
+		LoadTLUT_CI4(title_options_tlut);
 		LoadTex_CI4(48, 32, title_options_tex);
 		PutBitmap(&rcNew, (SCREEN_WIDTH / 2) - 24, (SCREEN_HEIGHT / 2) + 8);
 		PutBitmap(&rcContinue, (SCREEN_WIDTH / 2) - 24, (SCREEN_HEIGHT / 2) + 28);
 		
 		//Draw Pixel copyright
-		LoadTLUT(title_pixel_tlut);
+		LoadTLUT_CI4(title_pixel_tlut);
 		LoadTex_CI4(128, 16, title_pixel_tex);
 		PutBitmap(&rcPixel, (SCREEN_WIDTH - 128) / 2, SCREEN_HEIGHT - 48);
 		
@@ -119,23 +119,23 @@ void ModeTitle_Draw()
 		switch (char_type)
 		{
 			case 0:
-				LoadTLUT(title_quote_tlut);
+				LoadTLUT_CI4(title_quote_tlut);
 				LoadTex_CI4(48, 16, title_quote_tex);
 				break;
 			case 1:
-				LoadTLUT(title_curly_tlut);
+				LoadTLUT_CI4(title_curly_tlut);
 				LoadTex_CI4(48, 16, title_curly_tex);
 				break;
 			case 2:
-				LoadTLUT(title_toroko_tlut);
+				LoadTLUT_CI4(title_toroko_tlut);
 				LoadTex_CI4(48, 16, title_toroko_tex);
 				break;
 			case 3:
-				LoadTLUT(title_king_tlut);
+				LoadTLUT_CI4(title_king_tlut);
 				LoadTex_CI4(48, 16, title_king_tex);
 				break;
 			case 4:
-				LoadTLUT(title_sue_tlut);
+				LoadTLUT_CI4(title_sue_tlut);
 				LoadTex_CI4(48, 16, title_sue_tex);
 				break;
 		}

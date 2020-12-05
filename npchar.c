@@ -283,13 +283,33 @@ void VanishNpChar(NPCHAR *npc)
 static const RECT rctest = {0, 0, 16, 16};
 #include "data/bitmap/snack.inc.c"
 
+static BOOL NpCharVisible(NPCHAR *npc, s32 fx, s32 fy)
+{
+	s32 lx = (npc->x / 0x200) - (fx / 0x200);
+	s32 ly = (npc->y / 0x200) - (fy / 0x200);
+	s32 pl, pt, pr, pb;
+	if (npc->direct)
+	{
+		pl = npc->view.back / 0x200;
+		pr = npc->view.front / 0x200;
+	}
+	else
+	{
+		pl = npc->view.front / 0x200;
+		pr = npc->view.back / 0x200;
+	}
+	pt = npc->view.top / 0x200;
+	pb = npc->view.bottom / 0x200;
+	return (lx > -pl && ly > -pt && lx < (SCREEN_WIDTH + pr) && ly < (SCREEN_HEIGHT + pb));
+}
+
 void PutNpChar(s32 fx, s32 fy)
 {
 	s32 i;
-	LoadTLUT(snack_tlut);
+	LoadTLUT_CI4(snack_tlut);
 	LoadTex_CI4(32, 32, snack_tex);
 	for (i = 0; i < NPC_MAX; i++)
-		if (gNPC[i].cond & 0x80)
+		if ((gNPC[i].cond & 0x80) && NpCharVisible(&gNPC[i], fx, fy))
 			PutBitmap(&rctest, (gNPC[i].x / 0x200) - (fx / 0x200) - 8, (gNPC[i].y / 0x200) - (fy / 0x200) - 8);
 }
 
@@ -302,7 +322,7 @@ void ActNpChar()
 		{
 			//gNPC[i].act_wait++;
 			//if (gNPC[i].act_wait >= 30)
-				gNPC[i].cond = 0;
+			//	gNPC[i].cond = 0;
 		}
 	}
 }
