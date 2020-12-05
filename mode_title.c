@@ -40,6 +40,7 @@ GameMode ModeTitle_Proc()
 			{
 				//PlaySoundObject(18, SOUND_MODE_PLAY);
 				black_time = 60 | 0x80;
+				return GameMode_Title;
 			}
 		}
 		else

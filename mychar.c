@@ -1,4 +1,5 @@
 #include "mychar.h"
+#include "mycparam.h"
 #include "npchar.h"
 #include "keycontrol.h"
 #include "draw.h"
@@ -6,6 +7,7 @@
 #include "flags.h"
 #include "caret.h"
 #include "textscr.h"
+#include "armsitem.h"
 #include <string.h>
 
 MYCHAR gMC;
@@ -186,6 +188,7 @@ void PutMyChar(s32 fx, s32 fy)
 {
 	s32 arms_offset_y;
 	s32 lx, ly;
+	s32 arms_code;
 	
 	if (!(gMC.cond & 0x80) || gMC.cond & 2)
 		return;
@@ -195,7 +198,8 @@ void PutMyChar(s32 fx, s32 fy)
 	if (lx <= -16 || ly <= -8 || lx >= (SCREEN_WIDTH + 16) || ly >= (SCREEN_HEIGHT + 12))
 		return;
 	
-	if (arms_tex[0].tex != NULL && arms_tex[0].tlut != NULL)
+	arms_code = gArmsData[gSelectedArms].code;
+	if (arms_tex[arms_code].tex != NULL && arms_tex[arms_code].tlut != NULL)
 	{
 		//Draw weapon
 		gMC.rect_arms.left = 0;
@@ -229,8 +233,8 @@ void PutMyChar(s32 fx, s32 fy)
 		if (gMC.ani_no == 1 || gMC.ani_no == 3 || gMC.ani_no == 6 || gMC.ani_no == 8)
 			gMC.rect_arms.top++;
 		
-		LoadTLUT_CI4(arms_tex[0].tlut);
-		LoadTex_CI4(32, 96, arms_tex[0].tex);
+		LoadTLUT_CI4(arms_tex[arms_code].tlut);
+		LoadTex_CI4(32, 96, arms_tex[arms_code].tex);
 		if (gMC.direct == 0)
 			PutBitmap(
 				&gMC.rect_arms,
@@ -653,8 +657,8 @@ void ActMyChar_Normal(BOOL bKey)
 		gMC.sprash = FALSE;
 	
 	//Spike damage
-	//if (gMC.flag & 0x400)
-	//	DamageMyChar(10);
+	if (gMC.flag & 0x400)
+		DamageMyChar(10);
 	
 	//Camera
 	if (gMC.direct == 0)

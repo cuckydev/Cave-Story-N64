@@ -5,6 +5,7 @@
 #include "stage.h"
 #include "flags.h"
 #include "fade.h"
+#include "armsitem.h"
 #include "keycontrol.h"
 
 //Profile functions
@@ -22,10 +23,10 @@ BOOL InitializeGame()
 {
 	//Initialize game state
 	InitMyChar();
-	//gSelectedArms = 0;
-	//gSelectedItem = 0;
-	//ClearArmsData();
-	//ClearItemData();
+	gSelectedArms = 0;
+	gSelectedItem = 0;
+	ClearArmsData();
+	ClearItemData();
 	//ClearPermitStage();
 	InitFlags();
 	

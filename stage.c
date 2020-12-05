@@ -13,10 +13,12 @@
 #include "data/stage/start.inc.c"
 #include "data/stage/shelt.inc.c"
 #include "data/stage/pole.inc.c"
+#include "data/stage/kings.inc.c"
 
 #include "data/tilesets/prt_cave.inc.c"
 #include "data/tilesets/prt_eggs.inc.c"
 #include "data/tilesets/prt_store.inc.c"
+#include "data/tilesets/prt_white.inc.c"
 
 struct 
 {
@@ -96,7 +98,7 @@ struct
 	{NULL, NULL, "Little House"},
 	{NULL, NULL, "Balcony"},
 	{NULL, NULL, "Fall"},
-	{NULL, NULL, "u"},
+	{&kings_data, &prt_white, "u"},
 	{NULL, NULL, "Waterway Cabin"},
 	{NULL, NULL, ""},
 	{NULL, NULL, ""},

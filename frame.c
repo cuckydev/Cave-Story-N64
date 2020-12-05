@@ -13,7 +13,7 @@ static void ClampFrame()
 {
 	//Get map dimensions
 	s16 map_w, map_l;
-	GetMapData(0, &map_w, &map_l);
+	GetMapData(NULL, &map_w, &map_l);
 	
 	//Clamp frame
 	if (gFrame.x / 0x200 < 0)
@@ -30,8 +30,11 @@ static void ClampFrame()
 void MoveFrame3()
 {
 	//Move towards target and clamp
-	gFrame.x += (*gFrame.tgt_x - (SCREEN_WIDTH * 0x200 / 2) - gFrame.x) / gFrame.wait;
-	gFrame.y += (*gFrame.tgt_y - (SCREEN_HEIGHT * 0x200 / 2) - gFrame.y) / gFrame.wait;
+	if (gFrame.tgt_x != NULL && gFrame.tgt_y != NULL & gFrame.wait != 0)
+	{
+		gFrame.x += (*gFrame.tgt_x - (SCREEN_WIDTH * 0x200 / 2) - gFrame.x) / gFrame.wait;
+		gFrame.y += (*gFrame.tgt_y - (SCREEN_HEIGHT * 0x200 / 2) - gFrame.y) / gFrame.wait;
+	}
 	ClampFrame();
 	
 	//Quake

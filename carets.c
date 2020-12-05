@@ -43,7 +43,7 @@ void ActCaret01(CARET *crt)
 
 void PutCaret01(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 02
@@ -89,10 +89,12 @@ void ActCaret02(CARET *crt)
 
 void PutCaret02(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 03
+#include "data/bitmap/caret_03.inc.c"
+
 void ActCaret03(CARET *crt)
 {
 	//Animate
@@ -106,7 +108,15 @@ void ActCaret03(CARET *crt)
 
 void PutCaret03(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	static const RECT rect[] = {
+		{0,  0, 16, 16},
+		{16, 0, 32, 16},
+		{32, 0, 48, 16},
+		{48, 0, 64, 16},
+	};
+	LoadTLUT_CI4(caret_03_tlut);
+	LoadTex_CI4(64, 16, caret_03_tex);
+	PutBitmap(&rect[crt->ani_no], ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 04
@@ -123,7 +133,7 @@ void ActCaret04(CARET *crt)
 
 void PutCaret04(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 05
@@ -146,7 +156,7 @@ void ActCaret05(CARET *crt)
 
 void PutCaret05(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 07
@@ -180,10 +190,12 @@ void ActCaret07(CARET *crt)
 
 void PutCaret07(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 08
+#include "data/bitmap/caret_08.inc.c"
+
 void ActCaret08(CARET *crt)
 {
 	(void)crt;
@@ -191,11 +203,18 @@ void ActCaret08(CARET *crt)
 
 void PutCaret08(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	static const RECT rcLeft = {0, 0, 16, 16};
+	static const RECT rcRight = {16, 0, 32, 16};
+	LoadTLUT_CI4(caret_08_tlut);
+	LoadTex_CI4(32, 16, caret_08_tex);
+	if (crt->direct)
+		PutBitmap(&rcRight, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+	else
+		PutBitmap(&rcLeft,  ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 09
-#include "data/bitmap/caret09.inc.c"
+#include "data/bitmap/caret_09.inc.c"
 
 void ActCaret09(CARET *crt)
 {
@@ -209,8 +228,8 @@ void ActCaret09(CARET *crt)
 void PutCaret09(CARET *crt, s32 fx, s32 fy)
 {
 	static const RECT rcMark = {0, 0, 16, 16};
-	LoadTLUT_CI4(caret09_tlut);
-	LoadTex_CI4(16, 16, caret09_tex);
+	LoadTLUT_CI4(caret_09_tlut);
+	LoadTex_CI4(16, 16, caret_09_tex);
 	PutBitmap(&rcMark, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
@@ -237,7 +256,7 @@ void ActCaret10(CARET *crt)
 
 void PutCaret10(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 11
@@ -268,7 +287,7 @@ void ActCaret11(CARET *crt)
 
 void PutCaret11(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 12
@@ -285,11 +304,11 @@ void ActCaret12(CARET *crt)
 
 void PutCaret12(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 13
-#include "data/bitmap/caret13.inc.c"
+#include "data/bitmap/caret_13.inc.c"
 
 void ActCaret13(CARET *crt)
 {
@@ -333,8 +352,8 @@ void PutCaret13(CARET *crt, s32 fx, s32 fy)
 	static const RECT rcStar = {4, 4, 12, 12};
 	if ((crt->ani_wait / 2 % 2) == 0)
 	{
-		LoadTLUT_CI4(caret13_tlut);
-		LoadTex_CI4(16, 16, caret13_tex);
+		LoadTLUT_CI4(caret_13_tlut);
+		LoadTex_CI4(16, 16, caret_13_tex);
 		PutBitmap(&rcStar, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 	}
 }
@@ -353,7 +372,7 @@ void ActCaret14(CARET *crt)
 
 void PutCaret14(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 15
@@ -370,7 +389,7 @@ void ActCaret15(CARET *crt)
 
 void PutCaret15(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 16
@@ -385,7 +404,7 @@ void ActCaret16(CARET *crt)
 
 void PutCaret16(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 17
@@ -398,5 +417,5 @@ void ActCaret17(CARET *crt)
 
 void PutCaret17(CARET *crt, s32 fx, s32 fy)
 {
-	PutBitmap(&rctest, (crt->x / 0x200) - (fx / 0x200) - 8, (crt->y / 0x200) - (fy / 0x200) - 8);
+	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }

@@ -11,6 +11,7 @@
 #include "frame.h"
 #include "textscr.h"
 #include "fade.h"
+#include "armsitem.h"
 
 void ModeAction_Init()
 {
@@ -19,26 +20,38 @@ void ModeAction_Init()
 
 GameMode ModeAction_Proc()
 {
-	//Update game
-	ActMyChar((g_GameFlags & 2) != 0);
-	ActNpChar();
-	
-	//Collision detection
-	ResetMyCharFlag();
-	HitMyCharMap();
-	HitMyCharNpChar();
-	
-	//Update carets
-	ActCaret();
-	
-	//Move frame
-	MoveFrame3();
+	if (g_GameFlags & 1)
+	{
+		//Update game
+		ActMyChar((g_GameFlags & 2) != 0);
+		ActNpChar();
+		
+		//Collision detection
+		ResetMyCharFlag();
+		HitMyCharMap();
+		HitMyCharNpChar();
+		
+		//Update carets
+		ActCaret();
+		
+		//Move frame
+		MoveFrame3();
+		
+		//Animate player
+		AnimationMyChar((g_GameFlags & 2) != 0);
+	}
 	
 	//Update fading
 	ProcFade();
 	
-	//Animate player
-	AnimationMyChar((g_GameFlags & 2) != 0);
+	//Handle additional input
+	if (g_GameFlags & 2)
+	{
+		if (gKeyTrg & gKeyArms)
+			RotationArms();
+		else if (gKeyTrg & gKeyArmsRev)
+			RotationArmsRev();
+	}
 	
 	//Run text script
 	TextScriptProc();
@@ -69,6 +82,8 @@ void ModeAction_Draw()
 	if (g_GameFlags & 2)
 	{
 		PutMyLife(TRUE);
+		PutArmsEnergy(TRUE);
+		PutActiveArmsList();
 	}
 	PutTextScript();
 }

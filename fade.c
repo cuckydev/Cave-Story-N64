@@ -137,7 +137,7 @@ void PutFade()
 				for (i = 0; i <= FADE_HEIGHT; i++)
 				{
 					//Get v
-					v = (count - 8 + ((i < (FADE_HEIGHT / 2)) ? i : (FADE_HEIGHT - i)));
+					v = (count - 8 + ((i < (FADE_HEIGHT / 2)) ? i : ((FADE_HEIGHT - 1) - i)));
 					
 					//Draw left
 					rect.left = 0;

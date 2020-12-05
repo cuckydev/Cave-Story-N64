@@ -784,18 +784,18 @@ void HitMyCharNpChar()
 		{
 			if (gNPC[i].bits & NPC_REAR_AND_TOP_DONT_HURT)
 			{
-				//if (hit & 4 && gNPC[i].xm < 0)
-				//	DamageMyChar(gNPC[i].damage);
-				//if (hit & 1 && gNPC[i].xm > 0)
-				//	DamageMyChar(gNPC[i].damage);
-				//if (hit & 8 && gNPC[i].ym < 0)
-				//	DamageMyChar(gNPC[i].damage);
-				//if (hit & 2 && gNPC[i].ym > 0)
-				//	DamageMyChar(gNPC[i].damage);
+				if (hit & 4 && gNPC[i].xm < 0)
+					DamageMyChar(gNPC[i].damage);
+				if (hit & 1 && gNPC[i].xm > 0)
+					DamageMyChar(gNPC[i].damage);
+				if (hit & 8 && gNPC[i].ym < 0)
+					DamageMyChar(gNPC[i].damage);
+				if (hit & 2 && gNPC[i].ym > 0)
+					DamageMyChar(gNPC[i].damage);
 			}
 			else if (hit != 0 && gNPC[i].damage && !(g_GameFlags & 4))
 			{
-				//DamageMyChar(gNPC[i].damage);
+				DamageMyChar(gNPC[i].damage);
 			}
 		}
 		

@@ -11,6 +11,7 @@
 #include "flash.h"
 #include "flags.h"
 #include "profile.h"
+#include "armsitem.h"
 #include "fade.h"
 #include <string.h>
 
@@ -339,14 +340,14 @@ void PutTextScript()
 	{
 		LoadTLUT_CI4(textbox_tlut);
 		
-		LoadTex_CI4(256, 16, textbox_top_tex);
+		LoadTex_CI4(256, 16, textbox_tex + (128 * 16) * 0);
 		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10);
 		
-		LoadTex_CI4(256, 16, textbox_mid_tex);
+		LoadTex_CI4(256, 16, textbox_tex + (128 * 16) * 1);
 		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 16);
 		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 32);
 		
-		LoadTex_CI4(256, 16, textbox_btm_tex);
+		LoadTex_CI4(256, 16, textbox_tex + (128 * 16) * 2);
 		PutBitmap(&rcFrame, (SCREEN_WIDTH - 256) / 2, msg_box_y - 10 + 48);
 	}
 	
@@ -397,11 +398,11 @@ void PutTextScript()
 		//Draw frame
 		LoadTLUT_CI4(textbox_tlut);
 		
-		LoadTex_CI4(256, 16, textbox_top_tex);
+		LoadTex_CI4(256, 16, textbox_tex + (128 * 16) * 0);
 		PutBitmap(&rcItemBox1, (SCREEN_WIDTH / 2) - 38, SCREEN_HEIGHT - 112);
 		PutBitmap(&rcItemBox2, (SCREEN_WIDTH / 2) + 26, SCREEN_HEIGHT - 112);
 		
-		LoadTex_CI4(256, 16, textbox_btm_tex);
+		LoadTex_CI4(256, 16, textbox_tex + (128 * 16) * 2);
 		PutBitmap(&rcItemBox3, (SCREEN_WIDTH / 2) - 38, SCREEN_HEIGHT - 96);
 		PutBitmap(&rcItemBox4, (SCREEN_WIDTH / 2) + 26, SCREEN_HEIGHT - 96);
 		
@@ -500,20 +501,20 @@ s32 TextScriptProc()
 					}
 					else if (IS_COMMAND('A','E','+'))
 					{
-						//FullArmsEnergy();
+						FullArmsEnergy();
 						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('I','T','+'))
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						//PlaySoundObject(38, SOUND_MODE_PLAY);
-						//AddItemData(x);
+						AddItemData(x);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('I','T','-'))
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
-						//SubItemData(z);
+						SubItemData(z);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('E','Q','+'))
@@ -535,18 +536,18 @@ s32 TextScriptProc()
 						
 						gNumberTextScript[0] = x;
 						//PlaySoundObject(38, SOUND_MODE_PLAY);
-						//AddArmsData(w, x);
+						AddArmsData(w, x);
 						gTS.p_read += 13;
 					}
 					else if (IS_COMMAND('A','M','-'))
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
-						//SubArmsData(z);
+						SubArmsData(z);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('Z','A','M'))
 					{
-						//ZeroArmsEnergy_All();
+						ZeroArmsEnergy_All();
 						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('T','A','M'))
@@ -554,7 +555,7 @@ s32 TextScriptProc()
 						x = GetTextScriptNo(gTS.p_read + 4);
 						y = GetTextScriptNo(gTS.p_read + 9);
 						z = GetTextScriptNo(gTS.p_read + 14);
-						//TradeArms(x, y, z);
+						TradeArms(x, y, z);
 						gTS.p_read += 18;
 					}
 					else if (IS_COMMAND('P','S','+'))
@@ -744,7 +745,7 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
-
+						
 						if (GetNPCFlag(x))
 							JumpTextScript(z);
 						else
@@ -754,7 +755,7 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
-
+						
 						if (GetSkipFlag(x))
 							JumpTextScript(z);
 						else
@@ -764,8 +765,8 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
-
-						if (0)//CheckItem(x))
+						
+						if (CheckItem(x))
 							JumpTextScript(z);
 						else
 							gTS.p_read += 13;
@@ -774,8 +775,8 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
-
-						if (0)//CheckArms(x))
+						
+						if (CheckArms(x))
 							JumpTextScript(z);
 						else
 							gTS.p_read += 13;
@@ -784,6 +785,7 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
+						
 						if (GetUnitMyChar() == x)
 							JumpTextScript(z);
 						else
@@ -793,6 +795,7 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
+						
 						if (GetNpCharAlive(x))
 							JumpTextScript(z);
 						else
@@ -802,6 +805,7 @@ s32 TextScriptProc()
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						z = GetTextScriptNo(gTS.p_read + 9);
+						
 						if (IsNpCharCode(x))
 							JumpTextScript(z);
 						else
@@ -810,6 +814,7 @@ s32 TextScriptProc()
 					else if (IS_COMMAND('M','P','J'))
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
+						
 						if (FALSE)//IsMapping())
 							JumpTextScript(x);
 						else
