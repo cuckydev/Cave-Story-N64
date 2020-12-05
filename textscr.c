@@ -231,6 +231,8 @@ void ClearTextLine(void)
 
 #include "data/bitmap/textbox.inc.c"
 #include "data/bitmap/yesno.inc.c"
+#include "data/bitmap/armsimage.inc.c"
+#include "data/bitmap/itemimage.inc.c"
 
 #include "data/bitmap/face00.inc.c"
 #include "data/bitmap/face01.inc.c"
@@ -310,6 +312,11 @@ void PutTextScript()
 	s32 i;
 	
 	static const RECT rcFrame = {0, 0, 256, 16};
+	static const RECT rcItemBox1 = {6, 0, 70, 16};
+	static const RECT rcItemBox2 = {238, 0, 256, 16};
+	static const RECT rcItemBox3 = {6, 0, 70, 16};
+	static const RECT rcItemBox4 = {238, 0, 256, 16};
+		
 	static const RECT rect_yesno = {16, 0, 128, 32};
 	static const RECT rect_cur = {0, 0, 16, 16};
 	RECT rect;
@@ -377,6 +384,49 @@ void PutTextScript()
 		rect.right = rect.left + 5;
 		rect.bottom = rect.top + 11;
 		CortBox(&rect, RGB(0xFF, 0xFF, 0xFE));
+	}
+	
+	//Draw item image
+	if (gTS.item != 0)
+	{
+		//Move item image
+		if (gTS.item_y < SCREEN_HEIGHT - 104)
+			gTS.item_y++;
+		
+		//Draw frame
+		LoadTLUT_CI4(textbox_tlut);
+		
+		LoadTex_CI4(256, 16, textbox_top_tex);
+		PutBitmap(&rcItemBox1, (SCREEN_WIDTH / 2) - 38, SCREEN_HEIGHT - 112);
+		PutBitmap(&rcItemBox2, (SCREEN_WIDTH / 2) + 26, SCREEN_HEIGHT - 112);
+		
+		LoadTex_CI4(256, 16, textbox_btm_tex);
+		PutBitmap(&rcItemBox3, (SCREEN_WIDTH / 2) - 38, SCREEN_HEIGHT - 96);
+		PutBitmap(&rcItemBox4, (SCREEN_WIDTH / 2) + 26, SCREEN_HEIGHT - 96);
+		
+		//Draw contents
+		if (gTS.item < 1000)
+		{
+			//Arms Image
+			rect.left = 16 * gTS.item;
+			rect.right = rect.left + 16;
+			rect.top = 0;
+			rect.bottom = 16;
+			LoadTLUT_CI4(armsimage_tlut);
+			LoadTex_CI4(256, 16, armsimage_tex);
+			PutBitmap(&rect, (SCREEN_WIDTH - 16) / 2, gTS.item_y);
+		}
+		else
+		{
+			//Item Image
+			rect.left = 32 * ((gTS.item - 1000) % 8);
+			rect.right = rect.left + 32;
+			rect.top = 0;
+			rect.bottom = 16;
+			LoadTLUT_CI4(itemimage_tlut);
+			LoadTex_CI4(256, 16, itemimage_tex + (128 * 16) * ((gTS.item - 1000) / 8));
+			PutBitmap(&rect, (SCREEN_WIDTH - 32) / 2, gTS.item_y);
+		}
 	}
 	
 	//Draw Yes/No dialogue
