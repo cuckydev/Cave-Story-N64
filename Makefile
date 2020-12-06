@@ -47,6 +47,7 @@ CODEFILES = \
 	npc020.c \
 	npc040.c \
 	npc060.c \
+	npc080.c \
 	npc100.c \
 	npc200.c \
 	npc340.c \
@@ -55,7 +56,9 @@ CODEFILES = \
 	bullets.c \
 	caret.c \
 	carets.c \
+	valueview.c \
 	armsitem.c \
+	shoot.c \
 	selstage.c \
 	stage.c \
 	map.c \

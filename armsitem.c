@@ -1,5 +1,6 @@
 #include "armsitem.h"
 #include "sound.h"
+#include "shoot.h"
 #include <string.h>
 
 //Globals
@@ -157,7 +158,7 @@ s32 RotationArms()
 	if (arms_num == 0)
 		return 0;
 	
-	//ResetSpurCharge();
+	ResetSpurCharge();
 	
 	//Select next valid weapon
 	gSelectedArms++;
@@ -186,7 +187,7 @@ s32 RotationArmsRev()
 	if (arms_num == 0)
 		return 0;
 	
-	//ResetSpurCharge();
+	ResetSpurCharge();
 	
 	// Select previous valid weapon
 	gSelectedArms--;

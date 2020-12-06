@@ -5,6 +5,7 @@
 #include "npctbl.h"
 #include "draw.h"
 #include "sound.h"
+#include "valueview.h"
 #include <string.h>
 
 //NPC globals
@@ -122,7 +123,7 @@ void SetDestroyNpChar(s32 x, s32 y, s32 w, s32 num)
 	}
 	
 	//Flash effect
-	SetCaret(x, y, CARET_EXPLOSION, 0);
+	SetCaret(x, y, 12, 0);
 }
 
 void SetDestroyNpCharUp(s32 x, s32 y, s32 w, s32 num)
@@ -141,7 +142,7 @@ void SetDestroyNpCharUp(s32 x, s32 y, s32 w, s32 num)
 	}
 	
 	//Flash effect
-	SetCaret(x, y, CARET_EXPLOSION, 0);
+	SetCaret(x, y, 12, 0);
 }
 
 void SetExpObjects(s32 x, s32 y, s32 exp)
@@ -316,7 +317,11 @@ void PutNpChar(s32 fx, s32 fy)
 			else
 			{
 				a = 0;
-				//valueview code
+				if (gNPC[i].bits & NPC_SHOW_DAMAGE && gNPC[i].damage_view)
+				{
+					SetValueView(&gNPC[i].x, &gNPC[i].y, gNPC[i].damage_view);
+					gNPC[i].damage_view = 0;
+				}
 			}
 			gpNpcFuncTbl[gNPC[i].code_char].put(&gNPC[i],
 				((gNPC[i].x - (gNPC[i].direct ? gNPC[i].view.front : gNPC[i].view.back)) / 0x200) - (fx / 0x200) + a,

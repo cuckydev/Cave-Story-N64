@@ -7,6 +7,7 @@
 #include "flags.h"
 #include "textscr.h"
 #include "sound.h"
+#include "valueview.h"
 
 void JadgeHitNpCharBlock(NPCHAR *npc, s32 x, s32 y)
 {
@@ -470,8 +471,8 @@ void LoseNpChar(NPCHAR *npc, BOOL bVanish)
 	//Create value view
 	if (npc->bits & NPC_SHOW_DAMAGE)
 	{
-		//if (npc->damage_view)
-		//	SetValueView(&npc->x, &npc->y, npc->damage_view);
+		if (npc->damage_view)
+			SetValueView(&npc->x, &npc->y, npc->damage_view);
 		if (bVanish)
 			VanishNpChar(npc);
 	}

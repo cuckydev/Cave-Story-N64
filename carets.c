@@ -295,8 +295,21 @@ void ActCaret09(CARET *crt)
 }
 
 //Caret 10
+#include "data/bitmap/caret_10.inc.c"
+
 void ActCaret10(CARET *crt)
 {
+	static const RECT rect[2][2] = {
+		{
+			{0,  0, 64, 16},
+			{0, 16, 64, 32},
+		},
+		{
+			{0, 32, 64, 48},
+			{0, 48, 64, 64},
+		},
+	};
+	
 	//Move up and delete after 80 frames
 	crt->ani_wait++;
 	if (crt->direct == 0)
@@ -319,6 +332,16 @@ void ActCaret10(CARET *crt)
 			return;
 		}
 	}
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_10_tex;
+		crt->tex_w = 64;
+		crt->tex_h = 64;
+		crt->tlut = caret_10_tlut;
+	}
+	crt->rect = rect[crt->direct != 0][crt->ani_wait / 2 % 2];
 }
 
 //Caret 11
@@ -373,8 +396,15 @@ void ActCaret11(CARET *crt)
 }
 
 //Caret 12
+#include "data/bitmap/caret_12.inc.c"
+
 void ActCaret12(CARET *crt)
 {
+	static const RECT rect[] = {
+		{ 0, 0, 32, 32},
+		{32, 0, 64, 32},
+	};
+	
 	//Animate
 	if (++crt->ani_wait > 2)
 	{
@@ -385,6 +415,16 @@ void ActCaret12(CARET *crt)
 			return;
 		}
 	}
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_12_tex;
+		crt->tex_w = 64;
+		crt->tex_h = 32;
+		crt->tlut = caret_12_tlut;
+	}
+	crt->rect = rect[crt->ani_no];
 }
 
 //Caret 13

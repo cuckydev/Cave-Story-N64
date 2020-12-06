@@ -9,6 +9,7 @@
 #include "caret.h"
 #include "textscr.h"
 #include "armsitem.h"
+#include "valueview.h"
 #include <string.h>
 
 MYCHAR gMC;
@@ -37,32 +38,32 @@ void InitMyChar()
 void AnimationMyChar(BOOL bKey)
 {
 	static const RECT rcLeft[12] = {
-		{0, 0, 16, 16},
-		{16, 0, 32, 16},
-		{0, 0, 16, 16},
-		{32, 0, 48, 16},
-		{0, 0, 16, 16},
-		{48, 0, 64, 16},
-		{64, 0, 80, 16},
-		{48, 0, 64, 16},
-		{80, 0, 96, 16},
-		{48, 0, 64, 16},
-		{96, 0, 112, 16},
+		{  0, 0,  16, 16},
+		{ 16, 0,  32, 16},
+		{  0, 0,  16, 16},
+		{ 32, 0,  48, 16},
+		{  0, 0,  16, 16},
+		{ 48, 0,  64, 16},
+		{ 64, 0,  80, 16},
+		{ 48, 0,  64, 16},
+		{ 80, 0,  96, 16},
+		{ 48, 0,  64, 16},
+		{ 96, 0, 112, 16},
 		{112, 0, 128, 16},
 	};
 	
 	static const RECT rcRight[12] = {
-		{0, 16, 16, 32},
-		{16, 16, 32, 32},
-		{0, 16, 16, 32},
-		{32, 16, 48, 32},
-		{0, 16, 16, 32},
-		{48, 16, 64, 32},
-		{64, 16, 80, 32},
-		{48, 16, 64, 32},
-		{80, 16, 96, 32},
-		{48, 16, 64, 32},
-		{96, 16, 112, 32},
+		{  0, 16,  16, 32},
+		{ 16, 16,  32, 32},
+		{  0, 16,  16, 32},
+		{ 32, 16,  48, 32},
+		{  0, 16,  16, 32},
+		{ 48, 16,  64, 32},
+		{ 64, 16,  80, 32},
+		{ 48, 16,  64, 32},
+		{ 80, 16,  96, 32},
+		{ 48, 16,  64, 32},
+		{ 96, 16, 112, 32},
 		{112, 16, 128, 32},
 	};
 	
@@ -521,9 +522,9 @@ void ActMyChar_Normal(BOOL bKey)
 			if (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1)
 			{
 				if (gMC.direct == 0)
-					SetCaret(gMC.x + (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, 2);
+					SetCaret(gMC.x + (2 * 0x200), gMC.y + (2 * 0x200), 7, 2);
 				if (gMC.direct == 2)
-					SetCaret(gMC.x - (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, 0);
+					SetCaret(gMC.x - (2 * 0x200), gMC.y + (2 * 0x200), 7, 0);
 				
 				PlaySoundObject(113, 1);
 			}
@@ -536,14 +537,14 @@ void ActMyChar_Normal(BOOL bKey)
 			//Boost particles (and sound)
 			if (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1)
 			{
-				SetCaret(gMC.x, gMC.y + (6 * 0x200), CARET_EXHAUST, 3);
+				SetCaret(gMC.x, gMC.y + (6 * 0x200), 7, 3);
 				PlaySoundObject(113, 1);
 			}
 		}
 		else if (gMC.boost_sw == 3 && (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1))
 		{
 			//Boost particles (and sound)
-			SetCaret(gMC.x, gMC.y - (6 * 0x200), CARET_EXHAUST, 1);
+			SetCaret(gMC.x, gMC.y - (6 * 0x200), 7, 1);
 			PlaySoundObject(113, 1);
 		}
 	}
@@ -560,7 +561,7 @@ void ActMyChar_Normal(BOOL bKey)
 		
 		if (gMC.boost_cnt % 3 == 0)
 		{
-			SetCaret(gMC.x, gMC.y + (gMC.hit.bottom / 2), CARET_EXHAUST, 3);
+			SetCaret(gMC.x, gMC.y + (gMC.hit.bottom / 2), 7, 3);
 			PlaySoundObject(113, 1);
 		}
 		
@@ -769,9 +770,9 @@ void ActMyChar_Stream(BOOL bKey)
 	}
 	
 	if (gMC.ym < -0x200 && gMC.flag & 2)
-		SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, 5);
+		SetCaret(gMC.x, gMC.y - gMC.hit.top, 13, 5);
 	if (gMC.ym > 0x200 && gMC.flag & 8)
-		SetCaret(gMC.x, gMC.y + gMC.hit.bottom, CARET_TINY_PARTICLES, 5);
+		SetCaret(gMC.x, gMC.y + gMC.hit.bottom, 13, 5);
 	
 	//Limit speed
 	if (gMC.xm > 0x400)
@@ -849,9 +850,9 @@ void AirProcess()
 					StartTextScript(41);
 					
 					if (gMC.direct == 0)
-						SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, 0);
+						SetCaret(gMC.x, gMC.y, 8, 0);
 					else
-						SetCaret(gMC.x, gMC.y, CARET_DROWNED_QUOTE, 2);
+						SetCaret(gMC.x, gMC.y, 8, 2);
 					
 					gMC.cond &= ~0x80;
 				}
@@ -884,7 +885,7 @@ void ActMyChar(BOOL bKey)
 	}
 	else if (gMC.exp_count != 0)
 	{
-		//SetValueView(&gMC.x, &gMC.y, gMC.exp_count);
+		SetValueView(&gMC.x, &gMC.y, gMC.exp_count);
 		gMC.exp_count = 0;
 	}
 	

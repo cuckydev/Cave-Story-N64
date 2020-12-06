@@ -1133,7 +1133,20 @@ s32 TextScriptProc()
 				}
 				else
 				{
-					if (*gTS.p_read == '\n')
+					if (*gTS.p_read == '\r')
+					{
+						//Go to new-line
+						gTS.p_read++;
+						if (*gTS.p_read == '\n')
+							gTS.p_read++;
+						gTS.p_write = 0;
+						if (gTS.flags & 1)
+						{
+							gTS.line++;
+							CheckNewLine();
+						}
+					}
+					else if (*gTS.p_read == '\n')
 					{
 						//Go to new-line
 						gTS.p_read++;

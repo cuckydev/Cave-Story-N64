@@ -5,6 +5,11 @@
 
 void Npc000_Act(NPCHAR *npc);
 
+void Npc001_Act(NPCHAR *npc);
+void Npc001_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc003_Act(NPCHAR *npc);
+
 void Npc004_Act(NPCHAR *npc);
 void Npc004_Put(NPCHAR *npc, s32 x, s32 y);
 
@@ -40,6 +45,9 @@ void Npc065_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc073_Act(NPCHAR *npc);
 void Npc073_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc087_Act(NPCHAR *npc);
+void Npc087_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc119_Put(NPCHAR *npc, s32 x, s32 y);
 

@@ -16,6 +16,8 @@
 #include "textscr.h"
 #include "fade.h"
 #include "armsitem.h"
+#include "valueview.h"
+#include "shoot.h"
 
 void ModeAction_Init()
 {
@@ -31,6 +33,7 @@ GameMode ModeAction_Proc()
 		//Update game
 		ActMyChar((g_GameFlags & 2) != 0);
 		ActNpChar();
+		ActValueView();
 		
 		//Collision detection
 		ResetMyCharFlag();
@@ -41,19 +44,8 @@ GameMode ModeAction_Proc()
 		HitNpCharBullet();
 		
 		//Update bullets and carets
-		if (gKeyTrg & gKeyShot)
-		{
-			if (gMC.direct == 0)
-			{
-				SetBullet(4, gMC.x - (6 * 0x200), gMC.y + (3 * 0x200), 0);
-				SetCaret(gMC.x - (12 * 0x200), gMC.y + (3 * 0x200), 3, 0);
-			}
-			else
-			{
-				SetBullet(4, gMC.x + (6 * 0x200), gMC.y + (3 * 0x200), 2);
-				SetCaret(gMC.x + (12 * 0x200), gMC.y + (3 * 0x200), 3, 0);
-			}
-		}
+		if (g_GameFlags & 2)
+			ShootBullet();
 		ActBullet();
 		ActCaret();
 		
@@ -102,6 +94,7 @@ void ModeAction_Draw()
 	PutStage_Front(fx, fy);
 	PutFlash();
 	PutCaret(fx, fy);
+	PutValueView(fx, fy);
 	
 	//Draw HUD
 	PutFade();

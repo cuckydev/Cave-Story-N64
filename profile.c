@@ -9,6 +9,7 @@
 #include "fade.h"
 #include "armsitem.h"
 #include "keycontrol.h"
+#include "valueview.h"
 #include <string.h>
 
 BOOL gGoodEEPROM;
@@ -127,7 +128,7 @@ BOOL LoadProfile()
 		//InitBossLife();
 		CutNoise();
 		//InitStar();
-		//ClearValueView();
+		ClearValueView();
 		gCurlyShoot_wait = 0;
 		
 		return TRUE;
@@ -167,7 +168,7 @@ BOOL InitializeGame()
 	SetFrameTargetMyChar(16);
 	//InitBossLife();
 	CutNoise();
-	//ClearValueView();
+	ClearValueView();
 	gCurlyShoot_wait = 0;
 	SetFadeMask();
 	

@@ -2,6 +2,7 @@
 #include "game.h"
 #include "triangle.h"
 #include "draw.h"
+#include "sound.h"
 
 //NPC 000 - Null
 void Npc000_Act(NPCHAR *npc)
@@ -12,6 +13,176 @@ void Npc000_Act(NPCHAR *npc)
 		if (npc->direct == 2)
 			npc->y += 16 * 0x200;
 	}
+}
+
+//NPC 001 - Experience
+#include "data/bitmap/npc_exp.inc.c"
+
+void Npc001_Act(NPCHAR *npc)
+{
+	if (0)//gBack.type == 5 || gBack.type == 6)
+	{
+		if (npc->act_no == 0)
+		{
+			//Set state
+			npc->act_no = 1;
+			
+			//Set random speed
+			npc->ym = Random(-0x80, 0x80);
+			npc->xm = Random(0x7F, 0x100);
+		}
+		
+		//Blow to the left
+		npc->xm -= 8;
+		
+		//Destroy when off-screen
+		if (npc->x < 80 * 0x200)
+			npc->cond = 0;
+		
+		//Limit speed
+		if (npc->xm < -0x600)
+			npc->xm = -0x600;
+		
+		//Bounce off walls
+		if (npc->flag & 1)
+			npc->xm = 0x100;
+		if (npc->flag & 2)
+			npc->ym = 0x40;
+		if (npc->flag & 8)
+			npc->ym = -0x40;
+	}
+	else
+	{
+		if (npc->act_no == 0)
+		{
+			//Set state
+			npc->act_no = 1;
+			npc->ani_no = Random(0, 4);
+			
+			//Random speed
+			npc->xm = Random(-0x200, 0x200);
+			npc->ym = Random(-0x400, 0);
+			
+			//Random direction (reverse animation or not)
+			if (Random(0, 1) != 0)
+				npc->direct = 0;
+			else
+				npc->direct = 2;
+		}
+		
+		//Gravity
+		if (npc->flag & 0x100)
+			npc->ym += 0x15;
+		else
+			npc->ym += 0x2A;
+		
+		//Bounce off walls
+		if (npc->flag & 1 && npc->xm < 0)
+			npc->xm *= -1;
+		if (npc->flag & 4 && npc->xm > 0)
+			npc->xm *= -1;
+		
+		//Bounce off ceiling
+		if (npc->flag & 2 && npc->ym < 0)
+			npc->ym *= -1;
+		
+		//Bounce off floor
+		if (npc->flag & 8)
+		{
+			PlaySoundObject(45, 1);
+			npc->ym = -0x280;
+			npc->xm = 2 * npc->xm / 3;
+		}
+		
+		//Play bounce song (and try to clip out of floor if stuck)
+		if (npc->flag & 0xD)
+		{
+			PlaySoundObject(45, 1);
+			if (++npc->count2 > 2)
+				npc->y -= 1 * 0x200;
+		}
+		else
+		{
+			npc->count2 = 0;
+		}
+		
+		//Limit speed
+		if (npc->xm < -0x5FF)
+			npc->xm = -0x5FF;
+		if (npc->xm > 0x5FF)
+			npc->xm = 0x5FF;
+		if (npc->ym < -0x5FF)
+			npc->ym = -0x5FF;
+		if (npc->ym > 0x5FF)
+			npc->ym = 0x5FF;
+	}
+	
+	//Move
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+	
+	//Animate
+	npc->ani_wait++;
+	
+	if (npc->direct == 0)
+	{
+		if (npc->ani_wait > 2)
+		{
+			npc->ani_wait = 0;
+			if (++npc->ani_no > 5)
+				npc->ani_no = 0;
+		}
+	}
+	else
+	{
+		if (npc->ani_wait > 2)
+		{
+			npc->ani_wait = 0;
+			if (--npc->ani_no < 0)
+				npc->ani_no = 5;
+		}
+	}
+	
+	//Delete after 500 frames
+	if (++npc->count1 > 500 && npc->ani_no == 5 && npc->ani_wait == 2)
+		npc->cond = 0;
+}
+
+void Npc001_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[6] = {
+		{ 0, 0, 16, 16},
+		{16, 0, 32, 16},
+		{32, 0, 48, 16},
+		{48, 0, 64, 16},
+		{64, 0, 80, 16},
+		{80, 0, 96, 16},
+	};
+	
+	if (!(npc->count1 > 400 && npc->count1 / 2 % 2))
+	{
+		LoadTLUT_CI4(npc_exp_tlut);
+		switch (npc->exp)
+		{
+			default:
+				LoadTex_CI4(96, 16, npc_exp_tex + (48 * 16) * 0);
+				break;
+			case 5:
+				LoadTex_CI4(96, 16, npc_exp_tex + (48 * 16) * 1);
+				break;
+			case 20:
+				LoadTex_CI4(96, 16, npc_exp_tex + (48 * 16) * 2);
+				break;
+		}
+		PutBitmap(&rect[npc->ani_no], x, y);
+	}
+}
+
+//NPC 003 - Value View Holder
+void Npc003_Act(NPCHAR *npc)
+{
+	if (++npc->count1 > 100)
+		npc->cond = 0;
 }
 
 //NPC 004 - Smoke

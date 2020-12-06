@@ -18,8 +18,8 @@ static void PutlittleStar()
 	if (!(gMC.cond & 2) && gMC.ym < -0x200)
 	{
 		PlaySoundObject(3, 1);
-		SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, 0);
-		SetCaret(gMC.x, gMC.y - gMC.hit.top, CARET_TINY_PARTICLES, 0);
+		SetCaret(gMC.x, gMC.y - gMC.hit.top, 13, 0);
+		SetCaret(gMC.x, gMC.y - gMC.hit.top, 13, 0);
 	}
 }
 
@@ -811,5 +811,5 @@ void HitMyCharNpChar()
 	
 	//Create question mark when NPC hasn't been interacted with
 	if (gMC.ques)
-		SetCaret(gMC.x, gMC.y, CARET_QUESTION_MARK, 0);
+		SetCaret(gMC.x, gMC.y, 9, 0);
 }

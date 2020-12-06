@@ -14,24 +14,24 @@ static const struct
 	s32 view_left;
 	s32 view_top;
 } gCaretTable[18] = {
-	{0, 0},                   // CARET_NULL
-	{ 4 * 0x200,  4 * 0x200}, // CARET_BUBBLE
-	{ 8 * 0x200,  8 * 0x200}, // CARET_PROJECTILE_DISSIPATION
-	{ 8 * 0x200,  8 * 0x200}, // CARET_SHOOT
-	{ 8 * 0x200,  8 * 0x200}, // CARET_SNAKE_AFTERIMAGE
-	{ 4 * 0x200,  4 * 0x200}, // CARET_ZZZ
-	{ 8 * 0x200,  8 * 0x200}, // CARET_SNAKE_AFTERIMAGE_DUPLICATE
-	{ 4 * 0x200,  4 * 0x200}, // CARET_EXHAUST
-	{ 8 * 0x200,  8 * 0x200}, // CARET_DROWNED_QUOTE
-	{ 8 * 0x200,  8 * 0x200}, // CARET_QUESTION_MARK
-	{28 * 0x200,  8 * 0x200}, // CARET_LEVEL_UP
-	{ 4 * 0x200,  4 * 0x200}, // CARET_HURT_PARTICLES
-	{16 * 0x200, 16 * 0x200}, // CARET_EXPLOSION
-	{ 4 * 0x200,  4 * 0x200}, // CARET_TINY_PARTICLES
-	{20 * 0x200, 20 * 0x200}, // CARET_UNKNOWN
-	{ 4 * 0x200,  4 * 0x200}, // CARET_PROJECTILE_DISSIPATION_TINY
-	{20 * 0x200,  4 * 0x200}, // CARET_EMPTY
-	{52 * 0x200,  4 * 0x200}  // CARET_PUSH_JUMP_KEY
+	{0, 0},
+	{ 4 * 0x200,  4 * 0x200},
+	{ 8 * 0x200,  8 * 0x200},
+	{ 8 * 0x200,  8 * 0x200},
+	{ 8 * 0x200,  8 * 0x200},
+	{ 4 * 0x200,  4 * 0x200},
+	{ 8 * 0x200,  8 * 0x200},
+	{ 4 * 0x200,  4 * 0x200},
+	{ 8 * 0x200,  8 * 0x200},
+	{ 8 * 0x200,  8 * 0x200},
+	{28 * 0x200,  8 * 0x200},
+	{ 4 * 0x200,  4 * 0x200},
+	{16 * 0x200, 16 * 0x200},
+	{ 4 * 0x200,  4 * 0x200},
+	{20 * 0x200, 20 * 0x200},
+	{ 4 * 0x200,  4 * 0x200},
+	{20 * 0x200,  4 * 0x200},
+	{52 * 0x200,  4 * 0x200},
 };
 
 //Caret functions

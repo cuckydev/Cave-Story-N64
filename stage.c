@@ -8,6 +8,7 @@
 #include "flash.h"
 #include "caret.h"
 #include "bullet.h"
+#include "valueview.h"
 
 //Stage table
 #include "data/stage/eggs.inc.c"
@@ -153,7 +154,7 @@ void TransferStage(s32 no, s32 w, s32 x, s32 y)
 	SetFrameMyChar();
 	ClearBullet();
 	InitCaret();
-	//ClearValueView();
+	ClearValueView();
 	ResetQuake();
 	//InitBossChar(gTMT[no].boss_no);
 	ResetFlash();

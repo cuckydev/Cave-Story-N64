@@ -3,9 +3,9 @@
 
 const NPC_FUNC gpNpcFuncTbl[] = {
 	{Npc000_Act, NULL}, //000,
-	{NULL, NULL}, //001,
+	{Npc001_Act, Npc001_Put}, //001,
 	{NULL, NULL}, //002,
-	{NULL, NULL}, //003,
+	{Npc003_Act, NULL}, //003,
 	{Npc004_Act, Npc004_Put}, //004,
 	{NULL, NULL}, //005,
 	{NULL, NULL}, //006,
@@ -89,7 +89,7 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{NULL, NULL}, //084,
 	{NULL, NULL}, //085,
 	{NULL, NULL}, //086,
-	{NULL, NULL}, //087,
+	{Npc087_Act, Npc087_Put}, //087,
 	{NULL, NULL}, //088,
 	{NULL, NULL}, //089,
 	{NULL, NULL}, //090,

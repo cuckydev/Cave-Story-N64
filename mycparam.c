@@ -7,6 +7,7 @@
 #include "armsitem.h"
 #include "draw.h"
 #include "sound.h"
+#include "valueview.h"
 
 const ARMS_LEVEL gArmsLevelTable[14] =
 {
@@ -59,7 +60,7 @@ void AddExpMyChar(s32 x)
 				if (gArmsData[gSelectedArms].code != 13)
 				{
 					PlaySoundObject(27, 1);
-					SetCaret(gMC.x, gMC.y, CARET_LEVEL_UP, 0);
+					SetCaret(gMC.x, gMC.y, 10, 0);
 				}
 			}
 		}
@@ -310,7 +311,7 @@ void DamageMyChar(s32 damage)
 			gArmsData[gSelectedArms].exp = gArmsLevelTable[arms_code].exp[lv] + gArmsData[gSelectedArms].exp;
 			
 			if (gMC.life > 0 && gArmsData[gSelectedArms].code != 13)
-				SetCaret(gMC.x, gMC.y, CARET_LEVEL_UP, 2);
+				SetCaret(gMC.x, gMC.y, 10, 2);
 		}
 		else
 		{
@@ -319,7 +320,7 @@ void DamageMyChar(s32 damage)
 	}
 	
 	//Tell player how much damage was taken
-	//SetValueView(&gMC.x, &gMC.y, -damage);
+	SetValueView(&gMC.x, &gMC.y, -damage);
 	
 	//Death
 	if (gMC.life <= 0)
