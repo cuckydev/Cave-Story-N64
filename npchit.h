@@ -3,5 +3,6 @@
 
 //NpChar collision functions
 void HitNpCharMap();
+void HitNpCharBullet();
 
 #endif

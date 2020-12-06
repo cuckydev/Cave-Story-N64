@@ -51,6 +51,7 @@ CODEFILES = \
 	npc200.c \
 	npc340.c \
 	bullet.c \
+	bulhit.c \
 	bullets.c \
 	caret.c \
 	carets.c \

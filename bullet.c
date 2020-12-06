@@ -259,7 +259,15 @@ void ActBullet()
 	s32 i;
 	for (i = 0; i < BULLET_MAX; i++)
 	{
-		if ((gBul[i].cond & 0x80) && gpBulletFuncTbl[gBul[i].code_bullet].act != NULL)
-			gpBulletFuncTbl[gBul[i].code_bullet].act(&gBul[i], gpBulletFuncTbl[gBul[i].code_bullet].level);
+		if (gBul[i].cond & 0x80)
+		{
+			if (gBul[i].life <= 0)
+			{
+				gBul[i].cond = 0;
+				continue;
+			}
+			if (gpBulletFuncTbl[gBul[i].code_bullet].act != NULL)
+				gpBulletFuncTbl[gBul[i].code_bullet].act(&gBul[i], gpBulletFuncTbl[gBul[i].code_bullet].level);
+		}
 	}
 }

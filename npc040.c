@@ -63,5 +63,5 @@ void Npc059_Put(NPCHAR *npc, s32 x, s32 y)
 	
 	LoadTLUT_CI4(npc_eyedoor_tlut);
 	LoadTex_CI4(64, 24, npc_eyedoor_tex);
-	PutBitmap(&rect[npc->ani_no], x, y);
+	PutBitmap(&rect[(npc->shock != 0) ? 3 : npc->ani_no], x, y);
 }

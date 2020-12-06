@@ -7,6 +7,7 @@
 #include "npchit.h"
 #include "caret.h"
 #include "bullet.h"
+#include "bulhit.h"
 #include "stage.h"
 #include "mapname.h"
 #include "keycontrol.h"
@@ -36,6 +37,8 @@ GameMode ModeAction_Proc()
 		HitMyCharMap();
 		HitMyCharNpChar();
 		HitNpCharMap();
+		HitBulletMap();
+		HitNpCharBullet();
 		
 		//Update bullets and carets
 		if (gKeyTrg & gKeyShot)
