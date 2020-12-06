@@ -50,6 +50,8 @@ CODEFILES = \
 	npc100.c \
 	npc200.c \
 	npc340.c \
+	bullet.c \
+	bullets.c \
 	caret.c \
 	carets.c \
 	armsitem.c \

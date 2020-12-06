@@ -405,7 +405,7 @@ void HitMyCharMap()
 				//Block
 				case 0x05:
 				case 0x41:
-				case 0x43:
+				//case 0x43:
 				case 0x46:
 					gMC.flag |= JudgeHitMyCharBlock(x, y);
 					break;

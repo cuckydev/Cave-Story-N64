@@ -6,6 +6,7 @@
 #include "npchar.h"
 #include "npchit.h"
 #include "caret.h"
+#include "bullet.h"
 #include "stage.h"
 #include "mapname.h"
 #include "keycontrol.h"
@@ -36,7 +37,21 @@ GameMode ModeAction_Proc()
 		HitMyCharNpChar();
 		HitNpCharMap();
 		
-		//Update carets
+		//Update bullets and carets
+		if (gKeyTrg & gKeyShot)
+		{
+			if (gMC.direct == 0)
+			{
+				SetBullet(4, gMC.x - (6 * 0x200), gMC.y + (3 * 0x200), 0);
+				SetCaret(gMC.x - (12 * 0x200), gMC.y + (3 * 0x200), 3, 0);
+			}
+			else
+			{
+				SetBullet(4, gMC.x + (6 * 0x200), gMC.y + (3 * 0x200), 2);
+				SetCaret(gMC.x + (12 * 0x200), gMC.y + (3 * 0x200), 3, 0);
+			}
+		}
+		ActBullet();
 		ActCaret();
 		
 		//Move frame
@@ -79,6 +94,7 @@ void ModeAction_Draw()
 	UpdateMapPlane(fx, fy);
 	PutStage_Back(fx, fy);
 	PutNpChar(fx, fy);
+	PutBullet(fx, fy);
 	PutMyChar(fx, fy);
 	PutStage_Front(fx, fy);
 	PutFlash();
