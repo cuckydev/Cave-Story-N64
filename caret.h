@@ -45,6 +45,10 @@ typedef struct
 	s32 ani_wait;
 	s32 view_left;
 	s32 view_top;
+	u8 *tex;
+	s32 tex_w, tex_h;
+	u16 *tlut;
+	RECT rect;
 } CARET;
 
 extern CARET gCrt[CARET_MAX];

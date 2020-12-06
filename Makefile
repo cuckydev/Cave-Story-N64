@@ -41,6 +41,15 @@ CODEFILES = \
 	mycparam.c \
 	mychit.c \
 	npchar.c \
+	npchit.c \
+	npctbl.c \
+	npc000.c \
+	npc020.c \
+	npc040.c \
+	npc060.c \
+	npc100.c \
+	npc200.c \
+	npc340.c \
 	caret.c \
 	carets.c \
 	armsitem.c \

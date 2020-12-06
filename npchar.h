@@ -54,7 +54,6 @@ typedef struct NPCHAR
 	s32 size;
 	s32 direct;
 	u16 bits;
-	//RECT rect;
 	s32 ani_wait;
 	s32 ani_no;
 	s32 count1;

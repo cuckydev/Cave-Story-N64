@@ -1,5 +1,6 @@
 #include "mode_title.h"
 #include "draw.h"
+#include "sound.h"
 #include "keycontrol.h"
 #include "profile.h"
 
@@ -38,7 +39,7 @@ GameMode ModeTitle_Proc()
 		{
 			if (gKeyTrg & gKeyOk)
 			{
-				//PlaySoundObject(18, SOUND_MODE_PLAY);
+				PlaySoundObject(18, 1);
 				black_time = 60 | 0x80;
 				return GameMode_Title;
 			}
@@ -51,8 +52,7 @@ GameMode ModeTitle_Proc()
 		//Move cursor
 		if (gKeyTrg & (gKeyUp | gKeyDown))
 		{
-			//PlaySoundObject(1, SOUND_MODE_PLAY);
-			
+			PlaySoundObject(1, 1);
 			if (bContinue)
 				bContinue = FALSE;
 			else

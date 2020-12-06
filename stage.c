@@ -5,6 +5,7 @@
 #include "map.h"
 #include "mapname.h"
 #include "frame.h"
+#include "flash.h"
 #include "caret.h"
 
 //Stage table
@@ -154,6 +155,6 @@ void TransferStage(s32 no, s32 w, s32 x, s32 y)
 	//ClearValueView();
 	ResetQuake();
 	//InitBossChar(gTMT[no].boss_no);
-	//ResetFlash();
+	ResetFlash();
 	gStageNo = no;
 }

@@ -4,6 +4,7 @@
 #include "mycparam.h"
 #include "npchar.h"
 #include "draw.h"
+#include "sound.h"
 #include "keycontrol.h"
 #include "stage.h"
 #include "selstage.h"
@@ -205,7 +206,7 @@ void SetNumberTextScript(s32 index)
 	strcat(text[gTS.line % 4], str);
 	
 	//Play sound and reset blinking cursor
-	//PlaySoundObject(2, SOUND_MODE_PLAY);
+	PlaySoundObject(2, 1);
 	gTS.wait_beam = 0;
 	
 	//Check if should move to next line
@@ -508,7 +509,7 @@ s32 TextScriptProc()
 					else if (IS_COMMAND('I','T','+'))
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
-						//PlaySoundObject(38, SOUND_MODE_PLAY);
+						PlaySoundObject(38, 1);
 						AddItemData(x);
 						gTS.p_read += 8;
 					}
@@ -536,7 +537,7 @@ s32 TextScriptProc()
 						x = GetTextScriptNo(gTS.p_read + 9);
 						
 						gNumberTextScript[0] = x;
-						//PlaySoundObject(38, SOUND_MODE_PLAY);
+						PlaySoundObject(38, 1);
 						AddArmsData(w, x);
 						gTS.p_read += 13;
 					}
@@ -737,7 +738,7 @@ s32 TextScriptProc()
 						gTS.next_event = GetTextScriptNo(gTS.p_read + 4);
 						gTS.p_read += 8;
 						gTS.mode = 6;
-						//PlaySoundObject(5, SOUND_MODE_PLAY);
+						PlaySoundObject(5, 1);
 						gTS.wait = 0;
 						gTS.select = 0;
 						bExit = TRUE;
@@ -850,7 +851,7 @@ s32 TextScriptProc()
 					}
 					else if (IS_COMMAND('F','L','A'))
 					{
-						//SetFlash(0, 0, 2);
+						SetFlash(0, 0, 2);
 						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('F','A','I'))
@@ -897,7 +898,7 @@ s32 TextScriptProc()
 					else if (IS_COMMAND('S','O','U'))
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
-						//PlaySoundObject(z, SOUND_MODE_PLAY);
+						PlaySoundObject(z, 1);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('C','M','U'))
@@ -1186,7 +1187,7 @@ s32 TextScriptProc()
 						
 						//Print text
 						strcat(text[gTS.line % 4], c);
-						//PlaySoundObject(2, SOUND_MODE_PLAY);
+						PlaySoundObject(2, 1);
 						gTS.wait_beam = 0;
 						
 						//Offset read and write positions
@@ -1269,7 +1270,7 @@ s32 TextScriptProc()
 				//Select option
 				if (gKeyTrg & gKeyOk)
 				{
-					//PlaySoundObject(18, SOUND_MODE_PLAY);
+					PlaySoundObject(18, 1);
 					
 					if (gTS.select == 1)
 					{
@@ -1285,13 +1286,13 @@ s32 TextScriptProc()
 				else if (gKeyTrg & gKeyLeft)
 				{
 					gTS.select = 0;
-					//PlaySoundObject(1, SOUND_MODE_PLAY);
+					PlaySoundObject(1, 1);
 				}
 				//No
 				else if (gKeyTrg & gKeyRight)
 				{
 					gTS.select = 1;
-					//PlaySoundObject(1, SOUND_MODE_PLAY);
+					PlaySoundObject(1, 1);
 				}
 			}
 			break;

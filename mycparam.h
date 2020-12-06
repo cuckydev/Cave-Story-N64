@@ -26,4 +26,7 @@ void AddMaxLifeMyChar(s32 val);
 void DamageMyChar(s32 damage);
 void PutMyLife(BOOL flash);
 
+//Air functions
+void PutMyAir(s32 x, s32 y);
+
 #endif

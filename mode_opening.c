@@ -4,6 +4,7 @@
 #include "mychar.h"
 #include "mychit.h"
 #include "npchar.h"
+#include "npchit.h"
 #include "caret.h"
 #include "stage.h"
 #include "map.h"
@@ -22,7 +23,6 @@ void ModeOpening_Init()
 	InitCaret();
 	//InitStar();
 	InitFade();
-	//InitFlash();
 	//InitBossLife();
 	//ChangeMusic(MUS_SILENCE);
 	TransferStage(72, 100, 3, 3);
@@ -57,7 +57,7 @@ GameMode ModeOpening_Proc()
 		HitMyCharMap();
 		HitMyCharNpChar();
 		//HitMyCharBoss();
-		//HitNpCharMap();
+		HitNpCharMap();
 		//HitBossMap();
 		//HitBossBullet();
 		ActCaret();

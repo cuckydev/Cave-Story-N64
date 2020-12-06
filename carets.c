@@ -1,6 +1,5 @@
 #include "carets.h"
 #include "triangle.h"
-#include "draw.h"
 #include "game.h"
 
 static const RECT rctest = {0, 0, 16, 16};
@@ -9,11 +8,6 @@ static const RECT rctest = {0, 0, 16, 16};
 void ActCaret00(CARET *crt)
 {
 	(void)crt;
-}
-
-void PutCaret00(CARET *crt, s32 fx, s32 fy)
-{
-	(void)crt; (void)fx; (void)fy;
 }
 
 //Caret 01
@@ -39,11 +33,6 @@ void ActCaret01(CARET *crt)
 		if (++crt->ani_no > 3)
 			crt->cond = 0;
 	}
-}
-
-void PutCaret01(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 02
@@ -87,26 +76,10 @@ void ActCaret02(CARET *crt)
 	}
 }
 
-void PutCaret02(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 03
 #include "data/bitmap/caret_03.inc.c"
 
 void ActCaret03(CARET *crt)
-{
-	//Animate
-	if (++crt->ani_wait > 2)
-	{
-		crt->ani_wait = 0;
-		if (++crt->ani_no > 3)
-			crt->cond = 0;
-	}
-}
-
-void PutCaret03(CARET *crt, s32 fx, s32 fy)
 {
 	static const RECT rect[] = {
 		{0,  0, 16, 16},
@@ -114,9 +87,27 @@ void PutCaret03(CARET *crt, s32 fx, s32 fy)
 		{32, 0, 48, 16},
 		{48, 0, 64, 16},
 	};
-	LoadTLUT_CI4(caret_03_tlut);
-	LoadTex_CI4(64, 16, caret_03_tex);
-	PutBitmap(&rect[crt->ani_no], ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+	
+	//Animate
+	if (++crt->ani_wait > 2)
+	{
+		crt->ani_wait = 0;
+		if (++crt->ani_no > 3)
+		{
+			crt->cond = 0;
+			return;
+		}
+	}
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_03_tex;
+		crt->tex_w = 64;
+		crt->tex_h = 16;
+		crt->tlut = caret_03_tlut;
+	}
+	crt->rect = rect[crt->ani_no];
 }
 
 //Caret 04
@@ -131,14 +122,21 @@ void ActCaret04(CARET *crt)
 	}
 }
 
-void PutCaret04(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 05
+#include "data/bitmap/caret_05.inc.c"
+
 void ActCaret05(CARET *crt)
 {
+	static const RECT rect[] = {
+		{0, 0,  8,  8},
+		{0, 8,  8, 16},
+		{8, 0, 16,  8},
+		{8, 8, 16, 16},
+		{8, 0, 16,  8},
+		{8, 8, 16, 16},
+		{8, 0, 16,  8},
+	};
+	
 	//Animate
 	if (++crt->ani_wait > 4)
 	{
@@ -152,11 +150,16 @@ void ActCaret05(CARET *crt)
 	//Move
 	crt->x += 0x80;
 	crt->y -= 0x80;
-}
-
-void PutCaret05(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_05_tex;
+		crt->tex_w = 16;
+		crt->tex_h = 16;
+		crt->tlut = caret_05_tlut;
+	}
+	crt->rect = rect[crt->ani_no];
 }
 
 //Caret 07
@@ -188,29 +191,26 @@ void ActCaret07(CARET *crt)
 	}
 }
 
-void PutCaret07(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 08
 #include "data/bitmap/caret_08.inc.c"
 
 void ActCaret08(CARET *crt)
 {
-	(void)crt;
-}
-
-void PutCaret08(CARET *crt, s32 fx, s32 fy)
-{
 	static const RECT rcLeft = {0, 0, 16, 16};
 	static const RECT rcRight = {16, 0, 32, 16};
-	LoadTLUT_CI4(caret_08_tlut);
-	LoadTex_CI4(32, 16, caret_08_tex);
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_08_tex;
+		crt->tex_w = 32;
+		crt->tex_h = 16;
+		crt->tlut = caret_08_tlut;
+	}
 	if (crt->direct)
-		PutBitmap(&rcRight, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+		crt->rect = rcRight;
 	else
-		PutBitmap(&rcLeft,  ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+		crt->rect = rcLeft;
 }
 
 //Caret 09
@@ -218,19 +218,26 @@ void PutCaret08(CARET *crt, s32 fx, s32 fy)
 
 void ActCaret09(CARET *crt)
 {
+	static const RECT rcMark = {0, 0, 16, 16};
+	
 	//Move and delete after 32 frames
 	if (++crt->ani_wait < 5)
 		crt->y -= 0x800;
 	if (crt->ani_wait == 32)
+	{
 		crt->cond = 0;
-}
-
-void PutCaret09(CARET *crt, s32 fx, s32 fy)
-{
-	static const RECT rcMark = {0, 0, 16, 16};
-	LoadTLUT_CI4(caret_09_tlut);
-	LoadTex_CI4(16, 16, caret_09_tex);
-	PutBitmap(&rcMark, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+		return;
+	}
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_09_tex;
+		crt->tex_w = 16;
+		crt->tex_h = 16;
+		crt->tlut = caret_09_tlut;
+		crt->rect = rcMark;
+	}
 }
 
 //Caret 10
@@ -252,11 +259,6 @@ void ActCaret10(CARET *crt)
 		if (crt->ani_wait == 80)
 			crt->cond = 0;
 	}
-}
-
-void PutCaret10(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }
 
 //Caret 11
@@ -285,11 +287,6 @@ void ActCaret11(CARET *crt)
 	}
 }
 
-void PutCaret11(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 12
 void ActCaret12(CARET *crt)
 {
@@ -302,16 +299,16 @@ void ActCaret12(CARET *crt)
 	}
 }
 
-void PutCaret12(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 13
 #include "data/bitmap/caret_13.inc.c"
 
 void ActCaret13(CARET *crt)
 {
+	static const RECT rect[2] = {
+		{4, 4, 12, 12},
+		{0, 0, 0, 0},
+	};
+	
 	//Initial velocity
 	if (crt->act_no == 0)
 	{
@@ -344,18 +341,20 @@ void ActCaret13(CARET *crt)
 	
 	//Animate
 	if (++crt->ani_wait > 20)
-		crt->cond = 0;
-}
-
-void PutCaret13(CARET *crt, s32 fx, s32 fy)
-{
-	static const RECT rcStar = {4, 4, 12, 12};
-	if ((crt->ani_wait / 2 % 2) == 0)
 	{
-		LoadTLUT_CI4(caret_13_tlut);
-		LoadTex_CI4(16, 16, caret_13_tex);
-		PutBitmap(&rcStar, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
+		crt->cond = 0;
+		return;
 	}
+	
+	//Draw
+	if (crt->tex == NULL)
+	{
+		crt->tex = caret_13_tex;
+		crt->tex_w = 16;
+		crt->tex_h = 16;
+		crt->tlut = caret_13_tlut;
+	}
+	crt->rect = rect[crt->ani_wait / 2 % 2];
 }
 
 //Caret 14
@@ -370,11 +369,6 @@ void ActCaret14(CARET *crt)
 	}
 }
 
-void PutCaret14(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 15
 void ActCaret15(CARET *crt)
 {
@@ -387,11 +381,6 @@ void ActCaret15(CARET *crt)
 	}
 }
 
-void PutCaret15(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 16
 void ActCaret16(CARET *crt)
 {
@@ -402,20 +391,10 @@ void ActCaret16(CARET *crt)
 		crt->cond = 0;
 }
 
-void PutCaret16(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
-}
-
 //Caret 17
 void ActCaret17(CARET *crt)
 {
 	//Delete after 40 frames
 	if (++crt->ani_wait >= 40)
 		crt->ani_wait = 0;
-}
-
-void PutCaret17(CARET *crt, s32 fx, s32 fy)
-{
-	PutBitmap(&rctest, ((crt->x - crt->view_left) / 0x200) - (fx / 0x200), ((crt->y - crt->view_top) / 0x200) - (fy / 0x200));
 }

@@ -2,6 +2,7 @@
 #include "carets.h"
 #include "config.h"
 #include "game_def.h"
+#include "draw.h"
 #include <string.h>
 
 //Carets structure
@@ -34,29 +35,25 @@ static const struct
 };
 
 //Caret functions
-static const struct
-{
-	void (*act)(CARET*);
-	void (*put)(CARET*, s32, s32);
-} gpCaretFuncTbl[18] = {
-	{ActCaret00, PutCaret00},
-	{ActCaret01, PutCaret01},
-	{ActCaret02, PutCaret02},
-	{ActCaret03, PutCaret03},
-	{ActCaret04, PutCaret04},
-	{ActCaret05, PutCaret05},
-	{ActCaret04, PutCaret04}, //Caret 04 instead of 06 (which doesn't exist)
-	{ActCaret07, PutCaret07},
-	{ActCaret08, PutCaret08},
-	{ActCaret09, PutCaret09},
-	{ActCaret10, PutCaret10},
-	{ActCaret11, PutCaret11},
-	{ActCaret12, PutCaret12},
-	{ActCaret13, PutCaret13},
-	{ActCaret14, PutCaret14},
-	{ActCaret15, PutCaret15},
-	{ActCaret16, PutCaret16},
-	{ActCaret17, PutCaret17},
+void (*gpCaretFuncTbl[18])(CARET*) = {
+	ActCaret00,
+	ActCaret01,
+	ActCaret02,
+	ActCaret03,
+	ActCaret04,
+	ActCaret05,
+	ActCaret04, //Caret 04 instead of 06 (which doesn't exist)
+	ActCaret07,
+	ActCaret08,
+	ActCaret09,
+	ActCaret10,
+	ActCaret11,
+	ActCaret12,
+	ActCaret13,
+	ActCaret14,
+	ActCaret15,
+	ActCaret16,
+	ActCaret17,
 };
 
 //Caret functions
@@ -70,7 +67,7 @@ void ActCaret()
 	s32 i;
 	for (i = 0; i < CARET_MAX; i++)
 		if (gCrt[i].cond & 0x80)
-			gpCaretFuncTbl[gCrt[i].code].act(&gCrt[i]);
+			gpCaretFuncTbl[gCrt[i].code](&gCrt[i]);
 }
 
 static BOOL CaretVisible(CARET *crt, s32 fx, s32 fy)
@@ -86,8 +83,14 @@ void PutCaret(s32 fx, s32 fy)
 {
 	s32 i;
 	for (i = 0; i < CARET_MAX; i++)
-		if ((gCrt[i].cond & 0x80) && CaretVisible(&gCrt[i], fx, fy))
-			gpCaretFuncTbl[gCrt[i].code].put(&gCrt[i], fx, fy);
+	{
+		if ((gCrt[i].cond & 0x80) && gCrt[i].tex != NULL && CaretVisible(&gCrt[i], fx, fy))
+		{
+			LoadTLUT_CI4(gCrt[i].tlut);
+			LoadTex_CI4(gCrt[i].tex_w, gCrt[i].tex_h, gCrt[i].tex);
+			PutBitmap(&gCrt[i].rect, ((gCrt[i].x - gCrt[i].view_left) / 0x200) - (fx / 0x200), ((gCrt[i].y - gCrt[i].view_top) / 0x200) - (fy / 0x200));
+		}
+	}
 }
 
 void SetCaret(s32 x, s32 y, s32 code, s32 dir)

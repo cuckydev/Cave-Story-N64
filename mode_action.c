@@ -4,11 +4,13 @@
 #include "mycparam.h"
 #include "mychit.h"
 #include "npchar.h"
+#include "npchit.h"
 #include "caret.h"
 #include "stage.h"
 #include "mapname.h"
 #include "keycontrol.h"
 #include "frame.h"
+#include "flash.h"
 #include "textscr.h"
 #include "fade.h"
 #include "armsitem.h"
@@ -20,6 +22,8 @@ void ModeAction_Init()
 
 GameMode ModeAction_Proc()
 {
+	s32 fx, fy;
+	
 	if (g_GameFlags & 1)
 	{
 		//Update game
@@ -30,12 +34,15 @@ GameMode ModeAction_Proc()
 		ResetMyCharFlag();
 		HitMyCharMap();
 		HitMyCharNpChar();
+		HitNpCharMap();
 		
 		//Update carets
 		ActCaret();
 		
 		//Move frame
 		MoveFrame3();
+		GetFramePosition(&fx, &fy);
+		ActFlash(fx, fy);
 		
 		//Animate player
 		AnimationMyChar((g_GameFlags & 2) != 0);
@@ -74,6 +81,7 @@ void ModeAction_Draw()
 	PutNpChar(fx, fy);
 	PutMyChar(fx, fy);
 	PutStage_Front(fx, fy);
+	PutFlash();
 	PutCaret(fx, fy);
 	
 	//Draw HUD
@@ -83,6 +91,7 @@ void ModeAction_Draw()
 	{
 		PutMyLife(TRUE);
 		PutArmsEnergy(TRUE);
+		PutMyAir((SCREEN_WIDTH / 2) - 40, (SCREEN_HEIGHT / 2) - 16);
 		PutActiveArmsList();
 	}
 	PutTextScript();

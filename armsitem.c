@@ -1,4 +1,5 @@
 #include "armsitem.h"
+#include "sound.h"
 #include <string.h>
 
 //Globals
@@ -170,7 +171,7 @@ s32 RotationArms()
 		gSelectedArms = 0;
 	
 	gArmsEnergyX = 32;
-	//PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+	PlaySoundObject(4, 1);
 	
 	return gArmsData[gSelectedArms].code;
 }
@@ -200,7 +201,7 @@ s32 RotationArmsRev()
 	}
 	
 	gArmsEnergyX = 0;
-	//PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+	PlaySoundObject(4, 1);
 	
 	return gArmsData[gSelectedArms].code;
 }
@@ -209,7 +210,7 @@ void ChangeToFirstArms()
 {
 	gSelectedArms = 0;
 	gArmsEnergyX = 32;
-	//PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+	PlaySoundObject(4, 1);
 }
 
 //Item

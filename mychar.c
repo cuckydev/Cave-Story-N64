@@ -3,6 +3,7 @@
 #include "npchar.h"
 #include "keycontrol.h"
 #include "draw.h"
+#include "sound.h"
 #include "game.h"
 #include "flags.h"
 #include "caret.h"
@@ -82,8 +83,8 @@ void AnimationMyChar(BOOL bKey)
 			{
 				gMC.ani_wait = 0;
 				gMC.ani_no++;
-				//if (gMC.ani_no == 7 || gMC.ani_no == 9)
-				//	PlaySoundObject(24, SOUND_MODE_PLAY);
+				if (gMC.ani_no == 7 || gMC.ani_no == 9)
+					PlaySoundObject(24, 1);
 			}
 			
 			if (gMC.ani_no > 9 || gMC.ani_no < 6)
@@ -97,8 +98,8 @@ void AnimationMyChar(BOOL bKey)
 			{
 				gMC.ani_wait = 0;
 				gMC.ani_no++;
-				//if (gMC.ani_no == 2 || gMC.ani_no == 4)
-				//	PlaySoundObject(24, SOUND_MODE_PLAY);
+				if (gMC.ani_no == 2 || gMC.ani_no == 4)
+					PlaySoundObject(24, 1);
 			}
 			
 			if (gMC.ani_no > 4 || gMC.ani_no < 1)
@@ -106,16 +107,16 @@ void AnimationMyChar(BOOL bKey)
 		}
 		else if (gKey & gKeyUp && bKey)
 		{
-			//if (gMC.cond & 4)
-			//	PlaySoundObject(24, SOUND_MODE_PLAY);
+			if (gMC.cond & 4)
+				PlaySoundObject(24, 1);
 			
 			gMC.cond &= ~4;
 			gMC.ani_no = 5;
 		}
 		else
 		{
-			//if (gMC.cond & 4)
-			//	PlaySoundObject(24, SOUND_MODE_PLAY);
+			if (gMC.cond & 4)
+				PlaySoundObject(24, 1);
 			
 			gMC.cond &= ~4;
 			gMC.ani_no = 0;
@@ -478,7 +479,7 @@ void ActMyChar_Normal(BOOL bKey)
 			if (!(gMC.flag & 0x2000))
 			{
 				gMC.ym = -jump;
-				//PlaySoundObject(15, SOUND_MODE_PLAY);
+				PlaySoundObject(15, 1);
 			}
 		}
 	}
@@ -524,7 +525,7 @@ void ActMyChar_Normal(BOOL bKey)
 				if (gMC.direct == 2)
 					SetCaret(gMC.x - (2 * 0x200), gMC.y + (2 * 0x200), CARET_EXHAUST, 0);
 				
-				//PlaySoundObject(113, SOUND_MODE_PLAY);
+				PlaySoundObject(113, 1);
 			}
 		}
 		else if (gMC.boost_sw == 2)
@@ -536,14 +537,14 @@ void ActMyChar_Normal(BOOL bKey)
 			if (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1)
 			{
 				SetCaret(gMC.x, gMC.y + (6 * 0x200), CARET_EXHAUST, 3);
-				//PlaySoundObject(113, SOUND_MODE_PLAY);
+				PlaySoundObject(113, 1);
 			}
 		}
 		else if (gMC.boost_sw == 3 && (gKeyTrg & gKeyJump || gMC.boost_cnt % 3 == 1))
 		{
 			//Boost particles (and sound)
 			SetCaret(gMC.x, gMC.y - (6 * 0x200), CARET_EXHAUST, 1);
-			//PlaySoundObject(113, SOUND_MODE_PLAY);
+			PlaySoundObject(113, 1);
 		}
 	}
 	//Upwards wind/current
@@ -560,7 +561,7 @@ void ActMyChar_Normal(BOOL bKey)
 		if (gMC.boost_cnt % 3 == 0)
 		{
 			SetCaret(gMC.x, gMC.y + (gMC.hit.bottom / 2), CARET_EXHAUST, 3);
-			//PlaySoundObject(113, SOUND_MODE_PLAY);
+			PlaySoundObject(113, 1);
 		}
 		
 		//Bounce off of ceiling
@@ -634,7 +635,7 @@ void ActMyChar_Normal(BOOL bKey)
 				SetNpChar(73, x, gMC.y, gMC.xm + Random(-0x200, 0x200), Random(-0x200, 0x80) - (gMC.ym / 2), dir, NULL, 0);
 			}
 			
-			//PlaySoundObject(56, SOUND_MODE_PLAY);
+			PlaySoundObject(56, 1);
 		}
 		else
 		{
@@ -646,7 +647,7 @@ void ActMyChar_Normal(BOOL bKey)
 					SetNpChar(73, x, gMC.y, gMC.xm + Random(-0x200, 0x200), Random(-0x200, 0x80), dir, NULL, 0);
 				}
 				
-				//PlaySoundObject(56, SOUND_MODE_PLAY);
+				PlaySoundObject(56, 1);
 			}
 		}
 		
@@ -1013,12 +1014,12 @@ void SetNoise(s32 no, s32 freq)
 		case 1:
 			//ChangeSoundFrequency(40, noise_freq);
 			//ChangeSoundFrequency(41, noise_freq + 100);
-			//PlaySoundObject(40, SOUND_MODE_PLAY_LOOP);
-			//PlaySoundObject(41, SOUND_MODE_PLAY_LOOP);
+			PlaySoundObject(40, -1);
+			PlaySoundObject(41, -1);
 			break;
 			
 		case 2:
-			//PlaySoundObject(58, SOUND_MODE_PLAY_LOOP);
+			PlaySoundObject(58, -1);
 			break;
 	}
 }
@@ -1026,9 +1027,9 @@ void SetNoise(s32 no, s32 freq)
 void CutNoise()
 {
 	noise_no = 0;
-	//PlaySoundObject(40, SOUND_MODE_STOP);
-	//PlaySoundObject(41, SOUND_MODE_STOP);
-	//PlaySoundObject(58, SOUND_MODE_STOP);
+	PlaySoundObject(40, 0);
+	PlaySoundObject(41, 0);
+	PlaySoundObject(58, 0);
 }
 
 void ResetNoise()
@@ -1038,19 +1039,19 @@ void ResetNoise()
 		case 1:
 			//ChangeSoundFrequency(40, noise_freq);
 			//ChangeSoundFrequency(41, noise_freq + 100);
-			//PlaySoundObject(40, SOUND_MODE_PLAY_LOOP);
-			//PlaySoundObject(41, SOUND_MODE_PLAY_LOOP);
+			PlaySoundObject(40, -1);
+			PlaySoundObject(41, -1);
 			break;
 			
 		case 2:
-			//PlaySoundObject(58, SOUND_MODE_PLAY_LOOP);
+			PlaySoundObject(58, -1);
 			break;
 	}
 }
 
 void SleepNoise()
 {
-	//PlaySoundObject(40, SOUND_MODE_STOP);
-	//PlaySoundObject(41, SOUND_MODE_STOP);
-	//PlaySoundObject(58, SOUND_MODE_STOP);
+	PlaySoundObject(40, 0);
+	PlaySoundObject(41, 0);
+	PlaySoundObject(58, 0);
 }

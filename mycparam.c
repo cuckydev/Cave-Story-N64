@@ -6,6 +6,7 @@
 #include "caret.h"
 #include "armsitem.h"
 #include "draw.h"
+#include "sound.h"
 
 const ARMS_LEVEL gArmsLevelTable[14] =
 {
@@ -57,7 +58,7 @@ void AddExpMyChar(s32 x)
 				
 				if (gArmsData[gSelectedArms].code != 13)
 				{
-					//PlaySoundObject(27, SOUND_MODE_PLAY);
+					PlaySoundObject(27, 1);
 					SetCaret(gMC.x, gMC.y, CARET_LEVEL_UP, 0);
 				}
 			}
@@ -278,7 +279,7 @@ void DamageMyChar(s32 damage)
 		return;
 	
 	//Damage player
-	//PlaySoundObject(16, SOUND_MODE_PLAY);
+	PlaySoundObject(16, 1);
 	gMC.cond &= ~1;
 	gMC.shock = 128;
 	
@@ -323,7 +324,7 @@ void DamageMyChar(s32 damage)
 	//Death
 	if (gMC.life <= 0)
 	{
-		//PlaySoundObject(17, SOUND_MODE_PLAY);
+		PlaySoundObject(17, 1);
 		gMC.cond = 0;
 		SetDestroyNpChar(gMC.x, gMC.y, 0x1400, 0x40);
 		StartTextScript(40);
@@ -371,4 +372,30 @@ void PutMyLife(BOOL flash)
 	PutBitmap(&rcLife, 40, 40);
 	
 	PutNumber4(8, 40, gMC.lifeBr, FALSE);
+}
+
+//Air
+#include "data/bitmap/air.inc.c"
+
+void PutMyAir(s32 x, s32 y)
+{
+	static const RECT rcAir[2] = {
+		{0, 0, 32,  8},
+		{0, 8, 32, 16},
+	};
+	
+	if (gMC.equip & EQUIP_AIR_TANK)
+		return;
+	
+	if (gMC.air_get != 0)
+	{
+		//Draw how much air is left
+		if (gMC.air_get % 6 < 4)
+			PutNumber4(x + 32, y, gMC.air / 10, FALSE);
+		
+		//Draw "AIR" text
+		LoadTLUT_CI4(air_tlut);
+		LoadTex_CI4(32, 16, air_tex);
+		PutBitmap(&rcAir[gMC.air % 30 <= 10], x, y);
+	}
 }

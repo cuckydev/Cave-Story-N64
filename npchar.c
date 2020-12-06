@@ -2,7 +2,9 @@
 #include "flags.h"
 #include "caret.h"
 #include "mychar.h"
+#include "npctbl.h"
 #include "draw.h"
+#include "sound.h"
 #include <string.h>
 
 //NPC globals
@@ -280,9 +282,6 @@ void VanishNpChar(NPCHAR *npc)
 	SetUniqueParameter(npc);
 }
 
-static const RECT rctest = {0, 0, 16, 16};
-#include "data/bitmap/snack.inc.c"
-
 static BOOL NpCharVisible(NPCHAR *npc, s32 fx, s32 fy)
 {
 	s32 lx = (npc->x / 0x200) - (fx / 0x200);
@@ -306,11 +305,9 @@ static BOOL NpCharVisible(NPCHAR *npc, s32 fx, s32 fy)
 void PutNpChar(s32 fx, s32 fy)
 {
 	s32 i;
-	LoadTLUT_CI4(snack_tlut);
-	LoadTex_CI4(32, 32, snack_tex);
 	for (i = 0; i < NPC_MAX; i++)
-		if ((gNPC[i].cond & 0x80) && NpCharVisible(&gNPC[i], fx, fy))
-			PutBitmap(&rctest, (gNPC[i].x / 0x200) - (fx / 0x200) - 8, (gNPC[i].y / 0x200) - (fy / 0x200) - 8);
+		if ((gNPC[i].cond & 0x80) && gpNpcFuncTbl[gNPC[i].code_char].put != NULL && NpCharVisible(&gNPC[i], fx, fy))
+			gpNpcFuncTbl[gNPC[i].code_char].put(&gNPC[i], ((gNPC[i].x - (gNPC[i].direct ? gNPC[i].view.front : gNPC[i].view.back)) / 0x200) - (fx / 0x200), ((gNPC[i].y - gNPC[i].view.top) / 0x200) - (fy / 0x200));
 }
 
 void ActNpChar()
@@ -318,12 +315,8 @@ void ActNpChar()
 	s32 i;
 	for (i = 0; i < NPC_MAX; i++)
 	{
-		if (gNPC[i].cond & 0x80)
-		{
-			//gNPC[i].act_wait++;
-			//if (gNPC[i].act_wait >= 30)
-			//	gNPC[i].cond = 0;
-		}
+		if ((gNPC[i].cond & 0x80) && gpNpcFuncTbl[gNPC[i].code_char].act != NULL)
+			gpNpcFuncTbl[gNPC[i].code_char].act(&gNPC[i]);
 	}
 }
 
@@ -365,7 +358,8 @@ void ChangeNpCharByEvent(s32 code_event, s32 code_char, s32 dir)
 				gNPC[n].direct = dir;
 			}
 			
-			//gpNpcFuncTbl[code_char](&gNPC[n]);
+			if (gpNpcFuncTbl[code_char].act != NULL)
+				gpNpcFuncTbl[code_char].act(&gNPC[n]);
 		}
 	}
 }
@@ -410,7 +404,8 @@ void ChangeCheckableNpCharByEvent(s32 code_event, s32 code_char, s32 dir)
 				gNPC[n].direct = dir;
 			}
 			
-			//gpNpcFuncTbl[code_char](&gNPC[n]);
+			if (gpNpcFuncTbl[code_char].act != NULL)
+				gpNpcFuncTbl[code_char].act(&gNPC[n]);
 		}
 	}
 }
@@ -547,7 +542,7 @@ void DeleteNpCharCode(s32 code, BOOL bSmoke)
 			
 			if (bSmoke)
 			{
-				//PlaySoundObject(gNPC[n].destroy_voice, SOUND_MODE_PLAY);
+				PlaySoundObject(gNPC[n].destroy_voice, 1);
 				
 				switch (gNPC[n].size)
 				{
