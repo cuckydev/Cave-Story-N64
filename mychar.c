@@ -37,36 +37,6 @@ void InitMyChar()
 
 void AnimationMyChar(BOOL bKey)
 {
-	static const RECT rcLeft[12] = {
-		{  0, 0,  16, 16},
-		{ 16, 0,  32, 16},
-		{  0, 0,  16, 16},
-		{ 32, 0,  48, 16},
-		{  0, 0,  16, 16},
-		{ 48, 0,  64, 16},
-		{ 64, 0,  80, 16},
-		{ 48, 0,  64, 16},
-		{ 80, 0,  96, 16},
-		{ 48, 0,  64, 16},
-		{ 96, 0, 112, 16},
-		{112, 0, 128, 16},
-	};
-	
-	static const RECT rcRight[12] = {
-		{  0, 16,  16, 32},
-		{ 16, 16,  32, 32},
-		{  0, 16,  16, 32},
-		{ 32, 16,  48, 32},
-		{  0, 16,  16, 32},
-		{ 48, 16,  64, 32},
-		{ 64, 16,  80, 32},
-		{ 48, 16,  64, 32},
-		{ 80, 16,  96, 32},
-		{ 48, 16,  64, 32},
-		{ 96, 16, 112, 32},
-		{112, 16, 128, 32},
-	};
-	
 	if (gMC.cond & 2)
 		return;
 	
@@ -138,11 +108,6 @@ void AnimationMyChar(BOOL bKey)
 		else
 			gMC.ani_no = 3;
 	}
-	
-	if (gMC.direct == 0)
-		gMC.rect = rcLeft[gMC.ani_no];
-	else
-		gMC.rect = rcRight[gMC.ani_no];
 }
 
 void ShowMyChar(BOOL bShow)
@@ -191,6 +156,21 @@ void PutMyChar(s32 fx, s32 fy)
 	s32 arms_offset_y;
 	s32 lx, ly;
 	s32 arms_code;
+	
+	static const RECT rect[12] = {
+		{  0, 0,  16, 16},
+		{ 16, 0,  32, 16},
+		{  0, 0,  16, 16},
+		{ 32, 0,  48, 16},
+		{  0, 0,  16, 16},
+		{ 48, 0,  64, 16},
+		{ 64, 0,  80, 16},
+		{ 48, 0,  64, 16},
+		{ 80, 0,  96, 16},
+		{ 48, 0,  64, 16},
+		{ 96, 0, 112, 16},
+		{112, 0, 128, 16},
+	};
 	
 	if (!(gMC.cond & 0x80) || gMC.cond & 2)
 		return;
@@ -254,11 +234,8 @@ void PutMyChar(s32 fx, s32 fy)
 	
 	//Draw player
 	LoadTLUT_CI4(mychar_tlut);
-	if (gMC.equip & EQUIP_MIMIGA_MASK)
-		LoadTex_CI4(128, 32, mychar_mask_tex);
-	else
-		LoadTex_CI4(128, 32, mychar_nomask_tex);
-	PutBitmap(&gMC.rect,
+	LoadTex_CI4(176, 16, mychar_tex + (88 * 16) * ((((gMC.equip & EQUIP_MIMIGA_MASK) != 0) * 2) + (gMC.direct != 0)));
+	PutBitmap(&rect[gMC.ani_no],
 		((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200),
 		((gMC.y - gMC.view.top)   / 0x200) - (fy / 0x200));
 	

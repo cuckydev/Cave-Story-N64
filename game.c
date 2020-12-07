@@ -132,7 +132,7 @@ void InitGame()
 		mode_init[mode]();
 }
 
-void Game()
+void Game_Update()
 {
 	//Run mode process
 	GameMode next_mode;
@@ -159,7 +159,10 @@ void Game()
 		}
 		break;
 	}
-	
+}
+
+void Game_Draw()
+{
 	//Draw mode
 	if (mode_draw[mode] != NULL)
 		mode_draw[mode]();

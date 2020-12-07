@@ -18,6 +18,7 @@
 #include "armsitem.h"
 #include "valueview.h"
 #include "shoot.h"
+#include "back.h"
 
 void ModeAction_Init()
 {
@@ -34,6 +35,7 @@ GameMode ModeAction_Proc()
 		ActMyChar((g_GameFlags & 2) != 0);
 		ActNpChar();
 		ActValueView();
+		ActBack();
 		
 		//Collision detection
 		ResetMyCharFlag();
@@ -82,11 +84,9 @@ void ModeAction_Draw()
 	s32 fx, fy;
 	GetFramePosition(&fx, &fy);
 	
-	//Draw blue backing
-	CortBox(&grcFull, RGB(0x00, 0x00, 0x20));
-	
 	//Draw map
 	UpdateMapPlane(fx, fy);
+	PutBack(fx, fy);
 	PutStage_Back(fx, fy);
 	PutNpChar(fx, fy);
 	PutBullet(fx, fy);

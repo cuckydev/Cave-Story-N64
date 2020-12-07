@@ -27,6 +27,7 @@ extern s32 g_GameFlags;
 s32 Random(s32 min, s32 max);
 void PutNumber4(s32 x, s32 y, s32 value, BOOL bZero);
 void InitGame();
-void Game();
+void Game_Update();
+void Game_Draw();
 
 #endif

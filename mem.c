@@ -9,6 +9,7 @@ typedef struct
 } Mem_Header;
 
 static Mem_Header *mem = NULL;
+static size_t mem_used, mem_size;
 
 u8 Mem_Init(void *ptr, size_t size)
 {
@@ -18,12 +19,13 @@ u8 Mem_Init(void *ptr, size_t size)
 	
 	//Get mem pointer (16 byte alignment)
 	mem = (Mem_Header*)MEM_ALIGN(ptr);
-	size -= (size_t)mem - (size_t)ptr;
+	mem_used = sizeof(Mem_Header);
+	mem_size = size - ((size_t)mem - (size_t)ptr);
 	
 	//Initial mem header
 	mem->prev = NULL;
 	mem->next = NULL;
-	mem->size = size - sizeof(Mem_Header);
+	mem->size = mem_size - sizeof(Mem_Header);
 	return 0;
 }
 
@@ -88,6 +90,9 @@ void *Mem_Alloc(size_t size)
 	
 	//Link previous header to us
 	header->next = new_block;
+	
+	mem_used += new_header->size + sizeof(Mem_Header);
+	
 	return new_block;
 }
 
@@ -109,4 +114,14 @@ void Mem_Free(void *ptr)
 	header2 = Mem_GetHeader(header->next);
 	if (header2 != NULL)
 		header2->prev = header->prev;
+	
+	mem_used -= header->size + sizeof(Mem_Header);
+}
+
+void Mem_GetStat(size_t *used, size_t *size)
+{
+	if (used != NULL)
+		*used = mem_used;
+	if (size != NULL)
+		*size = mem_size;
 }

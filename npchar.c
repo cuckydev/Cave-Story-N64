@@ -300,7 +300,7 @@ static BOOL NpCharVisible(NPCHAR *npc, s32 fx, s32 fy)
 	}
 	pt = npc->view.top / 0x200;
 	pb = npc->view.bottom / 0x200;
-	return (lx > -pl && ly > -pt && lx < (SCREEN_WIDTH + pr) && ly < (SCREEN_HEIGHT + pb));
+	return (lx > -pr && ly > -pb && lx < (SCREEN_WIDTH + pl) && ly < (SCREEN_HEIGHT + pt));
 }
 
 void PutNpChar(s32 fx, s32 fy)

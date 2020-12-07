@@ -570,7 +570,6 @@ s32 TextScriptProc()
 					else if (IS_COMMAND('M','P','+'))
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
-						//SetMapping(x);
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('U','N','I'))
@@ -816,11 +815,7 @@ s32 TextScriptProc()
 					else if (IS_COMMAND('M','P','J'))
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
-						
-						if (FALSE)//IsMapping())
-							JumpTextScript(x);
-						else
-							gTS.p_read += 8;
+						JumpTextScript(x);
 					}
 					else if (IS_COMMAND('S','S','S'))
 					{
@@ -1161,7 +1156,7 @@ s32 TextScriptProc()
 					{
 						//SAT/CAT/TUR printing
 						x = 0;
-						while (gTS.p_read[x] != '<' && gTS.p_read[x] != '\r')
+						while (gTS.p_read[x] != '<' && gTS.p_read[x] != '\r' && gTS.p_read[x] != '\n')
 						{
 							//Skip if SHIFT-JIS
 							if (gTS.p_read[x] & 0x80)

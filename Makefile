@@ -49,7 +49,10 @@ CODEFILES = \
 	npc060.c \
 	npc080.c \
 	npc100.c \
+	npc140.c \
 	npc200.c \
+	npc280.c \
+	npc300.c \
 	npc340.c \
 	bullet.c \
 	bulhit.c \
@@ -61,6 +64,7 @@ CODEFILES = \
 	shoot.c \
 	selstage.c \
 	stage.c \
+	back.c \
 	map.c \
 	mapname.c \
 	fade.c \
