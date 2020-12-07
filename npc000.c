@@ -3,6 +3,7 @@
 #include "triangle.h"
 #include "draw.h"
 #include "sound.h"
+#include "back.h"
 
 //NPC 000 - Null
 void Npc000_Act(NPCHAR *npc)
@@ -20,7 +21,7 @@ void Npc000_Act(NPCHAR *npc)
 
 void Npc001_Act(NPCHAR *npc)
 {
-	if (0)//gBack.type == 5 || gBack.type == 6)
+	if (gBack.type == 5 || gBack.type == 6)
 	{
 		if (npc->act_no == 0)
 		{

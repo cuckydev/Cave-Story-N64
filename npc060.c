@@ -646,6 +646,140 @@ void Npc065_Put(NPCHAR *npc, s32 x, s32 y)
 	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
 }
 
+//NPC 070 - Sparkle
+#include "data/bitmap/npc_sparkle.inc.c"
+
+void Npc070_Act(NPCHAR *npc)
+{
+	//Animate
+	if (++npc->ani_wait > 3)
+	{
+		npc->ani_wait = 0;
+		npc->ani_no++;
+	}
+	if (npc->ani_no > 3)
+		npc->ani_no = 0;
+}
+
+void Npc070_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 16, 16},
+		{16, 0, 32, 16},
+		{32, 0, 48, 16},
+		{48, 0, 64, 16},
+	};
+	
+	LoadTLUT_CI4(npc_sparkle_tlut);
+	LoadTex_CI4(64, 16, npc_sparkle_tex);
+	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
+//NPC 071 - Chinfish
+#include "data/bitmap/npc_chinfish.inc.c"
+
+void Npc071_Act(NPCHAR *npc)
+{
+	//Move
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->tgt_x = npc->x;
+			npc->tgt_y = npc->y;
+			npc->ym = 0x80;
+			//Fallthrough
+		case 1:
+			if (npc->tgt_y < npc->y)
+				npc->ym -= 8;
+			if (npc->tgt_y > npc->y)
+				npc->ym += 8;
+			
+			if (npc->ym > 0x100)
+				npc->ym = 0x100;
+			if (npc->ym < -0x100)
+				npc->ym = -0x100;
+			break;
+	}
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+	
+	//Animate
+	if (++npc->ani_wait > 4)
+	{
+		npc->ani_wait = 0;
+		npc->ani_no++;
+	}
+	
+	if (npc->ani_no > 1)
+		npc->ani_no = 0;
+	
+	if (npc->shock)
+		npc->ani_no = 2;
+}
+
+void Npc071_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][3] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+		},
+	};
+	
+	LoadTLUT_CI4(npc_chinfish_tlut);
+	LoadTex_CI4(48, 32, npc_chinfish_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//NPC 072 - Sprinkler
+#include "data/bitmap/npc_sprinkler.inc.c"
+
+void Npc072_Act(NPCHAR *npc)
+{
+	//Animate and generate water droplets
+	if (npc->direct == 0)
+	{
+		if (++npc->ani_wait > 1)
+		{
+			npc->ani_wait = 0;
+			++npc->ani_no;
+		}
+		
+		if (npc->ani_no > 1)
+		{
+			npc->ani_no = 0;
+			return;
+		}
+		
+		if (gMC.x < npc->x + (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.x > npc->x - (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.y < npc->y + (((SCREEN_HEIGHT / 2) + 120) * 0x200) && gMC.y > npc->y - (((SCREEN_HEIGHT / 2) + 120) * 0x200))
+		{
+			if (++npc->act_no % 2)
+				SetNpChar(73, npc->x, npc->y, Random(-0x200, 0x200) * 2, Random(-0x200, 0x80) * 3, 0, NULL, 0x100);
+			SetNpChar(73, npc->x, npc->y, Random(-0x200, 0x200) * 2, Random(-0x200, 0x80) * 3, 0, NULL, 0x100);
+		}
+	}
+}
+
+void Npc072_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 16, 16},
+		{16, 0, 32, 16},
+	};
+	
+	LoadTLUT_CI4(npc_sprinkler_tlut);
+	LoadTex_CI4(32, 16, npc_sprinkler_tex);
+	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
 //NPC 073 - Water Droplet
 #include "data/bitmap/npc_waterdrop.inc.c"
 
@@ -684,27 +818,26 @@ void Npc073_Act(NPCHAR *npc)
 
 void Npc073_Put(NPCHAR *npc, s32 x, s32 y)
 {
-	static const RECT rcLeft[] = {
-		{0, 0,  2, 2},
-		{2, 0,  4, 2},
-		{4, 0,  6, 2},
-		{6, 0,  8, 2},
-		{8, 0, 10, 2},
-	};
-	static const RECT rcRight[] = {
-		{0, 2,  2, 4},
-		{2, 2,  4, 4},
-		{4, 2,  6, 4},
-		{6, 2,  8, 4},
-		{8, 2, 10, 4},
+	static const RECT rect[2][5] = {
+		{
+			{0, 0,  2, 2},
+			{2, 0,  4, 2},
+			{4, 0,  6, 2},
+			{6, 0,  8, 2},
+			{8, 0, 10, 2},
+		},
+		{
+			{0, 2,  2, 4},
+			{2, 2,  4, 4},
+			{4, 2,  6, 4},
+			{6, 2,  8, 4},
+			{8, 2, 10, 4},
+		},
 	};
 	
 	LoadTLUT_CI4(npc_waterdrop_tlut);
 	LoadTex_CI4(16, 4, npc_waterdrop_tex);
-	if (npc->direct == 2)
-		PutBitmap(&rcRight[npc->ani_no], x, y);
-	else
-		PutBitmap(&rcLeft[npc->ani_no], x, y);
+	PutBitmap(&rect[npc->direct == 2][npc->ani_no], x, y);
 }
 
 //NPC 074 - Jack
@@ -798,6 +931,97 @@ void Npc074_Put(NPCHAR *npc, s32 x, s32 y)
 	LoadTLUT_CI4(npc_jack_tlut);
 	LoadTex_CI4(64, 32, npc_jack_tex);
 	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//NPC 075 - Kanpachi fishing
+#include "data/bitmap/npc_kanpachi.inc.c"
+
+void Npc075_Act(NPCHAR *npc)
+{
+	//Animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 1:
+			if (npc->x - (48 * 0x200) < gMC.x && npc->x + (48 * 0x200) > gMC.x && npc->y - (48 * 0x200) < gMC.y && npc->y + (16 * 0x200) > gMC.y)
+				npc->ani_no = 1;
+			else
+				npc->ani_no = 0;
+			break;
+	}
+}
+
+void Npc075_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2] = {
+		{ 0, 0, 24, 24},
+		{24, 0, 48, 24},
+	};
+	
+	LoadTLUT_CI4(npc_kanpachi_tlut);
+	LoadTex_CI4(48, 24, npc_kanpachi_tex);
+	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
+//NPC 076 - Flowers
+#include "data/bitmap/npc_plant.inc.c"
+
+void Npc076_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	RECT rect;
+	rect.left = npc->code_event * 16;
+	rect.top = 0;
+	rect.right = rect.left + 16;
+	rect.bottom = 16;
+	
+	LoadTLUT_CI4(npc_plant_tlut);
+	LoadTex_CI4(96, 16, npc_plant_tex);
+	PutBitmap(&rect, x, y);
+}
+
+//NPC 077 - Yamashita
+#include "data/bitmap/npc_yamashita.inc.c"
+
+void Npc077_Act(NPCHAR *npc)
+{
+	//Animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 1:
+			if (Random(0, 120) == 10)
+			{
+				npc->act_no = 2;
+				npc->act_wait = 0;
+				npc->ani_no = 1;
+			}
+			break;
+			
+		case 2:
+			if (++npc->act_wait > 8)
+			{
+				npc->act_no = 1;
+				npc->ani_no = 0;
+			}
+			break;
+	}
+}
+
+void Npc077_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect = { 0, 0, 48, 32};
+	
+	LoadTLUT_CI4(npc_yamashita_tlut);
+	LoadTex_CI4(48, 32, npc_yamashita_tex + (24 * 32) * ((npc->direct != 0) ? 2 : npc->ani_no));
+	PutBitmap(&rect, x, y);
 }
 
 //NPC 078 - Pot

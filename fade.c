@@ -93,42 +93,42 @@ void PutFade()
 		switch (dir)
 		{
 			case 0:
-				LoadTex_CI4(256, 16, fade_h_tex);
 				rect.left = 0;
 				rect.top = 0;
 				rect.right = SCREEN_WIDTH - (count * 16);
 				rect.bottom = SCREEN_HEIGHT;
 				CortBox(&rect, RGB(0x00, 0x00, 0x20));
+				LoadTex_CI4(256, 16, fade_h_tex);
 				for (i = 0; i < FADE_HEIGHT; i++)
 					PutBitmap_X(&rcFadeH, rect.right, i * 16);
 				break;
 			case 1:
-				LoadTex_CI4(16, 256, fade_v_tex);
 				rect.left = 0;
 				rect.top = 0;
 				rect.right = SCREEN_WIDTH;
 				rect.bottom = SCREEN_HEIGHT - (count * 16);
 				CortBox(&rect, RGB(0x00, 0x00, 0x20));
+				LoadTex_CI4(16, 256, fade_v_tex);
 				for (i = 0; i <= FADE_WIDTH; i++)
 					PutBitmap_Y(&rcFadeV, i * 16, rect.bottom);
 				break;
 			case 2:
-				LoadTex_CI4(256, 16, fade_h_tex);
 				rect.left = count * 16;
 				rect.top = 0;
 				rect.right = SCREEN_WIDTH;
 				rect.bottom = SCREEN_HEIGHT;
 				CortBox(&rect, RGB(0x00, 0x00, 0x20));
+				LoadTex_CI4(256, 16, fade_h_tex);
 				for (i = 0; i <= FADE_HEIGHT; i++)
 					PutBitmap(&rcFadeH, rect.left - 256, i * 16);
 				break;
 			case 3:
-				LoadTex_CI4(16, 256, fade_v_tex);
 				rect.left = 0;
 				rect.top = count * 16;
 				rect.right = SCREEN_WIDTH;
 				rect.bottom = SCREEN_HEIGHT;
 				CortBox(&rect, RGB(0x00, 0x00, 0x20));
+				LoadTex_CI4(16, 256, fade_v_tex);
 				for (i = 0; i <= FADE_WIDTH; i++)
 					PutBitmap(&rcFadeV, i * 16, rect.top - 256);
 				break;

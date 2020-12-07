@@ -17,6 +17,7 @@
 #include "data/stage/cave.inc.c"
 #include "data/stage/start.inc.c"
 #include "data/stage/pool.inc.c"
+#include "data/stage/plant.inc.c"
 #include "data/stage/shelt.inc.c"
 #include "data/stage/mibox.inc.c"
 #include "data/stage/kings.inc.c"
@@ -29,6 +30,7 @@
 #include "data/tilesets/prt_mimi.inc.c"
 
 #include "data/back/bk_blue.inc.c"
+#include "data/back/bk_green.inc.c"
 
 struct 
 {
@@ -55,7 +57,7 @@ struct
 	{NULL, NULL, "Shack", NULL, 4},
 	{&pool_data, &prt_mimi, "Reservoir", &bk_blue, 1},
 	{NULL, NULL, "Graveyard", NULL, 4},
-	{NULL, NULL, "Yamashita Farm", NULL, 4},
+	{&plant_data, &prt_mimi, "Yamashita Farm", &bk_green, 1},
 	{&shelt_data, &prt_store, "Shelter", NULL, 4},
 	{NULL, NULL, "Assembly Hall", NULL, 4},
 	{&mibox_data, &prt_mimi, "Save Point", NULL, 4},

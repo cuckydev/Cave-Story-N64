@@ -1,6 +1,7 @@
 #include "npcxxx.h"
 #include "game.h"
 #include "draw.h"
+#include "back.h"
 
 //NPC 087 - Heart
 #include "data/bitmap/npc_heart.inc.c"
@@ -20,7 +21,7 @@ void Npc087_Act(NPCHAR *npc)
 	}
 	
 	//Move
-	if (0)//gBack.type == 5 || gBack.type == 6)
+	if (gBack.type == 5 || gBack.type == 6)
 	{
 		if (npc->act_no == 0)
 		{
