@@ -14,8 +14,8 @@ void Npc300_Act(NPCHAR *npc)
 		npc->y += 6 * 0x200;
 	}
 	
-	if (++npc->ani_wait % 8 == 1)
-		SetCaret(npc->x + (Random(-8, 8) * 0x200), npc->y + (8 * 0x200), 13, 1);
+	//if (++npc->ani_wait % 8 == 1)
+	//	SetCaret(npc->x + (Random(-8, 8) * 0x200), npc->y + (8 * 0x200), 13, 1);
 }
 
 void Npc300_Put(NPCHAR *npc, s32 x, s32 y)

@@ -84,7 +84,7 @@ void PutCaret(s32 fx, s32 fy)
 	s32 i;
 	for (i = 0; i < CARET_MAX; i++)
 	{
-		if ((gCrt[i].cond & 0x80) && gCrt[i].tex != NULL && CaretVisible(&gCrt[i], fx, fy))
+		if ((gCrt[i].cond & 0x80) && gCrt[i].tex != NULL && gCrt[i].tlut != NULL && CaretVisible(&gCrt[i], fx, fy))
 		{
 			LoadTLUT_CI4(gCrt[i].tlut);
 			LoadTex_CI4(gCrt[i].tex_w, gCrt[i].tex_h, gCrt[i].tex);

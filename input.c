@@ -32,10 +32,10 @@ u16 GetJoystickStatus()
 		if (cont_data[0].button & D_JPAD)
 			next_input |= INPUT_DOWN;
 		
-		if ((next_input & (INPUT_LEFT | INPUT_RIGHT)) == (INPUT_LEFT | INPUT_RIGHT))
-			next_input &= ~(INPUT_LEFT | INPUT_RIGHT);
-		if ((next_input & (INPUT_UP | INPUT_DOWN)) == (INPUT_UP | INPUT_DOWN))
-			next_input &= ~(INPUT_UP | INPUT_DOWN);
+		//if ((next_input & (INPUT_LEFT | INPUT_RIGHT)) == (INPUT_LEFT | INPUT_RIGHT))
+		//	next_input &= ~(INPUT_LEFT | INPUT_RIGHT);
+		//if ((next_input & (INPUT_UP | INPUT_DOWN)) == (INPUT_UP | INPUT_DOWN))
+		//	next_input &= ~(INPUT_UP | INPUT_DOWN);
 		
 		//Face buttons
 		if (cont_data[0].button & A_BUTTON)

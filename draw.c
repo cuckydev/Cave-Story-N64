@@ -176,6 +176,8 @@ void PutBitmap(const RECT *src, s32 x, s32 y)
 	//Get source rect dimensions
 	s32 src_w = src->right - src->left;
 	s32 src_h = src->bottom - src->top;
+	if (src_w <= 0 || src_h <= 0)
+		return;
 	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
 		return;
 	
@@ -196,6 +198,8 @@ void PutBitmap_X(const RECT *src, s32 x, s32 y)
 	//Get source rect dimensions
 	s32 src_w = src->right - src->left;
 	s32 src_h = src->bottom - src->top;
+	if (src_w <= 0 || src_h <= 0)
+		return;
 	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
 		return;
 	
@@ -216,6 +220,8 @@ void PutBitmap_Y(const RECT *src, s32 x, s32 y)
 	//Get source rect dimensions
 	s32 src_w = src->right - src->left;
 	s32 src_h = src->bottom - src->top;
+	if (src_w <= 0 || src_h <= 0)
+		return;
 	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
 		return;
 	
@@ -235,6 +241,8 @@ void PutBitmap_XY(const RECT *src, s32 x, s32 y)
 	//Get source rect dimensions
 	s32 src_w = src->right - src->left;
 	s32 src_h = src->bottom - src->top;
+	if (src_w <= 0 || src_h <= 0)
+		return;
 	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
 		return;
 	

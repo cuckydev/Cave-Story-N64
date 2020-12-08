@@ -14,27 +14,30 @@
 
 BOOL gGoodEEPROM;
 
-static const char *profile_code = "CS64rv01";
+static const char *profile_code = "CS64rv02";
 
+#pragma pack(push)
+#pragma pack(1)
 struct PROFILE_DATA
 {
 	char code[8];
-	s32 stage;
-	s32 music;
-	s32 x;
-	s32 y;
-	s32 direct;
-	s16 max_life;
-	s16 star;
-	s16 life;
-	s32 select_arms;
-	s32 equip;
+	u8 stage : 7;
+	u8 music : 6;
+	s32 x : (32 - 5);
+	s32 y : (32 - 5);
+	u8 direct : 1;
+	u8 max_life : 8;
+	u8 star : 2;
+	u8 life : 8;
+	u8 select_arms : 3;
+	u8 equip;
 	ARMS arms[ARMS_MAX];
 	ITEM items[ITEM_MAX];
 	PERMIT_STAGE permitstage[PERMIT_STAGE_MAX];
 	u8 flags[NPC_FLAG_BYTES];
-	u32 pad;
+	u8 pad[3];
 } profile;
+#pragma pack(pop)
 
 #ifdef __GNUC__
 	_Static_assert((sizeof(struct PROFILE_DATA) & 0x7) == 0, "PROFILE_DATA size must be aligned to 8 bytes");
@@ -59,9 +62,9 @@ BOOL SaveProfile()
 		memcpy(profile.code, profile_code, sizeof(profile.code));
 		profile.stage = gStageNo;
 		profile.music = 0;//gMusicNo;
-		profile.x = gMC.x;
-		profile.y = gMC.y;
-		profile.direct = gMC.direct;
+		profile.x = gMC.x >> 5;
+		profile.y = gMC.y >> 5;
+		profile.direct = (gMC.direct != 0) ? 1 : 0;
 		profile.max_life = gMC.max_life;
 		profile.life = gMC.life;
 		profile.star = gMC.star;
@@ -106,15 +109,15 @@ BOOL LoadProfile()
 		
 		//Set character properties
 		gMC.equip = profile.equip;
-		gMC.direct = profile.direct;
+		gMC.direct = (profile.direct != 0) ? 2 : 0;
 		gMC.max_life = profile.max_life;
 		gMC.life = profile.life;
 		gMC.star = profile.star;
 		gMC.cond = 0x80;
 		gMC.air = 1000;
 		gMC.lifeBr = profile.life;
-		gMC.x = profile.x;
-		gMC.y = profile.y;
+		gMC.x = profile.x << 5;
+		gMC.y = profile.y << 5;
 		
 		gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
 		gMC.rect_arms.right = gMC.rect_arms.left + 24;

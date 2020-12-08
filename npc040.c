@@ -3,6 +3,28 @@
 #include "mychar.h"
 #include "draw.h"
 
+//NPC 046 - H/V trigger
+void Npc046_Act(NPCHAR *npc)
+{
+	//Force 'event when touched' flag and move towards player's position
+	npc->bits |= NPC_EVENT_WHEN_TOUCHED;
+	
+	if (npc->direct == 0)
+	{
+		if (npc->x < gMC.x)
+			npc->x += 0x5FF;
+		else
+			npc->x -= 0x5FF;
+	}
+	else
+	{
+		if (npc->y < gMC.y)
+			npc->y += 0x5FF;
+		else
+			npc->y -= 0x5FF;
+	}
+}
+
 //NPC 059 - Eye Door
 #include "data/bitmap/npc_eyedoor.inc.c"
 

@@ -20,15 +20,19 @@ static u16 error_blink = 0;
 
 //#define MEM_DEBUG
 //#define GLIST_DEBUG
+//#define FRAME_DEBUG
 
 void VBlankCallback(int pending)
 {
 	const char *error;
-	#if (defined(MEM_DEBUG) || defined(GLIST_DEBUG))
+	#if (defined(MEM_DEBUG) || defined(GLIST_DEBUG) || defined(FRAME_DEBUG))
 		char debug[0x80];
 		s32 dbg_y = 64;
 		#ifdef GLIST_DEBUG
 			static size_t glistp_size = 0;
+		#endif
+		#ifdef FRAME_DEBUG
+			static size_t frames = 0;
 		#endif
 	#endif
 	
@@ -76,6 +80,15 @@ void VBlankCallback(int pending)
 			PutText(25, dbg_y + 1, debug, error_back_tlut);
 			PutText(24, dbg_y, debug, error_front_tlut);
 			dbg_y += 16;
+		#endif
+		
+		#ifdef FRAME_DEBUG
+			//Draw frame debug
+			sprintf(debug, "frame: %d", frames);
+			PutText(25, dbg_y + 1, debug, error_back_tlut);
+			PutText(24, dbg_y, debug, error_front_tlut);
+			dbg_y += 16;
+			frames++;
 		#endif
 		
 		//End frame

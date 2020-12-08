@@ -460,6 +460,131 @@ void Npc062_Put(NPCHAR *npc, s32 x, s32 y)
 	PutBitmap(&rect[npc->ani_no], x, y);
 }
 
+//NPC 063 - Toroko with stick
+void Npc063_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->act_wait = 0;
+			npc->ani_wait = 0;
+			npc->ym = -0x400;
+			//Fallthrough
+		case 1:
+			if (npc->ym > 0)
+				npc->bits &= ~NPC_IGNORE_SOLIDITY;
+			
+			if (++npc->ani_wait > 2)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 3)
+				npc->ani_no = 0;
+			
+			if (npc->direct == 0)
+				npc->xm = -0x100;
+			else
+				npc->xm = 0x100;
+			
+			if (npc->act_wait++ != 0 && npc->flag & 8)
+				npc->act_no = 2;
+			break;
+			
+		case 2:
+			npc->act_no = 3;
+			npc->act_wait = 0;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 3:
+			if (++npc->ani_wait > 2)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 3)
+				npc->ani_no = 0;
+			
+			if (++npc->act_wait > 50)
+			{
+				npc->act_wait = 40;
+				npc->xm *= -1;
+				
+				if (npc->direct == 0)
+					npc->direct = 2;
+				else
+					npc->direct = 0;
+			}
+			
+			if (npc->act_wait > 35)
+				npc->bits |= NPC_SHOOTABLE;
+			
+			if (npc->direct == 0)
+				npc->xm -= 0x40;
+			else
+				npc->xm += 0x40;
+			
+			if (npc->shock)
+			{
+				npc->act_no = 4;
+				npc->ani_no = 4;
+				npc->ym = -0x400;
+				npc->bits &= ~NPC_SHOOTABLE;
+				npc->damage = 0;
+			}
+			break;
+			
+		case 4:
+			if (npc->direct == 0)
+				npc->xm = -0x100;
+			else
+				npc->xm = 0x100;
+			
+			if (npc->act_wait++ != 0 && npc->flag & 8)
+			{
+				npc->act_no = 5;
+				npc->bits |= NPC_INTERACTABLE;
+			}
+			break;
+			
+		case 5:
+			npc->xm = 0;
+			npc->ani_no = 5;
+			break;
+	}
+	
+	//Fall and move
+	npc->ym += 0x40;
+	if (npc->xm > 0x400)
+		npc->xm = 0x400;
+	if (npc->xm < -0x400)
+		npc->xm = -0x400;
+	if (npc->ym > 0x5FF)
+		npc->ym = 0x5FF;
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc063_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 64, 0,  80, 16},
+		{ 80, 0,  96, 16},
+		{ 64, 0,  80, 16},
+		{ 96, 0, 112, 16},
+		{112, 0, 128, 16},
+		{128, 0, 144, 16},
+	};
+	
+	LoadTLUT_CI4(npc_toroko_tlut);
+	LoadTex_CI4(144, 16, npc_toroko_tex + (72 * 16) * (npc->direct != 0));
+	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
 //NPC 064 - First Cave Critter
 #include "data/bitmap/npc_critter.inc.c"
 
@@ -750,7 +875,7 @@ void Npc072_Act(NPCHAR *npc)
 		if (++npc->ani_wait > 1)
 		{
 			npc->ani_wait = 0;
-			++npc->ani_no;
+			npc->ani_no++;
 		}
 		
 		if (npc->ani_no > 1)

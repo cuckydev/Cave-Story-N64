@@ -152,16 +152,17 @@ void ShiftMapParts(s32 x, s32 y)
 		PutTile(x, y);
 }
 
-void ChangeMapParts(s32 x, s32 y, u8 no)
+BOOL ChangeMapParts(s32 x, s32 y, u8 no)
 {
 	s32 i;
 	if (map_data[x + y * map_width] != no)
-		return;
+		return FALSE;
 	map_data[x + y * map_width] = no;
 	if (IsTileOnscreen(x, y))
 		PutTile(x, y);
 	for (i = 0; i < 3; ++i)
 		SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, 0, 0, 0, NULL, 0);
+	return TRUE;
 }
 
 #include "data/bitmap/snack.inc.c"

@@ -308,7 +308,10 @@ void PutNpChar(s32 fx, s32 fy)
 	s32 i, a;
 	for (i = 0; i < NPC_MAX; i++)
 	{
-		if ((gNPC[i].cond & 0x80) && NpCharVisible(&gNPC[i], fx, fy))
+		if (!(gNPC[i].cond & 0x80))
+			continue;
+		
+		if (gpNpcFuncTbl[gNPC[i].code_char].put != NULL && NpCharVisible(&gNPC[i], fx, fy))
 		{
 			if (gNPC[i].shock)
 			{
@@ -323,11 +326,19 @@ void PutNpChar(s32 fx, s32 fy)
 					gNPC[i].damage_view = 0;
 				}
 			}
-			if (gpNpcFuncTbl[gNPC[i].code_char].put != NULL)
-				gpNpcFuncTbl[gNPC[i].code_char].put(&gNPC[i],
-					((gNPC[i].x - (gNPC[i].direct ? gNPC[i].view.back : gNPC[i].view.front)) / 0x200) - (fx / 0x200) + a,
-					((gNPC[i].y - gNPC[i].view.top) / 0x200) - (fy / 0x200)
-				);
+			
+			gpNpcFuncTbl[gNPC[i].code_char].put(&gNPC[i],
+				((gNPC[i].x - (gNPC[i].direct ? gNPC[i].view.back : gNPC[i].view.front)) / 0x200) - (fx / 0x200) + a,
+				((gNPC[i].y - gNPC[i].view.top) / 0x200) - (fy / 0x200)
+			);
+		}
+		else
+		{
+			if (gNPC[i].shock == 0 && gNPC[i].bits & NPC_SHOW_DAMAGE && gNPC[i].damage_view)
+			{
+				SetValueView(&gNPC[i].x, &gNPC[i].y, gNPC[i].damage_view);
+				gNPC[i].damage_view = 0;
+			}
 		}
 	}
 }

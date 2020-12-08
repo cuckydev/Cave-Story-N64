@@ -16,7 +16,9 @@
 #include "data/stage/mimi.inc.c"
 #include "data/stage/cave.inc.c"
 #include "data/stage/start.inc.c"
+#include "data/stage/barr.inc.c"
 #include "data/stage/pool.inc.c"
+#include "data/stage/cemet.inc.c"
 #include "data/stage/plant.inc.c"
 #include "data/stage/shelt.inc.c"
 #include "data/stage/mibox.inc.c"
@@ -54,9 +56,9 @@ struct
 	{&mimi_data, &prt_mimi, "Mimiga Village", &bk_blue, 1},
 	{&cave_data, &prt_cave, "First Cave", NULL, 4},
 	{&start_data, &prt_cave, "Start Point", NULL, 4},
-	{NULL, NULL, "Shack", NULL, 4},
+	{&barr_data, &prt_mimi, "Shack", NULL, 4},
 	{&pool_data, &prt_mimi, "Reservoir", &bk_blue, 1},
-	{NULL, NULL, "Graveyard", NULL, 4},
+	{&cemet_data, &prt_mimi, "Graveyard", NULL, 4},
 	{&plant_data, &prt_mimi, "Yamashita Farm", &bk_green, 1},
 	{&shelt_data, &prt_store, "Shelter", NULL, 4},
 	{NULL, NULL, "Assembly Hall", NULL, 4},
