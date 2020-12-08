@@ -23,12 +23,6 @@ void PutMapName(BOOL bMini)
 {
 	s32 y;
 	s32 width;
-	static u16 mapname_front_tlut[] = {
-		0x0000, GPACK_RGBA5551(0xFF, 0xFF, 0xFF, 1),
-	};
-	static u16 mapname_back_tlut[] = {
-		0x0000, GPACK_RGBA5551(0x11, 0x00, 0x22, 1),
-	};
 	static const RECT rcBack = {0, 7, SCREEN_WIDTH, 24};
 	
 	if (bMini)
@@ -50,6 +44,6 @@ void PutMapName(BOOL bMini)
 	}
 	
 	width = GetTextWidth(map_name);
-	PutText((SCREEN_WIDTH - width) / 2, y + 1, map_name, mapname_back_tlut);
-	PutText((SCREEN_WIDTH - width) / 2, y,     map_name, mapname_front_tlut);
+	PutText((SCREEN_WIDTH - width) / 2, y + 1, map_name, RGB(0x11, 0x00, 0x22));
+	PutText((SCREEN_WIDTH - width) / 2, y,     map_name, RGB(0xFF, 0xFF, 0xFF));
 }

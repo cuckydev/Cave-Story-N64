@@ -308,10 +308,6 @@ static const struct
 
 void PutTextScript()
 {
-	static u16 textscr_text_tlut[] = {
-		0x0000, GPACK_RGBA5551(0xFF, 0xFF, 0xFF, 1),
-	};
-	
 	s32 msg_box_y, text_offset;
 	s32 i;
 	
@@ -377,7 +373,7 @@ void PutTextScript()
 	for (i = 0; i < 4; i++)
 	{
 		if (gTS.ypos_line[i] > -8 && gTS.ypos_line[i] < 40)
-			PutText(TEXT_LEFT + text_offset, msg_box_y + gTS.ypos_line[i], text[i], textscr_text_tlut);
+			PutText(TEXT_LEFT + text_offset, msg_box_y + gTS.ypos_line[i], text[i], RGB(0xFF, 0xFF, 0xFF));
 	}
 	
 	//Draw NOD cursor

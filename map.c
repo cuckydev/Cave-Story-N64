@@ -20,7 +20,7 @@ static u8 map_attr[0x100];
 #define PLANE_PH (PLANE_H * 16)
 
 static Gfx map_plane_dumaln[] = { gsSPEndDisplayList() };
-static u8 map_plane[2][VIEW_W + 1][8 * PLANE_PH];
+__attribute__((aligned(8))) static u8 map_plane[2][VIEW_W + 1][8 * PLANE_PH];
 static s32 map_plane_fx, map_plane_fy;
 static BOOL map_plane_dirty;
 

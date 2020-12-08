@@ -17,7 +17,7 @@ typedef enum
 extern const RECT grcFull;
 
 //Render macros
-#define RGB(r, g, b) ((GPACK_RGBA5551((r), (g), (b), 1) << 16) | GPACK_RGBA5551((r), (g), (b), 1))
+#define RGB(r, g, b) (GPACK_RGBA5551((r), (g), (b), 1))
 
 //Render globals
 extern Gfx glist[GLIST_LENGTH];
@@ -36,8 +36,8 @@ void PutBitmap(const RECT *src, s32 x, s32 y);
 void PutBitmap_X(const RECT *src, s32 x, s32 y);
 void PutBitmap_Y(const RECT *src, s32 x, s32 y);
 void PutBitmap_XY(const RECT *src, s32 x, s32 y);
-void CortBox(const RECT *rect, u32 col);
+void CortBox(const RECT *rect, u16 col);
 s32 GetTextWidth(const char *text);
-void PutText(s32 x, s32 y, const char *text, u16 *tlut);
+void PutText(s32 x, s32 y, const char *text, u16 col);
 
 #endif

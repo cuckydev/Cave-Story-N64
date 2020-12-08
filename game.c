@@ -51,9 +51,6 @@ void (*mode_quit[GameMode_Num])() = {
 
 static void Error_InvalidGameMode()
 {
-	static u16 font_tlut[] = {
-		0x0000, GPACK_RGBA5551(0xFF, 0xFF, 0xFF, 1),
-	};
 	char text[0x80];
 	
 	//Draw red screen (scary!)
@@ -61,7 +58,7 @@ static void Error_InvalidGameMode()
 	
 	//Draw error text
 	sprintf(text, "INVALID GAME MODE (%d)", mode);
-	PutText((SCREEN_WIDTH - GetTextWidth(text)) / 2, (SCREEN_HEIGHT - 10) / 2, text, font_tlut);
+	PutText((SCREEN_WIDTH - GetTextWidth(text)) / 2, (SCREEN_HEIGHT - 10) / 2, text, RGB(0xFF, 0xFF, 0xFF));
 }
 
 //Game functions

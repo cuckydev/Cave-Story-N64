@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
+#define ALIGN_DEBUG
+
 //Current render state
 static RenderState render_state;
 
@@ -134,16 +136,28 @@ static void SetRenderState(RenderState next_render_state)
 
 void LoadTLUT_CI4(u16 *tlut)
 {
+	#ifdef ALIGN_DEBUG
+	if ((size_t)tlut & 0x7)
+	{ while (1) {;} }
+	#endif
 	gDPLoadTLUT_pal16(glistp++, 0, tlut);
 }
 
 void LoadTLUT_CI8(u16 *tlut)
 {
+	#ifdef ALIGN_DEBUG
+	if ((size_t)tlut & 0x7)
+	{ while (1) {;} }
+	#endif
 	gDPLoadTLUT_pal256(glistp++, tlut);
 }
 
 void LoadTex_CI4(u32 width, u32 height, u8 *tex)
 {
+	#ifdef ALIGN_DEBUG
+	if ((size_t)tex & 0x7)
+	{ while (1) {;} }
+	#endif
 	gDPLoadTextureBlock_4b(glistp++, 
 		tex,
 		G_IM_FMT_CI,
@@ -158,6 +172,10 @@ void LoadTex_CI4(u32 width, u32 height, u8 *tex)
 
 void LoadTex_CI8(u32 width, u32 height, u8 *tex)
 {
+	#ifdef ALIGN_DEBUG
+	if ((size_t)tex & 0x7)
+	{ while (1) {;} }
+	#endif
 	gDPLoadTextureBlock(glistp++, 
 		tex,
 		G_IM_FMT_CI,
@@ -257,7 +275,7 @@ void PutBitmap_XY(const RECT *src, s32 x, s32 y)
 	);
 }
 
-void CortBox(const RECT *rect, u32 col)
+void CortBox(const RECT *rect, u16 col)
 {
 	//Clip rect against top left
 	s32 left = rect->left, top = rect->top;
@@ -270,14 +288,14 @@ void CortBox(const RECT *rect, u32 col)
 	
 	//Draw rect
 	SetRenderState(RS_Rect);
-	gDPSetFillColor(glistp++, col);
+	gDPSetFillColor(glistp++, (col << 16) | col);
 	gDPFillRectangle(glistp++, left, top, rect->right - 1, rect->bottom - 1);
 	gDPPipeSync(glistp++);
 }
 
 #include "data/bitmap/font.inc.c"
 static const u8 font_space[32*3] = {
-	4,2,4,8,6,8,7,2,4,4,8,6,3,6,2,4,6,3,6,6,7,6,6,6,6,6,2,3,4,7,4,5,
+	4,2,4,8,6,8,7,2,4,4,8,6,3,6,2,4,6,3,6,6,7,6,6,6,6,6,2,3,4,6,4,5,
 	8,6,6,6,6,5,5,6,6,2,5,6,5,6,6,6,6,6,6,5,6,6,6,6,6,6,5,4,4,4,4,6,
 	3,6,6,6,6,6,5,6,6,2,4,5,3,8,6,6,6,6,5,5,5,6,6,6,6,6,6,5,2,5,6,4,
 };
@@ -292,15 +310,21 @@ s32 GetTextWidth(const char *text)
 	return x - ((x != 0) ? 1 : 0);
 }
 
-void PutText(s32 x, s32 y, const char *text, u16 *tlut)
+__attribute__((aligned(8))) static u16 text_tlut[0x20][4] = {};
+static u8 text_tlut_i = 0;
+
+void PutText(s32 x, s32 y, const char *text, u16 col)
 {
 	RECT rect = {0, 0, 0, 12};
-	
-	//Render text character by character
 	u8 v;
 	u8 ppy = 0xFF;
 	
-	LoadTLUT_CI4(tlut);
+	//Get colour
+	LoadTLUT_CI4(text_tlut[text_tlut_i]);
+	text_tlut[text_tlut_i][1] = col;
+	text_tlut_i = (text_tlut_i + 1) & 0x1F;
+	
+	//Render characters
 	while ((v = (u8)*text++ - 0x20) != 0xE0)
 	{
 		if (v == 0)
@@ -311,7 +335,7 @@ void PutText(s32 x, s32 y, const char *text, u16 *tlut)
 		else if (v <= 0x60)
 		{
 			//Switch page
-			u8 py = v / 32;
+			u8 py = v >> 5;
 			if (py != ppy)
 			{
 				LoadTex_CI4(256, 12, font_tex + (128 * 12) * py);
@@ -326,4 +350,3 @@ void PutText(s32 x, s32 y, const char *text, u16 *tlut)
 		}
 	}
 }
-
