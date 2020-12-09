@@ -64,6 +64,7 @@ void InitTextScript();
 void LoadTextScript_Stage(const char *script);
 void LoadTextScript(const char *script);
 const char *GetTextScript();
+void JumpTextScript(s32 no);
 void StartTextScript(s32 no);
 void StopTextScript();
 void PutTextScript();

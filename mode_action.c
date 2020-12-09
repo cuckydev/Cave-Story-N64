@@ -88,8 +88,6 @@ GameMode ModeAction_Proc()
 	//Run text script
 	switch (TextScriptProc())
 	{
-		case TSCR_None:
-			break;
 		case TSCR_Restart:
 			return GameMode_Opening;
 		case TSCR_MiniMap:
@@ -99,6 +97,8 @@ GameMode ModeAction_Proc()
 			return GameMode_StageSelect;
 		case TSCR_DownIsland:
 			return GameMode_DownIsland;
+		default:
+			break;
 	}
 	
 	return GameMode_Action;

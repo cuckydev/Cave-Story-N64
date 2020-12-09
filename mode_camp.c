@@ -12,6 +12,7 @@ static const char *prev_script;
 
 static BOOL gCampActive;
 static s32 gCampTitleY;
+static u32 flash;
 
 static BOOL no_init = FALSE;
 
@@ -23,17 +24,17 @@ void ModeCamp_Init()
 		prev_script = GetTextScript();
 		LoadTextScript(armsitem_script);
 		
-		//Initialize inventory state
-		gCampActive = FALSE;
-		gCampTitleY = (SCREEN_HEIGHT / 2) - 96;
-		
-		gSelectedItem = 0;
-		
 		//Run initial event
 		if (gArmsData[0].code != 0)
 			StartTextScript(1000 + gArmsData[gSelectedArms].code);
 		else
 			StartTextScript(5000 + gItemData[gSelectedItem].code);
+		
+		//Initialize inventory state
+		gCampActive = FALSE;
+		gCampTitleY = (SCREEN_HEIGHT / 2) - 96;
+		
+		gSelectedItem = 0;
 	}
 	no_init = FALSE;
 }
@@ -165,40 +166,33 @@ GameMode ModeCamp_Proc()
 	//Run TSC
 	switch (TextScriptProc())
 	{
-		case TSCR_None:
-			break;
 		case TSCR_Restart:
 			return GameMode_Opening;
 		case TSCR_MiniMap:
 			minimap_return = GameMode_Camp;
 			no_init = TRUE;
 			return GameMode_MiniMap;
-		case TSCR_StageSelect:
-			return GameMode_StageSelect;
-		case TSCR_DownIsland:
-			return GameMode_DownIsland;
+		default:
+			break;
 	}
 	
 	//Move titles
 	if (gCampTitleY > (SCREEN_HEIGHT / 2) - 104)
 		gCampTitleY--;
 	
+	//Increment cursor flash
+	flash++;
+	
 	//Check if the inventory should be closed
 	if (gCampActive)
 	{
 		if (g_GameFlags & 2 && gKeyTrg & (gKeyCancel | gKeyItem))
-		{
-			StopTextScript();
 			return GameMode_Action;
-		}
 	}
 	else
 	{
 		if (gKeyTrg & (gKeyOk | gKeyCancel | gKeyItem))
-		{
-			StopTextScript();
 			return GameMode_Action;
-		}
 	}
 	
 	return GameMode_Camp;
@@ -228,8 +222,6 @@ void PutCampObject()
 	
 	RECT rcArms = {0, 0, 0, 16}, rcItem = {0, 0, 0, 16};
 	
-	static u32 flash;
-	
 	s32 i;
 	
 	//Draw frame
@@ -257,9 +249,6 @@ void PutCampObject()
 	
 	PutBitmap(&rcTitle1, (SCREEN_WIDTH / 2) - 112, gCampTitleY);
 	PutBitmap(&rcTitle2, (SCREEN_WIDTH / 2) - 112, gCampTitleY + 52);
-	
-	//Increment cursor flash
-	flash++;
 	
 	//Draw arms cursor
 	LoadTLUT_CI4(armscursor_tlut);
@@ -344,7 +333,6 @@ void PutCampObject()
 void ModeCamp_Draw()
 {
 	//TODO: draw a screen capture instead of the entire game
-	//Get frame position
 	s32 fx, fy;
 	GetFramePosition(&fx, &fy);
 	
@@ -371,6 +359,7 @@ void ModeCamp_Quit()
 	if (!no_init)
 	{
 		//Reload stage script
+		StopTextScript();
 		LoadTextScript_Stage(prev_script);
 		
 		//Display weapon switch animation

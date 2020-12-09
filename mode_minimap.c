@@ -152,7 +152,6 @@ void ModeMiniMap_Draw()
 	u16 y;
 	
 	//TODO: draw a screen capture instead of the entire game
-	//Get frame position
 	s32 fx, fy;
 	GetFramePosition(&fx, &fy);
 	
