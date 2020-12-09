@@ -6,7 +6,7 @@
 #include "draw.h"
 #include "mem.h"
 
-static s32 my_x, my_y;
+static s32 my_x, my_y, my_wait;
 static u16 map_w, map_h;
 static u16 pline, line;
 
@@ -80,6 +80,7 @@ void ModeMiniMap_Init()
 	//Remember player position
 	my_x = ((gMC.x / 0x200) + 8) / 16;
 	my_y = ((gMC.y / 0x200) + 8) / 16;
+	my_wait = 0;
 	
 	//Get map dimensions
 	GetMapData(NULL, &map_w, &map_h);
@@ -130,14 +131,41 @@ GameMode ModeMiniMap_Proc()
 	return GameMode_MiniMap;
 }
 
+#include "frame.h"
+#include "back.h"
+#include "npchar.h"
+#include "bullet.h"
+#include "mychar.h"
+#include "caret.h"
+#include "flash.h"
+#include "valueview.h"
+#include "bosslife.h"
+#include "fade.h"
+
 void ModeMiniMap_Draw()
 {
 	RECT rcMiniMap = {0, 0, map_w, 0};
 	RECT rcFrame;
+	RECT rcMyc;
 	u16 y;
 	
-	//Draw screen capture (TODO)
-	CortBox(&grcFull, RGB(0x00, 0x00, 0x20));
+	//TODO: draw a screen capture instead of the entire game
+	//Get frame position
+	s32 fx, fy;
+	GetFramePosition(&fx, &fy);
+	
+	UpdateMapPlane(fx, fy);
+	PutBack(fx, fy);
+	PutStage_Back(fx, fy);
+	PutNpChar(fx, fy);
+	PutBullet(fx, fy);
+	PutMyChar(fx, fy);
+	PutStage_Front(fx, fy);
+	PutFlash();
+	PutCaret(fx, fy);
+	PutValueView(fx, fy);
+	PutBossLife();
+	PutFade();
 	
 	if (frame_i <= 8)
 	{
@@ -172,6 +200,16 @@ void ModeMiniMap_Draw()
 			if (rcMiniMap.bottom > mapsurf_chky)
 				rcMiniMap.bottom = mapsurf_chky;
 			PutBitmap(&rcMiniMap, (SCREEN_WIDTH - map_w) / 2, (SCREEN_HEIGHT - map_h) / 2 + y);
+		}
+		
+		//Draw player marker
+		if (++my_wait / 8 % 2)
+		{
+			rcMyc.left = (SCREEN_WIDTH - map_w) / 2 + my_x;
+			rcMyc.top = (SCREEN_HEIGHT- map_h) / 2 + my_y;
+			rcMyc.right = rcMyc.left + 1;
+			rcMyc.bottom = rcMyc.top + 1;
+			CortBox(&rcMyc, RGB(0xFF, 0xFF, 0xFF));
 		}
 	}
 	
