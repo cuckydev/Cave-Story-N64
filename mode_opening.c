@@ -12,6 +12,7 @@
 #include "frame.h"
 #include "fade.h"
 #include "textscr.h"
+#include "bosslife.h"
 
 static s32 wait;
 static u8 black_time;
@@ -23,7 +24,7 @@ void ModeOpening_Init()
 	InitCaret();
 	//InitStar();
 	InitFade();
-	//InitBossLife();
+	InitBossLife();
 	//ChangeMusic(MUS_SILENCE);
 	TransferStage(72, 100, 3, 3);
 	SetFrameTargetMyChar(16);

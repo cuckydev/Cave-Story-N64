@@ -3,6 +3,26 @@
 #include "mychar.h"
 #include "draw.h"
 
+//NPC 041 - Busted door
+#include "data/bitmap/npc_busteddoor.inc.c"
+
+void Npc041_Act(NPCHAR *npc)
+{
+	if (npc->act_no == 0)
+	{
+		npc->act_no++;
+		npc->y -= 1 * 0x10 * 0x200;
+	}
+}
+
+void Npc041_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect = {0, 0, 48, 32};
+	LoadTLUT_CI4(npc_busteddoor_tlut);
+	LoadTex_CI4(48, 32, npc_busteddoor_tex);
+	PutBitmap(&rect, x, y);
+}
+
 //NPC 046 - H/V trigger
 void Npc046_Act(NPCHAR *npc)
 {

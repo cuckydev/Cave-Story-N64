@@ -12,6 +12,7 @@
 #include "valueview.h"
 
 //Stage table
+#include "data/stage/pens1.inc.c"
 #include "data/stage/eggs.inc.c"
 #include "data/stage/mimi.inc.c"
 #include "data/stage/cave.inc.c"
@@ -25,6 +26,7 @@
 #include "data/stage/kings.inc.c"
 #include "data/stage/pole.inc.c"
 
+#include "data/tilesets/prt_pens.inc.c"
 #include "data/tilesets/prt_cave.inc.c"
 #include "data/tilesets/prt_eggs.inc.c"
 #include "data/tilesets/prt_store.inc.c"
@@ -43,7 +45,7 @@ struct
 	s32 back_type;
 } gTMT[] = {
 	{NULL, NULL, "Null", NULL, 4},
-	{NULL, NULL, "Arthur's House", NULL, 4},
+	{&pens1_data, &prt_pens, "Arthur's House", &bk_blue, 1},
 	{&eggs_data, &prt_eggs, "Egg Corridor", NULL, 4},
 	{NULL, NULL, "Egg No. 00", NULL, 4},
 	{NULL, NULL, "Egg No. 06", NULL, 4},

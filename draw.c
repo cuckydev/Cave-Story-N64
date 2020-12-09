@@ -121,7 +121,7 @@ static void SetRenderState(RenderState next_render_state)
 		case RS_Tex:
 			gDPSetCycleType(glistp++, G_CYC_1CYCLE);
 			gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
-			gDPSetRenderMode(glistp++, G_RM_AA_TEX_EDGE, G_RM_AA_TEX_EDGE);
+			gDPSetRenderMode(glistp++, G_RM_TEX_EDGE, G_RM_TEX_EDGE);
 			
 			gDPSetDepthSource(glistp++, G_ZS_PIXEL);
 			gDPSetPrimDepth(glistp++, 0, 0);
@@ -310,6 +310,7 @@ s32 GetTextWidth(const char *text)
 	return x - ((x != 0) ? 1 : 0);
 }
 
+static Gfx text_tlut_dumaln[] = { gsSPEndDisplayList() };
 __attribute__((aligned(8))) static u16 text_tlut[0x20][4] = {};
 static u8 text_tlut_i = 0;
 

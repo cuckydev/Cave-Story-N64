@@ -34,6 +34,7 @@ CODEFILES = \
 	mode_opening.c \
 	mode_title.c \
 	mode_action.c \
+	mode_minimap.c \
 	profile.c \
 	textscr.c \
 	flags.c \
@@ -54,6 +55,7 @@ CODEFILES = \
 	npc280.c \
 	npc300.c \
 	npc340.c \
+	bosslife.c \
 	bullet.c \
 	bulhit.c \
 	bullets.c \

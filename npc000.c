@@ -889,6 +889,7 @@ void Npc019_Put(NPCHAR *npc, s32 x, s32 y)
 		{ 0, 0, 40, 24},
 		{40, 0, 80, 24},
 	};
+	
 	LoadTLUT_CI4(npc_balrog_tlut);
 	LoadTex_CI4(80, 24, npc_balrog_tex + (40 * 24) * frame[npc->ani_no]);
 	PutBitmap(&rect[npc->direct != 0], x, y);

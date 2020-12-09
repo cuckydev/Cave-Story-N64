@@ -1,8 +1,12 @@
 #include "npcxxx.h"
 #include "game.h"
 #include "mychar.h"
+#include "mycparam.h"
+#include "frame.h"
 #include "map.h"
 #include "draw.h"
+#include "flash.h"
+#include "triangle.h"
 #include "sound.h"
 
 //NPC 060 - Toroko
@@ -768,6 +772,617 @@ void Npc065_Put(NPCHAR *npc, s32 x, s32 y)
 	
 	LoadTLUT_CI4(npc_bat_cemet_tlut);
 	LoadTex_CI4(96, 32, npc_bat_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//NPC 066 - Misery bubble (captures Toroko)
+#include "data/bitmap/npc_torokobubble.inc.c"
+
+void Npc066_Act(NPCHAR *npc)
+{
+	s32 a;
+	u8 deg;
+	
+	switch (npc->act_no)
+	{
+		case 0:
+			for (a = 0; a < NPC_MAX; ++a)
+				if (gNPC[a].code_event == 1000)
+					break;
+			
+			if (a == NPC_MAX)
+				break;
+			
+			npc->tgt_x = gNPC[a].x;
+			npc->tgt_y = gNPC[a].y;
+			npc->count1 = a;
+			
+			deg = GetArktan(npc->x - npc->tgt_x, npc->y - npc->tgt_y);
+			npc->xm = GetCos(deg) * 2;
+			npc->ym = GetSin(deg) * 2;
+			
+			npc->act_no = 1;
+			//Fallthrough
+		case 1:
+			if (++npc->ani_wait > 1)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 1)
+				npc->ani_no = 0;
+			
+			if (npc->x - (3 * 0x200) < npc->tgt_x && npc->x + (3 * 0x200) > npc->tgt_x && npc->y - (3 * 0x200) < npc->tgt_y && npc->y + (3 * 0x200) > npc->tgt_y)
+			{
+				npc->act_no = 2;
+				npc->ani_no = 2;
+				gNPC[npc->count1].cond = 0;
+				PlaySoundObject(21, 1);
+			}
+			break;
+			
+		case 2:
+			npc->xm -= 0x20;
+			npc->ym -= 0x20;
+			
+			if (npc->xm < -0x5FF)
+				npc->xm = -0x5FF;
+			if (npc->ym < -0x5FF)
+				npc->ym = -0x5FF;
+			
+			if (npc->y < -8 * 0x200)
+				npc->cond = 0;
+			
+			if (++npc->ani_wait > 3)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			
+			if (npc->ani_no > 3)
+				npc->ani_no = 2;
+			break;
+	}
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc066_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[4] = {
+		{ 0,  0, 24, 24},
+		{24,  0, 48, 24},
+		{ 0, 24, 24, 48},
+		{24, 24, 48, 48},
+	};
+	
+	LoadTLUT_CI4(npc_torokobubble_tlut);
+	LoadTex_CI4(48, 48, npc_torokobubble_tex);
+	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
+//NPC 067 - Misery (floating)
+#include "data/bitmap/npc_misery.inc.c"
+
+void Npc067_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->tgt_x = npc->x;
+			npc->tgt_y = npc->y;
+			npc->ani_no = 0;
+			PlaySoundObject(29, 1);
+			//Fallthrough
+		case 1:
+			npc->x = npc->tgt_x + (Random(-1, 1) * 0x200);
+			
+			if (++npc->act_wait == 0x20)
+				npc->act_no = 10;
+			break;
+			
+		case 10:
+			npc->act_no = 11;
+			npc->act_wait = 0;
+			npc->ani_no = 0;
+			npc->ym = 0x200;
+			//Fallthrough
+			
+		case 11:
+			if (npc->tgt_y < npc->y)
+				npc->ym -= 0x10;
+			if (npc->tgt_y > npc->y)
+				npc->ym += 0x10;
+			
+			if (npc->ym > 0x100)
+				npc->ym = 0x100;
+			if (npc->ym < -0x100)
+				npc->ym = -0x100;
+			break;
+			
+		case 13:
+			npc->ani_no = 1;
+			
+			npc->ym += 0x40;
+			if (npc->ym > 0x5FF)
+				npc->ym = 0x5FF;
+			
+			if (npc->flag & 8)
+			{
+				PlaySoundObject(23, 1);
+				npc->ym = 0;
+				npc->act_no = 14;
+				npc->bits |= NPC_IGNORE_SOLIDITY;
+				npc->ani_no = 2;
+			}
+			break;
+			
+		case 15:
+			npc->act_no = 16;
+			npc->act_wait = 0;
+			npc->ani_no = 4;
+			//Fallthrough
+		case 16:
+			if (++npc->act_wait == 30)
+			{
+				PlaySoundObject(21, 1);
+				SetNpChar(66, npc->x, npc->y - (16 * 0x200), 0, 0, 0, npc, 0);
+			}
+			if (npc->act_wait == 50)
+				npc->act_no = 14;
+			break;
+			
+		case 20:
+			npc->act_no = 21;
+			npc->ani_no = 0;
+			npc->ym = 0;
+			npc->bits |= NPC_IGNORE_SOLIDITY;
+			//Fallthrough
+		case 21:
+			npc->ym -= 0x20;
+			if (npc->y < -8 * 0x200)
+				npc->cond = 0;
+			break;
+			
+		case 25:
+			npc->act_no = 26;
+			npc->act_wait = 0;
+			npc->ani_no = 5;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 26:
+			if (++npc->ani_no > 7)
+				npc->ani_no = 5;
+			
+			if (++npc->act_wait == 30)
+			{
+				PlaySoundObject(101, 1);
+				SetFlash(0, 0, 2);
+				npc->act_no = 27;
+				npc->ani_no = 7;
+			}
+			break;
+			
+		case 27:
+			if (++npc->act_wait == 50)
+				npc->act_no = 14;
+			break;
+	}
+	
+	//Move
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+	
+	//Additional animation
+	if (npc->act_no == 11)
+	{
+		if (npc->ani_wait != 0)
+		{
+			npc->ani_wait--;
+			npc->ani_no = 1;
+		}
+		else
+		{
+			if (Random(0, 100) == 1)
+				npc->ani_wait = 30;
+			npc->ani_no = 0;
+		}
+	}
+	
+	if (npc->act_no == 14)
+	{
+		if (npc->ani_wait != 0)
+		{
+			npc->ani_wait--;
+			npc->ani_no = 3;
+		}
+		else
+		{
+			if (Random(0, 100) == 1)
+				npc->ani_wait = 30;
+			npc->ani_no = 2;
+		}
+	}
+	
+	if (npc->act_no == 1 && npc->ani_wait < 32)
+		npc->ani_wait++;
+}
+
+void Npc067_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][8] = {
+		{
+			{ 0, 0,  16, 16},
+			{16, 0,  32, 16},
+			{32, 0,  48, 16},
+			{48, 0,  64, 16},
+			{64, 0,  80, 16},
+			{80, 0,  96, 16},
+			{96, 0, 112, 16},
+			{64, 0,  80, 16},
+		},
+		{
+			{ 0, 16,  16, 32},
+			{16, 16,  32, 32},
+			{32, 16,  48, 32},
+			{48, 16,  64, 32},
+			{64, 16,  80, 32},
+			{80, 16,  96, 32},
+			{96, 16, 112, 32},
+			{64, 16,  80, 32},
+		},
+	};
+	RECT telerc;
+	
+	LoadTLUT_CI4(npc_misery_tlut);
+	LoadTex_CI4(128, 32, npc_misery_tex);
+	if (npc->act_no == 1 && npc->ani_wait < 32)
+	{
+		telerc.left = rect[npc->direct != 0][npc->ani_no].left;
+		telerc.top = rect[npc->direct != 0][npc->ani_no].top;
+		telerc.right = rect[npc->direct != 0][npc->ani_no].right;
+		telerc.bottom = (npc->ani_wait / 2) + rect[npc->direct != 0][npc->ani_no].bottom - 16;
+		PutBitmap(&telerc, x, y);
+	}
+	else
+	{
+		PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+	}
+}
+
+//NPC 068 - Balrog (running)
+#include "data/bitmap/npc_balrog.inc.c"
+
+void Npc068_Act(NPCHAR *npc)
+{
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->act_wait = 30;
+			
+			if (npc->x > gMC.x)
+				npc->direct = 0;
+			else
+				npc->direct = 2;
+			//Fallthrough
+		case 1:
+			if (--npc->act_wait)
+				break;
+			npc->act_no = 2;
+			npc->count1++;
+			break;
+			
+		case 2:
+			npc->act_no = 3;
+			npc->act_wait = 0;
+			npc->ani_no = 1;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 3:
+			if (++npc->ani_wait > 3)
+			{
+				npc->ani_wait = 0;
+				if (++npc->ani_no == 2 || npc->ani_no == 4)
+					PlaySoundObject(23, 1);
+			}
+			if (npc->ani_no > 4)
+				npc->ani_no = 1;
+			
+			if (npc->direct == 0)
+				npc->xm -= 0x10;
+			else
+				npc->xm += 0x10;
+			
+			if (npc->act_wait >= 8 && npc->x - (12 * 0x200) < gMC.x && npc->x + (12 * 0x200) > gMC.x && npc->y - (12 * 0x200) < gMC.y && npc->y + (8 * 0x200) > gMC.y)
+			{
+				npc->act_no = 10;
+				npc->ani_no = 5;
+				gMC.cond |= 2;
+				DamageMyChar(2);
+				break;
+			}
+			
+			npc->act_wait++;
+			if (npc->flag & 5 || npc->act_wait > 75)
+			{
+				npc->act_no = 9;
+				npc->ani_no = 0;
+				break;
+			}
+			
+			if ((npc->count1 % 3) == 0 && npc->act_wait > 25)
+			{
+				npc->act_no = 4;
+				npc->ani_no = 7;
+				npc->ym = -0x400;
+				break;
+			}
+			break;
+			
+		case 4:
+			if (npc->flag & 8)
+			{
+				npc->act_no = 9;
+				npc->ani_no = 8;
+				SetQuake(30);
+				PlaySoundObject(26, 1);
+			}
+			
+			if (npc->act_wait >= 8 && npc->x - (12 * 0x200) < gMC.x && npc->x + (12 * 0x200) > gMC.x && npc->y - (12 * 0x200) < gMC.y && npc->y + (8 * 0x200) > gMC.y)
+			{
+				npc->act_no = 10;
+				npc->ani_no = 5;
+				gMC.cond |= 2;
+				DamageMyChar(2);
+			}
+			break;
+			
+		case 9:
+			npc->xm = (npc->xm * 4) / 5;
+			if (npc->xm != 0)
+				break;
+			
+			npc->act_no = 0;
+			break;
+			
+		case 10:
+			gMC.x = npc->x;
+			gMC.y = npc->y;
+			
+			npc->xm = (npc->xm * 4) / 5;
+			if (npc->xm != 0)
+				break;
+			
+			npc->act_no = 11;
+			npc->act_wait = 0;
+			npc->ani_no = 5;
+			npc->ani_wait = 0;
+			break;
+			
+		case 11:
+			gMC.x = npc->x;
+			gMC.y = npc->y;
+			
+			if (++npc->ani_wait > 2)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 6)
+				npc->ani_no = 5;
+			
+			if (++npc->act_wait > 100)
+				npc->act_no = 20;
+			break;
+			
+		case 20:
+			PlaySoundObject(25, 1);
+			gMC.cond &= ~2;
+			
+			if (npc->direct == 0)
+			{
+				gMC.x += 4 * 0x200;
+				gMC.y -= 8 * 0x200;
+				gMC.xm = 0x5FF;
+				gMC.ym = -0x200;
+				gMC.direct = 2;
+				npc->direct = 2;
+			}
+			else
+			{
+				gMC.x -= 4 * 0x200;
+				gMC.y -= 8 * 0x200;
+				gMC.xm = -0x5FF;
+				gMC.ym = -0x200;
+				gMC.direct = 0;
+				npc->direct = 0;
+			}
+			
+			npc->act_no = 21;
+			npc->act_wait = 0;
+			npc->ani_no = 7;
+			//Fallthrough
+		case 21:
+			if (++npc->act_wait < 50)
+				break;
+			npc->act_no = 0;
+			break;
+	}
+	
+	//Fall and move
+	npc->ym += 0x20;
+	if (npc->xm < -0x400)
+		npc->xm = -0x400;
+	if (npc->xm > 0x400)
+		npc->xm = 0x400;
+	if (npc->ym > 0x5FF)
+		npc->ym = 0x5FF;
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc068_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const s32 frame[] = {
+		0/40,
+		8+0/40,
+		0/40,
+		8+40/40,
+		0/40,
+		8+80/40,
+		8+120/40,
+		120/40,
+		80/40,
+	};
+	static const RECT rect[2] = {
+		{ 0, 0, 40, 24},
+		{40, 0, 80, 24},
+	};
+	
+	LoadTLUT_CI4(npc_balrog_tlut);
+	LoadTex_CI4(80, 24, npc_balrog_tex + (40 * 24) * frame[npc->ani_no]);
+	PutBitmap(&rect[npc->direct != 0], x, y);
+}
+
+//NPC 069 - Pignon
+#include "data/bitmap/npc_pignon.inc.c"
+
+void Npc069_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			npc->xm = 0;
+			//Fallthrough
+		case 1:
+			if (Random(0, 100) == 1)
+			{
+				npc->act_no = 2;
+				npc->act_wait = 0;
+				npc->ani_no = 1;
+				break;
+			}
+			
+			if (Random(0, 150) == 1)
+			{
+				if (npc->direct == 0)
+					npc->direct = 2;
+				else
+					npc->direct = 0;
+			}
+			
+			if (Random(0, 150) == 1)
+			{
+				npc->act_no = 3;
+				npc->act_wait = 50;
+				npc->ani_no = 0;
+				break;
+			}
+			break;
+
+		case 2:
+			if (++npc->act_wait > 8)
+			{
+				npc->act_no = 1;
+				npc->ani_no = 0;
+			}
+			break;
+			
+		case 3:
+			npc->act_no = 4;
+			npc->ani_no = 2;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 4:
+			if (--npc->act_wait == 0)
+				npc->act_no = 0;
+			
+			if (++npc->ani_wait > 2)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 4)
+				npc->ani_no = 2;
+			
+			if (npc->flag & 1)
+			{
+				npc->direct = 2;
+				npc->xm = 0x200;
+			}
+			if (npc->flag & 4)
+			{
+				npc->direct = 0;
+				npc->xm = -0x200;
+			}
+			
+			if (npc->direct == 0)
+				npc->xm = -0x100;
+			else
+				npc->xm = 0x100;
+			break;
+			
+		case 5:
+			if (npc->flag & 8)
+				npc->act_no = 0;
+			break;
+	}
+	
+	switch (npc->act_no)
+	{
+		case 1:
+		case 2:
+		case 4:
+			if (npc->shock)
+			{
+				npc->ym = -0x200;
+				npc->ani_no = 5;
+				npc->act_no = 5;
+			}
+			break;
+	}
+	
+	//Fall and move
+	npc->ym += 0x40;
+	if (npc->ym > 0x5FF)
+		npc->ym = 0x5FF;
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc069_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][6] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+			{48, 0, 64, 16},
+			{ 0, 0, 16, 16},
+			{64, 0, 80, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+			{48, 16, 64, 32},
+			{ 0, 16, 16, 32},
+			{64, 16, 80, 32},
+		}
+	};
+	LoadTLUT_CI4(npc_pignon_tlut);
+	LoadTex_CI4(80, 32, npc_pignon_tex);
 	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
 }
 

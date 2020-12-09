@@ -6,7 +6,14 @@ typedef struct
 {
 	void *prev, *next;
 	size_t size;
+	u32 pad;
 } Mem_Header;
+
+#ifdef __GNUC__
+	_Static_assert((sizeof(Mem_Header) & 0xF) == 0, "Mem_Header size must be aligned to 16 bytes");
+#else
+	typedef char GLUE2(static_assertion_failed, __LINE__)[((sizeof(Mem_Header) & 0xF) == 0) ? 1 : -1]
+#endif
 
 static Mem_Header *mem = NULL;
 static size_t mem_used, mem_size;

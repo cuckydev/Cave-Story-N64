@@ -31,7 +31,6 @@ void VBlankCallback(int pending)
 	#endif
 	
 	//Update game
-	GetKey();
 	Game_Update();
 	
 	if (pending < 1)

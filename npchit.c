@@ -523,7 +523,7 @@ void HitNpCharBullet()
 				{
 					gNPC[n].life -= gBul[b].damage;
 					
-					if (gNPC[n].life < 1)
+					if (gNPC[n].life <= 0)
 					{
 						gNPC[n].life = 0;
 						

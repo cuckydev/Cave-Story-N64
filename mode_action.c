@@ -19,6 +19,7 @@
 #include "valueview.h"
 #include "shoot.h"
 #include "back.h"
+#include "bosslife.h"
 
 void ModeAction_Init()
 {
@@ -64,6 +65,12 @@ GameMode ModeAction_Proc()
 	ProcFade();
 	
 	//Handle additional input
+	if (!(g_GameFlags & 4))
+	{
+		if (gMC.equip & EQUIP_MAP && gKeyTrg & gKeyMap)
+			return GameMode_MiniMap;
+	}
+	
 	if (g_GameFlags & 2)
 	{
 		if (gKeyTrg & gKeyArms)
@@ -97,6 +104,7 @@ void ModeAction_Draw()
 	PutValueView(fx, fy);
 	
 	//Draw HUD
+	PutBossLife();
 	PutFade();
 	PutMapName(FALSE);
 	if (g_GameFlags & 2)

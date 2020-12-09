@@ -15,6 +15,7 @@
 #include "profile.h"
 #include "armsitem.h"
 #include "fade.h"
+#include "bosslife.h"
 #include <string.h>
 
 //Text script globals
@@ -1015,10 +1016,10 @@ s32 TextScriptProc()
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
 						
-						//if (z != 0)
-						//	StartBossLife(z);
-						//else
-						//	StartBossLife2();
+						if (z != 0)
+							StartBossLife(z);
+						else
+							StartBossLife2();
 						
 						gTS.p_read += 8;
 					}

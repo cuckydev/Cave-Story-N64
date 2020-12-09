@@ -1,6 +1,7 @@
 #include "game.h"
 #include "rand.h"
 #include "draw.h"
+#include "keycontrol.h"
 
 //Game globals
 s32 g_GameFlags = 3;
@@ -11,6 +12,7 @@ GameMode mode;
 #include "mode_opening.h"
 #include "mode_title.h"
 #include "mode_action.h"
+#include "mode_minimap.h"
 
 void (*mode_init[GameMode_Num])() = {
 	NULL,
@@ -18,7 +20,7 @@ void (*mode_init[GameMode_Num])() = {
 	ModeTitle_Init,
 	ModeAction_Init,
 	NULL,
-	NULL,
+	ModeMiniMap_Init,
 	NULL,
 };
 GameMode (*mode_proc[GameMode_Num])() = {
@@ -27,7 +29,7 @@ GameMode (*mode_proc[GameMode_Num])() = {
 	ModeTitle_Proc,
 	ModeAction_Proc,
 	NULL,
-	NULL,
+	ModeMiniMap_Proc,
 	NULL,
 };
 void (*mode_draw[GameMode_Num])() = {
@@ -36,7 +38,7 @@ void (*mode_draw[GameMode_Num])() = {
 	ModeTitle_Draw,
 	ModeAction_Draw,
 	NULL,
-	NULL,
+	ModeMiniMap_Draw,
 	NULL,
 };
 void (*mode_quit[GameMode_Num])() = {
@@ -45,7 +47,7 @@ void (*mode_quit[GameMode_Num])() = {
 	ModeTitle_Quit,
 	ModeAction_Quit,
 	NULL,
-	NULL,
+	ModeMiniMap_Quit,
 	NULL,
 };
 
@@ -137,9 +139,14 @@ void Game_Update()
 	{
 		//Run current mode process
 		if (mode_proc[mode] != NULL)
+		{
+			GetKey();
 			next_mode = mode_proc[mode]();
+		}
 		else
+		{
 			break;
+		}
 		
 		//Handle mode changes
 		if (next_mode != mode)

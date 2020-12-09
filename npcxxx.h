@@ -54,6 +54,9 @@ void Npc037_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc039_Put(NPCHAR *npc, s32 x, s32 y);
 
+void Npc041_Act(NPCHAR *npc);
+void Npc041_Put(NPCHAR *npc, s32 x, s32 y);
+
 void Npc046_Act(NPCHAR *npc);
 
 void Npc059_Act(NPCHAR *npc);
@@ -76,6 +79,18 @@ void Npc064_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc065_Act(NPCHAR *npc);
 void Npc065_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc066_Act(NPCHAR *npc);
+void Npc066_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc067_Act(NPCHAR *npc);
+void Npc067_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc068_Act(NPCHAR *npc);
+void Npc068_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc069_Act(NPCHAR *npc);
+void Npc069_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc070_Act(NPCHAR *npc);
 void Npc070_Put(NPCHAR *npc, s32 x, s32 y);
@@ -104,6 +119,12 @@ void Npc078_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc079_Act(NPCHAR *npc);
 void Npc079_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc080_Act(NPCHAR *npc);
+void Npc080_Put(NPCHAR *npc, s32 x, s32 y);
+
+void Npc081_Act(NPCHAR *npc);
+void Npc081_Put(NPCHAR *npc, s32 x, s32 y);
 
 void Npc087_Act(NPCHAR *npc);
 void Npc087_Put(NPCHAR *npc, s32 x, s32 y);

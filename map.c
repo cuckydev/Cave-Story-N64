@@ -155,7 +155,7 @@ void ShiftMapParts(s32 x, s32 y)
 BOOL ChangeMapParts(s32 x, s32 y, u8 no)
 {
 	s32 i;
-	if (map_data[x + y * map_width] != no)
+	if (map_data[x + y * map_width] == no)
 		return FALSE;
 	map_data[x + y * map_width] = no;
 	if (IsTileOnscreen(x, y))
