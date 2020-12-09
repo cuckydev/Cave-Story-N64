@@ -6,6 +6,8 @@
 #include "draw.h"
 #include "mem.h"
 
+GameMode minimap_return;
+
 static s32 my_x, my_y, my_wait;
 static u16 map_w, map_h;
 static u16 pline, line;
@@ -125,7 +127,7 @@ GameMode ModeMiniMap_Proc()
 	{
 		//Shrink frame
 		if (--frame_i <= 0)
-			return GameMode_Action;
+			return minimap_return;
 	}
 	
 	return GameMode_MiniMap;

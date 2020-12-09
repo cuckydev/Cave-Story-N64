@@ -49,13 +49,24 @@ typedef struct TEXT_SCRIPT
 
 extern TEXT_SCRIPT gTS;
 
+//Text script result enum
+typedef enum
+{
+	TSCR_None,
+	TSCR_Restart,
+	TSCR_MiniMap,
+	TSCR_StageSelect,
+	TSCR_DownIsland,
+} TSC_RESULT;
+
 //Text script functions
 void InitTextScript();
 void LoadTextScript_Stage(const char *script);
 void LoadTextScript(const char *script);
 const char *GetTextScript();
 void StartTextScript(s32 no);
+void StopTextScript();
 void PutTextScript();
-s32 TextScriptProc();
+TSC_RESULT TextScriptProc();
 
 #endif

@@ -12,6 +12,7 @@ GameMode mode;
 #include "mode_opening.h"
 #include "mode_title.h"
 #include "mode_action.h"
+#include "mode_camp.h"
 #include "mode_minimap.h"
 
 void (*mode_init[GameMode_Num])() = {
@@ -19,8 +20,9 @@ void (*mode_init[GameMode_Num])() = {
 	ModeOpening_Init,
 	ModeTitle_Init,
 	ModeAction_Init,
-	NULL,
+	ModeCamp_Init,
 	ModeMiniMap_Init,
+	NULL,
 	NULL,
 };
 GameMode (*mode_proc[GameMode_Num])() = {
@@ -28,8 +30,9 @@ GameMode (*mode_proc[GameMode_Num])() = {
 	ModeOpening_Proc,
 	ModeTitle_Proc,
 	ModeAction_Proc,
-	NULL,
+	ModeCamp_Proc,
 	ModeMiniMap_Proc,
+	NULL,
 	NULL,
 };
 void (*mode_draw[GameMode_Num])() = {
@@ -37,8 +40,9 @@ void (*mode_draw[GameMode_Num])() = {
 	ModeOpening_Draw,
 	ModeTitle_Draw,
 	ModeAction_Draw,
-	NULL,
+	ModeCamp_Draw,
 	ModeMiniMap_Draw,
+	NULL,
 	NULL,
 };
 void (*mode_quit[GameMode_Num])() = {
@@ -46,8 +50,9 @@ void (*mode_quit[GameMode_Num])() = {
 	ModeOpening_Quit,
 	ModeTitle_Quit,
 	ModeAction_Quit,
-	NULL,
+	ModeCamp_Quit,
 	ModeMiniMap_Quit,
+	NULL,
 	NULL,
 };
 

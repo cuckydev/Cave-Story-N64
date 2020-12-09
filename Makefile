@@ -34,6 +34,7 @@ CODEFILES = \
 	mode_opening.c \
 	mode_title.c \
 	mode_action.c \
+	mode_camp.c \
 	mode_minimap.c \
 	profile.c \
 	textscr.c \

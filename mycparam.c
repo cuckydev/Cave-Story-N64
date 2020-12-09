@@ -177,11 +177,8 @@ void PutArmsEnergy(BOOL flash)
 	if (flash == TRUE && (gMC.shock / 2) % 2)
 		return;
 	
-	if (gArmsData[gSelectedArms].max_num)
-	{
-		LoadTLUT_CI4(expbar_tlut);
-		LoadTex_CI4(128, 16, expbar_tex);
-	}
+	LoadTLUT_CI4(expbar_tlut);
+	LoadTex_CI4(128, 16, expbar_tex);
 	PutBitmap(&rcPer, gArmsEnergyX + 32, 24);
 	PutBitmap(&rcLv, gArmsEnergyX, 32);
 	PutNumber4(gArmsEnergyX - 8, 32, gArmsData[gSelectedArms].level, FALSE);

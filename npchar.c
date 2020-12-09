@@ -8,6 +8,8 @@
 #include "valueview.h"
 #include <string.h>
 
+#define SHOW_UNIMPLEMENTED_NPCS
+
 //NPC globals
 NPCHAR gNPC[NPC_MAX];
 s32 gCurlyShoot_wait;
@@ -339,6 +341,18 @@ void PutNpChar(s32 fx, s32 fy)
 				SetValueView(&gNPC[i].x, &gNPC[i].y, gNPC[i].damage_view);
 				gNPC[i].damage_view = 0;
 			}
+			#ifdef SHOW_UNIMPLEMENTED_NPCS
+			if (gpNpcFuncTbl[gNPC[i].code_char].act == NULL && NpCharVisible(&gNPC[i], fx, fy))
+			{
+				char text[0x10];
+				sprintf(text, "%d", gNPC[i].code_char);
+				PutText(
+					((gNPC[i].x - (gNPC[i].direct ? gNPC[i].view.back : gNPC[i].view.front)) / 0x200) - (fx / 0x200) + a,
+					((gNPC[i].y - gNPC[i].view.top) / 0x200) - (fy / 0x200),
+					text,
+					RGB(0xFF, 0xFF, 0xFF));
+			}
+			#endif
 		}
 	}
 }

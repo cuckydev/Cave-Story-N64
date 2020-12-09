@@ -20,6 +20,7 @@
 #include "shoot.h"
 #include "back.h"
 #include "bosslife.h"
+#include "mode_minimap.h"
 
 void ModeAction_Init()
 {
@@ -67,8 +68,13 @@ GameMode ModeAction_Proc()
 	//Handle additional input
 	if (!(g_GameFlags & 4))
 	{
+		if (gKeyTrg & gKeyItem)
+			return GameMode_Camp;
 		if (gMC.equip & EQUIP_MAP && gKeyTrg & gKeyMap)
+		{
+			minimap_return = GameMode_Action;
 			return GameMode_MiniMap;
+		}
 	}
 	
 	if (g_GameFlags & 2)
@@ -80,7 +86,20 @@ GameMode ModeAction_Proc()
 	}
 	
 	//Run text script
-	TextScriptProc();
+	switch (TextScriptProc())
+	{
+		case TSCR_None:
+			break;
+		case TSCR_Restart:
+			return GameMode_Opening;
+		case TSCR_MiniMap:
+			minimap_return = GameMode_Action;
+			return GameMode_MiniMap;
+		case TSCR_StageSelect:
+			return GameMode_StageSelect;
+		case TSCR_DownIsland:
+			return GameMode_DownIsland;
+	}
 	
 	return GameMode_Action;
 }

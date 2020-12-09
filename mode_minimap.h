@@ -3,6 +3,8 @@
 
 #include "game.h"
 
+extern GameMode minimap_return;
+
 void ModeMiniMap_Init();
 GameMode ModeMiniMap_Proc();
 void ModeMiniMap_Draw();

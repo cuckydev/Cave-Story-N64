@@ -16,6 +16,7 @@ typedef enum
 	GameMode_Camp,
 	GameMode_MiniMap,
 	GameMode_StageSelect,
+	GameMode_DownIsland,
 	//Number
 	GameMode_Num,
 } GameMode;

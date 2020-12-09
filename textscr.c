@@ -448,7 +448,7 @@ void PutTextScript()
 	
 }
 
-s32 TextScriptProc()
+TSC_RESULT TextScriptProc()
 {
 	s32 i;
 	char c[3];
@@ -913,29 +913,12 @@ s32 TextScriptProc()
 					{
 						gTS.p_read += 4;
 						bExit = TRUE;
-
-						//switch (MiniMapLoop())
-						//{
-						//	case enum_ESCRETURN_exit:
-						//		return enum_ESCRETURN_exit;
-						//	case enum_ESCRETURN_restart:
-						//		return enum_ESCRETURN_restart;
-						//}
+						return TSCR_MiniMap;
 					}
 					else if (IS_COMMAND('S','L','P'))
 					{
 						bExit = TRUE;
-						
-						//switch (StageSelectLoop(&z))
-						//{
-						//	case enum_ESCRETURN_exit:
-						//		return enum_ESCRETURN_exit;
-						//	case enum_ESCRETURN_restart:
-						//		return enum_ESCRETURN_restart;
-						//}
-						
-						JumpTextScript(z);
-						g_GameFlags &= ~3;
+						return TSCR_StageSelect;
 					}
 					else if (IS_COMMAND('D','N','P'))
 					{
@@ -1103,24 +1086,16 @@ s32 TextScriptProc()
 					{
 						bExit = TRUE;
 						z = GetTextScriptNo(gTS.p_read + 4);
-						
-						//switch (Scene_DownIsland(z))
-						//{
-						//	case enum_ESCRETURN_exit:
-						//		return enum_ESCRETURN_exit;
-						//	case enum_ESCRETURN_restart:
-						//		return enum_ESCRETURN_restart;
-						//}
-						
 						gTS.p_read += 8;
+						return TSCR_DownIsland;
 					}
 					else if (IS_COMMAND('E','S','C'))
 					{
-						return 0;
+						return TSCR_Restart;
 					}
 					else
 					{
-						return 0;
+						return TSCR_None;
 					}
 				}
 				else
@@ -1307,4 +1282,5 @@ s32 TextScriptProc()
 		g_GameFlags &= ~4;
 	else
 		g_GameFlags |= 4;
+	return TSCR_None;
 }
