@@ -3,10 +3,12 @@
 
 #include <assert.h>
 
-#define ALIGN_DEBUG
+//#define ALIGN_DEBUG
 
 //Current render state
 static RenderState render_state;
+static u8 *prev_tex;
+static u16 *prev_tlut;
 
 //Render constants
 const RECT grcFull = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
@@ -92,6 +94,8 @@ void StartFrame()
 	
 	//Reset draw state
 	render_state = RS_Null;
+	prev_tex = NULL;
+	prev_tlut = NULL;
 }
 
 void EndFrame()
@@ -140,7 +144,11 @@ void LoadTLUT_CI4(u16 *tlut)
 	if ((size_t)tlut & 0x7)
 	{ while (1) {;} }
 	#endif
-	gDPLoadTLUT_pal16(glistp++, 0, tlut);
+	if (tlut != prev_tlut)
+	{
+		gDPLoadTLUT_pal16(glistp++, 0, tlut);
+		prev_tlut = tlut;
+	}
 }
 
 void LoadTLUT_CI8(u16 *tlut)
@@ -149,7 +157,11 @@ void LoadTLUT_CI8(u16 *tlut)
 	if ((size_t)tlut & 0x7)
 	{ while (1) {;} }
 	#endif
-	gDPLoadTLUT_pal256(glistp++, tlut);
+	if (tlut != prev_tlut)
+	{
+		gDPLoadTLUT_pal256(glistp++, tlut);
+		prev_tlut = tlut;
+	}
 }
 
 void LoadTex_CI4(u32 width, u32 height, u8 *tex)
@@ -158,16 +170,20 @@ void LoadTex_CI4(u32 width, u32 height, u8 *tex)
 	if ((size_t)tex & 0x7)
 	{ while (1) {;} }
 	#endif
-	gDPLoadTextureBlock_4b(glistp++, 
-		tex,
-		G_IM_FMT_CI,
-		width, height,
-		0,
-		G_TX_WRAP, G_TX_WRAP,
-		G_TX_NOMASK, G_TX_NOMASK,
-		G_TX_NOLOD, G_TX_NOLOD
-	);
-	gDPPipeSync(glistp++);
+	if (tex != prev_tex)
+	{
+		gDPLoadTextureBlock_4b(glistp++, 
+			tex,
+			G_IM_FMT_CI,
+			width, height,
+			0,
+			G_TX_WRAP, G_TX_WRAP,
+			G_TX_NOMASK, G_TX_NOMASK,
+			G_TX_NOLOD, G_TX_NOLOD
+		);
+		gDPPipeSync(glistp++);
+		prev_tex = tex;
+	}
 }
 
 void LoadTex_CI8(u32 width, u32 height, u8 *tex)
@@ -176,17 +192,21 @@ void LoadTex_CI8(u32 width, u32 height, u8 *tex)
 	if ((size_t)tex & 0x7)
 	{ while (1) {;} }
 	#endif
-	gDPLoadTextureBlock(glistp++, 
-		tex,
-		G_IM_FMT_CI,
-		G_IM_SIZ_8b,
-		width, height,
-		0,
-		G_TX_WRAP, G_TX_WRAP,
-		G_TX_NOMASK, G_TX_NOMASK,
-		G_TX_NOLOD, G_TX_NOLOD
-	);
-	gDPPipeSync(glistp++);
+	if (tex != prev_tex)
+	{
+		gDPLoadTextureBlock(glistp++, 
+			tex,
+			G_IM_FMT_CI,
+			G_IM_SIZ_8b,
+			width, height,
+			0,
+			G_TX_WRAP, G_TX_WRAP,
+			G_TX_NOMASK, G_TX_NOMASK,
+			G_TX_NOLOD, G_TX_NOLOD
+		);
+		gDPPipeSync(glistp++);
+		prev_tex = tex;
+	}
 }
 
 void PutBitmap(const RECT *src, s32 x, s32 y)
