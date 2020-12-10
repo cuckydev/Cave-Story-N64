@@ -88,7 +88,7 @@ void ModeMiniMap_Init()
 	GetMapData(NULL, &map_w, &map_h);
 	mapsurf_pitch = ((map_w + 0xF) & ~0xF) >> 1;
 	mapsurf_chky = 2048 / mapsurf_pitch;
-	mapsurf_chks = map_h / mapsurf_chky;
+	mapsurf_chks = (map_h + mapsurf_chky - 1) / mapsurf_chky;
 	
 	//Allocate map surface
 	mapsurf = Mem_Alloc(mapsurf_pitch * (mapsurf_chks * mapsurf_chky));

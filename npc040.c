@@ -23,6 +23,32 @@ void Npc041_Put(NPCHAR *npc, s32 x, s32 y)
 	PutBitmap(&rect, x, y);
 }
 
+//NPC 043 - Chalkboard
+#include "data/bitmap/npc_chalkboard.inc.c"
+
+void Npc043_Act(NPCHAR *npc)
+{
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->y -= 1 * 0x10 * 0x200;
+			break;
+	}
+}
+
+void Npc043_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 40, 32},
+		{40, 0, 80, 32},
+	};
+	
+	LoadTLUT_CI4(npc_chalkboard_tlut);
+	LoadTex_CI4(80, 32, npc_chalkboard_tex);
+	PutBitmap(&rect[npc->direct != 0], x, y);
+}
+
 //NPC 046 - H/V trigger
 void Npc046_Act(NPCHAR *npc)
 {

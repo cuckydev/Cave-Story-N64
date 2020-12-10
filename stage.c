@@ -46,7 +46,7 @@ struct
 } gTMT[] = {
 	{NULL, NULL, "Null", NULL, 4},
 	{&pens1_data, &prt_pens, "Arthur's House", &bk_blue, 1},
-	{&eggs_data, &prt_eggs, "Egg Corridor", NULL, 4},
+	{&eggs_data, &prt_eggs, "Egg Corridor", &bk_green, 1},
 	{NULL, NULL, "Egg No. 00", NULL, 4},
 	{NULL, NULL, "Egg No. 06", NULL, 4},
 	{NULL, NULL, "Egg Observation Room", NULL, 4},

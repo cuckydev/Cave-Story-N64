@@ -120,11 +120,6 @@ BOOL LoadProfile()
 		gMC.x = profile.x << 5;
 		gMC.y = profile.y << 5;
 		
-		gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
-		gMC.rect_arms.right = gMC.rect_arms.left + 24;
-		gMC.rect_arms.top = (gArmsData[gSelectedArms].code / 10) * 32;
-		gMC.rect_arms.bottom = gMC.rect_arms.top + 16;
-		
 		//Reset stuff
 		ClearFade();
 		SetFrameMyChar();

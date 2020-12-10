@@ -1,5 +1,6 @@
 #include "mychar.h"
 #include "mycparam.h"
+#include "mychit.h"
 #include "npchar.h"
 #include "keycontrol.h"
 #include "draw.h"
@@ -113,9 +114,18 @@ void AnimationMyChar(BOOL bKey)
 void ShowMyChar(BOOL bShow)
 {
 	if (bShow)
+	{
 		gMC.cond &= ~2;
+		//hacky solution to fix some transitional issues
+		gMC.y++;
+		HitMyCharMap();
+		HitMyCharNpChar();
+		AnimationMyChar(FALSE);
+	}
 	else
+	{
 		gMC.cond |= 2;
+	}
 }
 
 #include "data/bitmap/mychar.inc.c"
@@ -171,6 +181,7 @@ void PutMyChar(s32 fx, s32 fy)
 		{ 96, 0, 112, 16},
 		{112, 0, 128, 16},
 	};
+	RECT rect_arms;
 	
 	if (!(gMC.cond & 0x80) || gMC.cond & 2)
 		return;
@@ -184,28 +195,28 @@ void PutMyChar(s32 fx, s32 fy)
 	if (arms_tex[arms_code].tex != NULL && arms_tex[arms_code].tlut != NULL)
 	{
 		//Draw weapon
-		gMC.rect_arms.left = 0;
-		gMC.rect_arms.right = 24;
-		gMC.rect_arms.top = 0;
-		gMC.rect_arms.bottom = 16;
+		rect_arms.left = 0;
+		rect_arms.right = 24;
+		rect_arms.top = 0;
+		rect_arms.bottom = 16;
 		
 		if (gMC.direct == 2)
 		{
-			gMC.rect_arms.top += 16;
-			gMC.rect_arms.bottom += 16;
+			rect_arms.top += 16;
+			rect_arms.bottom += 16;
 		}
 		
 		if (gMC.up)
 		{
 			arms_offset_y = -4;
-			gMC.rect_arms.top += 32;
-			gMC.rect_arms.bottom += 32;
+			rect_arms.top += 32;
+			rect_arms.bottom += 32;
 		}
 		else if (gMC.down)
 		{
 			arms_offset_y = 4;
-			gMC.rect_arms.top += 64;
-			gMC.rect_arms.bottom += 64;
+			rect_arms.top += 64;
+			rect_arms.bottom += 64;
 		}
 		else
 		{
@@ -213,18 +224,18 @@ void PutMyChar(s32 fx, s32 fy)
 		}
 		
 		if (gMC.ani_no == 1 || gMC.ani_no == 3 || gMC.ani_no == 6 || gMC.ani_no == 8)
-			gMC.rect_arms.top++;
+			rect_arms.top++;
 		
 		LoadTLUT_CI4(arms_tex[arms_code].tlut);
 		LoadTex_CI4(32, 96, arms_tex[arms_code].tex);
 		if (gMC.direct == 0)
 			PutBitmap(
-				&gMC.rect_arms,
+				&rect_arms,
 				((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200) - 8,
 				((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200) + arms_offset_y);
 		else
 			PutBitmap(
-				&gMC.rect_arms,
+				&rect_arms,
 				((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200),
 				((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200) + arms_offset_y);
 	}
@@ -936,7 +947,6 @@ void SetMyCharDirect(u8 dir)
 		}
 		else
 		{
-			/*
 			for (i = 0; i < NPC_MAX; ++i)
 				if (gNPC[i].code_event == dir)
 					break;
@@ -948,7 +958,6 @@ void SetMyCharDirect(u8 dir)
 				gMC.direct = 0;
 			else
 				gMC.direct = 2;
-			*/
 		}
 	}
 	

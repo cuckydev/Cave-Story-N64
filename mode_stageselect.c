@@ -19,12 +19,12 @@ void ModeStageSelect_Init()
 	prev_script = GetTextScript();
 	LoadTextScript(stageselect_script);
 	
-	//Run initial event
-	StartTextScript(gPermitStage[gSelectedStage].index + 1000);
-	
 	//Initialize stage select state
 	gSelectedStage = 0;
 	gStageSelectTitleY = (SCREEN_HEIGHT / 2) - 66;
+	
+	//Run initial event
+	StartTextScript(gPermitStage[gSelectedStage].index + 1000);
 }
 
 void MoveStageSelectCursor()

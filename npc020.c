@@ -211,6 +211,21 @@ void Npc032_Put(NPCHAR *npc, s32 x, s32 y)
 	PutBitmap(&rect[npc->ani_no], x, y);
 }
 
+//NPC 034 - Bed
+#include "data/bitmap/npc_bed.inc.c"
+
+void Npc034_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 32, 16},
+		{32, 0, 64, 16},
+	};
+	
+	LoadTLUT_CI4(npc_bed_tlut);
+	LoadTex_CI4(64, 16, npc_bed_tex);
+	PutBitmap(&rect[npc->direct != 0], x, y);
+}
+
 //NPC 037 - Save sign
 #include "data/bitmap/npc_sign.inc.c"
 

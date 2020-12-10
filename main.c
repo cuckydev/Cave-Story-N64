@@ -7,6 +7,7 @@
 #include "game.h"
 #include "sound.h"
 #include "profile.h"
+#include "npctbl.h"
 
 static const char *cont_error = "NO CONTROLLER";
 static const char *eeprom_error = "16K EEPROM REQUIRED FOR SAVING";
@@ -15,13 +16,18 @@ static u16 error_blink = 0;
 //#define MEM_DEBUG
 //#define GLIST_DEBUG
 //#define FRAME_DEBUG
+#define NPC_DEBUG
+
+#ifdef NPC_DEBUG
+static u32 npcs_implemented;
+#endif
 
 void VBlankCallback(int pending)
 {
 	const char *error;
-	#if (defined(MEM_DEBUG) || defined(GLIST_DEBUG) || defined(FRAME_DEBUG))
+	#if (defined(MEM_DEBUG) || defined(GLIST_DEBUG) || defined(FRAME_DEBUG) || defined(NPC_DEBUG))
 		char debug[0x80];
-		s32 dbg_y = 64;
+		s32 dbg_y = 50;
 		#ifdef GLIST_DEBUG
 			static size_t glistp_size = 0;
 		#endif
@@ -62,26 +68,34 @@ void VBlankCallback(int pending)
 			size_t used, size;
 			Mem_GetStat(&used, &size);
 			sprintf(debug, "mem: 0x%X/0x%X", used, size);
-			PutText(25, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
-			PutText(24, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
+			PutText(17, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
+			PutText(16, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
 			dbg_y += 16;
 		#endif
 		
 		#ifdef GLIST_DEBUG
 			//Draw glist debug
 			sprintf(debug, "glistp: 0x%X/0x%X", glistp_size, GLIST_LENGTH);
-			PutText(25, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
-			PutText(24, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
+			PutText(17, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
+			PutText(16, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
 			dbg_y += 16;
 		#endif
 		
 		#ifdef FRAME_DEBUG
 			//Draw frame debug
 			sprintf(debug, "frame: %d", frames);
-			PutText(25, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
-			PutText(24, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
+			PutText(17, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
+			PutText(16, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
 			dbg_y += 16;
 			frames++;
+		#endif
+		
+		#ifdef NPC_DEBUG
+			//Draw NPC debug
+			sprintf(debug, "NPCs implemented: %d/361", npcs_implemented);
+			PutText(17, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
+			PutText(16, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
+			dbg_y += 16;
 		#endif
 		
 		//End frame
@@ -95,6 +109,14 @@ void VBlankCallback(int pending)
 static u8 mem_heap[0x4000];
 void mainproc(void)
 {
+	#ifdef NPC_DEBUG
+		//Get NPCs implemented
+		npcs_implemented = 0;
+		for (u32 i = 0; i < 361; i++)
+			if (gpNpcFuncTbl[i].act != NULL || gpNpcFuncTbl[i].put != NULL)
+				npcs_implemented++;
+	#endif
+	
 	//Initialize memory heap
 	if (Mem_Init((void*)mem_heap, sizeof(mem_heap)))
 		return;

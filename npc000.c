@@ -182,6 +182,122 @@ void Npc001_Put(NPCHAR *npc, s32 x, s32 y)
 	}
 }
 
+//NPC 002 - Behemoth
+#include "data/bitmap/npc_behemoth.inc.c"
+
+void Npc002_Act(NPCHAR *npc)
+{
+	//Turn when touching a wall
+	if (npc->flag & 1)
+		npc->direct = 2;
+	else if (npc->flag & 4)
+		npc->direct = 0;
+	
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0: //Walking
+			if (npc->direct == 0)
+				npc->xm = -0x100;
+			else
+				npc->xm = 0x100;
+			
+			if (++npc->ani_wait > 8)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 3)
+				npc->ani_no = 0;
+			
+			if (npc->shock)
+			{
+				npc->count1 = 0;
+				npc->act_no = 1;
+				npc->ani_no = 4;
+			}
+			break;
+			
+		case 1: //Shot
+			npc->xm = (npc->xm * 7) / 8;
+			
+			if (++npc->count1 > 40)
+			{
+				if (npc->shock)
+				{
+					npc->count1 = 0;
+					npc->act_no = 2;
+					npc->ani_no = 6;
+					npc->ani_wait = 0;
+					npc->damage = 5;
+				}
+				else
+				{
+					npc->act_no = 0;
+					npc->ani_wait = 0;
+				}
+			}
+			break;
+			
+		case 2: //Charge
+			if (npc->direct == 0)
+				npc->xm = -0x400;
+			else
+				npc->xm = 0x400;
+			
+			if (++npc->count1 > 200)
+			{
+				npc->act_no = 0;
+				npc->damage = 1;
+			}
+			
+			if (++npc->ani_wait > 5)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			
+			if (npc->ani_no > 6)
+			{
+				npc->ani_no = 5;
+				PlaySoundObject(26, 1);
+				SetNpChar(4, npc->x, npc->y + (3 * 0x200), 0, 0, 0, NULL, 0x100);
+				SetQuake(8);
+			}
+			break;
+	}
+	
+	//Fall and move
+	npc->ym += 0x40;
+	if (npc->ym > 0x5FF)
+		npc->ym = 0x5FF;
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc002_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 32, 24},
+		{32, 0, 64, 24},
+	};
+	
+	static const s32 frame[] = {
+		1,
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+	};
+	
+	LoadTLUT_CI4(npc_behemoth_tlut);
+	LoadTex_CI4(64, 24, npc_behemoth_tex + (32 * 24) * frame[npc->ani_no]);
+	PutBitmap(&rect[npc->direct != 0], x, y);
+}
+
 //NPC 003 - Value View Holder
 void Npc003_Act(NPCHAR *npc)
 {
@@ -234,33 +350,356 @@ void Npc004_Act(NPCHAR *npc)
 
 void Npc004_Put(NPCHAR *npc, s32 x, s32 y)
 {
-	static const RECT rcLeft[8] = {
-		{  0, 0,  16, 16},
-		{ 16, 0,  32, 16},
-		{ 32, 0,  48, 16},
-		{ 48, 0,  64, 16},
-		{ 64, 0,  80, 16},
-		{ 80, 0,  96, 16},
-		{ 96, 0, 112, 16},
-		{112, 0, 128, 16},
-	};
-	static const RECT rcUp[8] = {
-		{  0, 16,  16, 32},
-		{ 16, 16,  32, 32},
-		{ 32, 16,  48, 32},
-		{ 48, 16,  64, 32},
-		{ 64, 16,  80, 32},
-		{ 80, 16,  96, 32},
-		{ 96, 16, 112, 32},
-		{112, 16, 128, 32},
+	static const RECT rect[2][8] = {
+		{
+			{  0, 0,  16, 16},
+			{ 16, 0,  32, 16},
+			{ 32, 0,  48, 16},
+			{ 48, 0,  64, 16},
+			{ 64, 0,  80, 16},
+			{ 80, 0,  96, 16},
+			{ 96, 0, 112, 16},
+			{112, 0, 128, 16},
+		},
+		{
+			{  0, 16,  16, 32},
+			{ 16, 16,  32, 32},
+			{ 32, 16,  48, 32},
+			{ 48, 16,  64, 32},
+			{ 64, 16,  80, 32},
+			{ 80, 16,  96, 32},
+			{ 96, 16, 112, 32},
+			{112, 16, 128, 32},
+		},
 	};
 	
 	LoadTLUT_CI4(npc_smoke_tlut);
 	LoadTex_CI4(128, 32, npc_smoke_tex);
-	if (npc->direct == 1)
-		PutBitmap(&rcUp[npc->ani_no], x, y);
+	PutBitmap(&rect[npc->direct == 1][npc->ani_no], x, y);
+}
+
+//NPC 005 - Egg Corridor Critter
+#include "data/bitmap/npc_critter.inc.c"
+
+void Npc005_Act(NPCHAR *npc)
+{
+	switch (npc->act_no)
+	{
+		case 0: //Initialize
+			npc->y += 3 * 0x200;
+			npc->act_no = 1;
+			//Fallthrough
+		case 1: //Waiting
+			//Look at player
+			if (npc->x > gMC.x)
+				npc->direct = 0;
+			else
+				npc->direct = 2;
+			
+			//Open eyes near player
+			if (npc->act_wait >= 8 && npc->x - (112 * 0x200) < gMC.x && npc->x + (112 * 0x200) > gMC.x && npc->y - (80 * 0x200) < gMC.y && npc->y + (80 * 0x200) > gMC.y)
+			{
+				npc->ani_no = 1;
+			}
+			else
+			{
+				if (npc->act_wait < 8)
+					npc->act_wait++;
+				npc->ani_no = 0;
+			}
+			
+			//Jump if attacked
+			if (npc->shock)
+			{
+				npc->act_no = 2;
+				npc->ani_no = 0;
+				npc->act_wait = 0;
+			}
+			
+			//Jump if player is nearby
+			if (npc->act_wait >= 8 && npc->x - (48 * 0x200) < gMC.x && npc->x + (48 * 0x200) > gMC.x && npc->y - (80 * 0x200) < gMC.y && npc->y + (48 * 0x200) > gMC.y)
+			{
+				npc->act_no = 2;
+				npc->ani_no = 0;
+				npc->act_wait = 0;
+			}
+			break;
+			
+		case 2: //Going to jump
+			if (++npc->act_wait > 8)
+			{
+				//Set jump state
+				npc->act_no = 3;
+				npc->ani_no = 2;
+				
+				//Jump
+				npc->ym = -0x5FF;
+				PlaySoundObject(30, 1);
+				
+				//Jump in facing direction
+				if (npc->direct == 0)
+					npc->xm = -0x100;
+				else
+					npc->xm = 0x100;
+			}
+			break;
+			
+		case 3: //Jumping
+			//Land
+			if (npc->flag & 8)
+			{
+				npc->xm = 0;
+				npc->act_wait = 0;
+				npc->ani_no = 0;
+				npc->act_no = 1;
+				PlaySoundObject(23, 1);
+			}
+			break;
+	}
+	
+	//Fall and move
+	npc->ym += 64;
+	if (npc->ym > 0x5FF)
+		npc->ym = 0x5FF;
+	
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc005_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][3] = {
+		{
+			{0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+		},
+		{
+			{0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+		},
+	};
+	
+	LoadTLUT_CI4(npc_critter_eggs_tlut);
+	LoadTex_CI4(96, 32, npc_critter_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//NPC 006 - Beetle going left and right
+#include "data/bitmap/npc_beetle.inc.c"
+
+void Npc006_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0: //Initialize
+			npc->act_no = 1;
+			if (npc->direct == 0)
+				npc->act_no = 1;
+			else
+				npc->act_no = 3;
+			break;
+			
+		case 1:
+			//Accelerate to the left
+			npc->xm -= 0x10;
+			if (npc->xm < -0x400)
+				npc->xm = -0x400;
+			
+			//Move
+			if (npc->shock)
+				npc->x += npc->xm / 2;
+			else
+				npc->x += npc->xm;
+			
+			//Animate
+			if (++npc->ani_wait > 1)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+				npc->ani_no = 1;
+			
+			//Stop when hitting a wall
+			if (npc->flag & 1)
+			{
+				npc->act_no = 2;
+				npc->act_wait = 0;
+				npc->ani_no = 0;
+				npc->xm = 0;
+				npc->direct = 2;
+			}
+			break;
+			
+		case 2:
+			//Wait 60 frames then move to the right
+			if (++npc->act_wait > 60)
+			{
+				npc->act_no = 3;
+				npc->ani_wait = 0;
+				npc->ani_no = 1;
+			}
+			break;
+			
+		case 3:
+			//Accelerate to the right
+			npc->xm += 0x10;
+			if (npc->xm > 0x400)
+				npc->xm = 0x400;
+			
+			//Move
+			if (npc->shock)
+				npc->x += npc->xm / 2;
+			else
+				npc->x += npc->xm;
+			
+			//Animate
+			if (++npc->ani_wait > 1)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+				npc->ani_no = 1;
+			
+			//Stop when hitting a wall
+			if (npc->flag & 4)
+			{
+				npc->act_no = 4;
+				npc->act_wait = 0;
+				npc->ani_no = 0;
+				npc->xm = 0;
+				npc->direct = 0;
+			}
+			break;
+			
+		case 4:
+			//Wait 60 frames then move to the left
+			if (++npc->act_wait > 60)
+			{
+				npc->act_no = 1;
+				npc->ani_wait = 0;
+				npc->ani_no = 1;
+			}
+			break;
+	}
+}
+
+void Npc006_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	RECT rect[2][5] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+			{48, 0, 64, 16},
+			{64, 0, 80, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+			{48, 16, 64, 32},
+			{64, 16, 80, 32},
+		}
+	};
+	
+	LoadTLUT_CI4(npc_beetle_tlut);
+	LoadTex_CI4(112, 32, npc_beetle_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//NPC 007 - Basil
+#include "data/bitmap/npc_basil.inc.c"
+
+void Npc007_Act(NPCHAR *npc)
+{
+	//Move
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->x = gMC.x;
+			if (npc->direct == 0)
+				npc->act_no = 1;
+			else
+				npc->act_no = 2;
+			break;
+			
+		case 1: //Going left
+			npc->xm -= 0x40;
+			
+			//Turn around if far enough away from the player
+			if (npc->x < gMC.x - (192 * 0x200))
+				npc->act_no = 2;
+			
+			//Turn around if touching a wall
+			if (npc->flag & 1)
+			{
+				npc->xm = 0;
+				npc->act_no = 2;
+			}
+			break;
+			
+		case 2: //Going right
+			npc->xm += 0x40;
+			
+			//Turn around if far enough away from the player
+			if (npc->x > gMC.x + (192 * 0x200))
+				npc->act_no = 1;
+			
+			//Turn around if touching a wall
+			if (npc->flag & 4)
+			{
+				npc->xm = 0;
+				npc->act_no = 1;
+			}
+			break;
+	}
+	
+	//Face in moving direction
+	if (npc->xm < 0)
+		npc->direct = 0;
 	else
-		PutBitmap(&rcLeft[npc->ani_no], x, y);
+		npc->direct = 2;
+	
+	//Move
+	if (npc->xm > 0x5FF)
+		npc->xm = 0x5FF;
+	if (npc->xm < -0x5FF)
+		npc->xm = -0x5FF;
+	npc->x += npc->xm;
+	
+	//Animate
+	if (++npc->ani_wait > 1)
+	{
+		npc->ani_wait = 0;
+		npc->ani_no++;
+	}
+	if (npc->ani_no > 2)
+		npc->ani_no = 0;
+}
+
+void Npc007_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][3] = {
+		{
+			{0,  0, 32, 16},
+			{0, 16, 32, 32},
+			{0, 32, 32, 48},
+		},
+		{
+			{32,  0, 64, 16},
+			{32, 16, 64, 32},
+			{32, 32, 64, 48},
+		},
+	};
+	
+	LoadTLUT_CI4(npc_basil_tlut);
+	LoadTex_CI4(64, 48, npc_basil_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
 }
 
 //NPC 012 - Balrog (cutscene)

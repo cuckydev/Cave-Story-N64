@@ -24,17 +24,17 @@ void ModeCamp_Init()
 		prev_script = GetTextScript();
 		LoadTextScript(armsitem_script);
 		
-		//Run initial event
-		if (gArmsData[0].code != 0)
-			StartTextScript(1000 + gArmsData[gSelectedArms].code);
-		else
-			StartTextScript(5000 + gItemData[gSelectedItem].code);
-		
 		//Initialize inventory state
 		gCampActive = FALSE;
 		gCampTitleY = (SCREEN_HEIGHT / 2) - 96;
 		
 		gSelectedItem = 0;
+		
+		//Run initial event
+		if (gArmsData[0].code != 0)
+			StartTextScript(1000 + gArmsData[gSelectedArms].code);
+		else
+			StartTextScript(5000 + gItemData[gSelectedItem].code);
 	}
 	no_init = FALSE;
 }

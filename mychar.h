@@ -40,8 +40,6 @@ typedef struct MYCHAR
 	s32 ani_no;
 	RECT2 hit;
 	RECT2 view;
-	RECT rect;
-	RECT rect_arms;
 	s32 level;
 	s32 exp_wait;
 	s32 exp_count;

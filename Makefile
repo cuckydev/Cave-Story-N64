@@ -54,6 +54,8 @@ CODEFILES = \
 	npc100.c \
 	npc140.c \
 	npc200.c \
+	npc220.c \
+	npc260.c \
 	npc280.c \
 	npc300.c \
 	npc340.c \

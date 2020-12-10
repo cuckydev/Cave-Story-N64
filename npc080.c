@@ -366,3 +366,23 @@ void Npc087_Put(NPCHAR *npc, s32 x, s32 y)
 		}
 	}
 }
+
+//NPC 091 - Cage
+#include "data/bitmap/npc_cage.inc.c"
+
+void Npc091_Act(NPCHAR *npc)
+{
+	if (npc->act_no == 0)
+	{
+		npc->act_no++;
+		npc->y += 16 * 0x200;
+	}
+}
+
+void Npc091_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect = {0, 0, 32, 24};
+	LoadTLUT_CI4(npc_cage_tlut);
+	LoadTex_CI4(48, 32, npc_cage_tex);
+	PutBitmap(&rect, x, y);
+}
