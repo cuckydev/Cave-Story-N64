@@ -21,7 +21,7 @@ static u16 mapsurf_chky;
 static u16 mapsurf_chks;
 
 static Gfx mapsurf_tlut_dumaln[] = { gsSPEndDisplayList() };
-__attribute__((aligned(8))) static u16 mapsurf_tlut[] = {
+ALIGNED8 static u16 mapsurf_tlut[] = {
 	RGB(0x00, 0x19, 0x00),  RGB(0x00, 0x4E, 0x00),  RGB(0x00, 0x98, 0x00),  RGB(0x00, 0xFF, 0x00)
 };
 

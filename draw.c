@@ -331,7 +331,7 @@ s32 GetTextWidth(const char *text)
 }
 
 static Gfx text_tlut_dumaln[] = { gsSPEndDisplayList() };
-__attribute__((aligned(8))) static u16 text_tlut[0x20][4] = {};
+ALIGNED8 static u16 text_tlut[0x20][4] = {};
 static u8 text_tlut_i = 0;
 
 void PutText(s32 x, s32 y, const char *text, u16 col)
