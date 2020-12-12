@@ -63,7 +63,20 @@ GameMode ModeTitle_Proc()
 	{
 		//Draw a black screen for a second after selecting an option
 		if (!(--black_time & 0x80))
-			return GameMode_Action;
+		{
+			if (gKey & gKeyMap)
+			{
+				//Go to debug select
+				return GameMode_DebugSelect;
+			}
+			else
+			{
+				//Load or start new game
+				if (!bContinue || !LoadProfile())
+					InitializeGame();
+				return GameMode_Action;
+			}
+		}
 	}
 	return GameMode_Title;
 }
@@ -155,7 +168,5 @@ void ModeTitle_Draw()
 
 void ModeTitle_Quit()
 {
-	//Load or start new game
-	if (!bContinue || !LoadProfile())
-		InitializeGame();
+	
 }

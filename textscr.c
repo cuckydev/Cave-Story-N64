@@ -210,14 +210,7 @@ void SetNumberTextScript(s32 index)
 	PlaySoundObject(2, 1);
 	gTS.wait_beam = 0;
 	
-	//Check if should move to next line
 	gTS.p_write += (int)strlen(str);
-	if (gTS.p_write >= 35)
-	{
-		gTS.p_write = 0;
-		gTS.line++;
-		CheckNewLine();
-	}
 }
 
 void ClearTextLine(void)
@@ -658,6 +651,11 @@ TSC_RESULT TextScriptProc()
 					else if (IS_COMMAND('C','L','R'))
 					{
 						ClearTextLine();
+						gTS.p_read += 4;
+					}
+					else if (IS_COMMAND('S','L','S'))
+					{
+						gTS.flags |= 0x80;
 						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('M','S','G'))
@@ -1150,10 +1148,8 @@ TSC_RESULT TextScriptProc()
 						//Print text
 						strcpy(text[gTS.line % 4], str);
 						
-						//Check if should move to next line
+						//Skip past read text
 						gTS.p_read += x;
-						if (gTS.p_write >= 35)
-							CheckNewLine();
 						
 						bExit = TRUE;
 					}
@@ -1188,14 +1184,6 @@ TSC_RESULT TextScriptProc()
 							gTS.p_write += 1;
 						}
 						
-						if (gTS.p_write >= 35)
-						{
-							CheckNewLine();
-							gTS.p_write = 0;
-							gTS.line++;
-							CheckNewLine();
-						}
-						
 						bExit = TRUE;
 					}
 				}
@@ -1208,13 +1196,30 @@ TSC_RESULT TextScriptProc()
 			break;
 			
 		case 3: //NEW LINE
-			for (i = 0; i < 4; ++i)
+			if (gTS.flags & 0x80)
 			{
-				gTS.ypos_line[i] -= 4;
-				if (gTS.ypos_line[i] == 0)
-					gTS.mode = 1;
-				if (gTS.ypos_line[i] == -16)
-					gTS.ypos_line[i] = 48;
+				if ((gTS.wait++ & 0x3) == 0)
+				{
+					for (i = 0; i < 4; ++i)
+					{
+						gTS.ypos_line[i] -= 1;
+						if (gTS.ypos_line[i] == 0)
+							gTS.mode = 1;
+						if (gTS.ypos_line[i] == -16)
+							gTS.ypos_line[i] = 48;
+					}
+				}
+			}
+			else
+			{
+				for (i = 0; i < 4; ++i)
+				{
+					gTS.ypos_line[i] -= 4;
+					if (gTS.ypos_line[i] == 0)
+						gTS.mode = 1;
+					if (gTS.ypos_line[i] == -16)
+						gTS.ypos_line[i] = 48;
+				}
 			}
 			break;
 			

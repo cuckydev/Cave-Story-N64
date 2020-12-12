@@ -37,6 +37,7 @@ CODEFILES = \
 	mode_camp.c \
 	mode_minimap.c \
 	mode_stageselect.c \
+	mode_debugsel.c \
 	profile.c \
 	textscr.c \
 	flags.c \

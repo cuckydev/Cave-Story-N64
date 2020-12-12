@@ -331,7 +331,7 @@ s32 GetTextWidth(const char *text)
 }
 
 static Gfx text_tlut_dumaln[] = { gsSPEndDisplayList() };
-ALIGNED8 static u16 text_tlut[0x20][4] = {};
+ALIGNED8 static u16 text_tlut[0x80][4] = {};
 static u8 text_tlut_i = 0;
 
 void PutText(s32 x, s32 y, const char *text, u16 col)
@@ -342,8 +342,9 @@ void PutText(s32 x, s32 y, const char *text, u16 col)
 	
 	//Get colour
 	LoadTLUT_CI4(text_tlut[text_tlut_i]);
+	text_tlut[text_tlut_i][0] = 0x0000;
 	text_tlut[text_tlut_i][1] = col;
-	text_tlut_i = (text_tlut_i + 1) & 0x1F;
+	text_tlut_i = (text_tlut_i + 1) & 0x7F;
 	
 	//Render characters
 	while ((v = (u8)*text++ - 0x20) != 0xE0)

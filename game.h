@@ -17,6 +17,7 @@ typedef enum
 	GameMode_MiniMap,
 	GameMode_StageSelect,
 	GameMode_DownIsland,
+	GameMode_DebugSelect,
 	//Number
 	GameMode_Num,
 } GameMode;

@@ -15,6 +15,7 @@ GameMode mode;
 #include "mode_camp.h"
 #include "mode_minimap.h"
 #include "mode_stageselect.h"
+#include "mode_debugsel.h"
 
 void (*mode_init[GameMode_Num])() = {
 	NULL,
@@ -25,6 +26,7 @@ void (*mode_init[GameMode_Num])() = {
 	ModeMiniMap_Init,
 	ModeStageSelect_Init,
 	NULL,
+	ModeDebugSel_Init,
 };
 GameMode (*mode_proc[GameMode_Num])() = {
 	NULL,
@@ -35,6 +37,7 @@ GameMode (*mode_proc[GameMode_Num])() = {
 	ModeMiniMap_Proc,
 	ModeStageSelect_Proc,
 	NULL,
+	ModeDebugSel_Proc,
 };
 void (*mode_draw[GameMode_Num])() = {
 	NULL,
@@ -45,6 +48,7 @@ void (*mode_draw[GameMode_Num])() = {
 	ModeMiniMap_Draw,
 	ModeStageSelect_Draw,
 	NULL,
+	ModeDebugSel_Draw,
 };
 void (*mode_quit[GameMode_Num])() = {
 	NULL,
@@ -55,6 +59,7 @@ void (*mode_quit[GameMode_Num])() = {
 	ModeMiniMap_Quit,
 	ModeStageSelect_Quit,
 	NULL,
+	ModeDebugSel_Quit,
 };
 
 static void Error_InvalidGameMode()
