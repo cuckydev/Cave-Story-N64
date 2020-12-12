@@ -86,6 +86,217 @@ void ShootBullet_PoleStar(s32 level)
 	}
 }
 
+//Missile Launcher
+void ShootBullet_Missile(s32 level, BOOL bSuper)
+{
+	s32 bul_no;
+	
+	if (bSuper)
+	{
+		switch (level)
+		{
+			case 1:
+				bul_no = 28;
+				break;
+			case 2:
+				bul_no = 29;
+				break;
+			case 3:
+				bul_no = 30;
+				break;
+		}
+		
+		switch (level)
+		{
+			case 1:
+				if (CountArmsBullet(10) > 0)
+					return;
+				if (CountArmsBullet(11) > 0)
+					return;
+				break;
+				
+			case 2:
+				if (CountArmsBullet(10) > 1)
+					return;
+				if (CountArmsBullet(11) > 1)
+					return;
+				break;
+				
+			case 3:
+				if (CountArmsBullet(10) > 3)
+					return;
+				if (CountArmsBullet(11) > 3)
+					return;
+				break;
+		}
+	}
+	else
+	{
+		switch (level)
+		{
+			case 1:
+				bul_no = 13;
+				break;
+			case 2:
+				bul_no = 14;
+				break;
+			case 3:
+				bul_no = 15;
+				break;
+		}
+		
+		switch (level)
+		{
+			case 1:
+				if (CountArmsBullet(5) > 0)
+					return;
+				if (CountArmsBullet(6) > 0)
+					return;
+				break;
+				
+			case 2:
+				if (CountArmsBullet(5) > 1)
+					return;
+				if (CountArmsBullet(6) > 1)
+					return;
+				break;
+				
+			case 3:
+				if (CountArmsBullet(5) > 3)
+					return;
+				if (CountArmsBullet(6) > 3)
+					return;
+				break;
+		}
+	}
+	
+	if (gKeyTrg & gKeyShot)
+	{
+		if (level < 3)
+		{
+			if (!UseArmsEnergy(1))
+			{
+				PlaySoundObject(37, 1);
+				
+				if (empty == 0)
+				{
+					SetCaret(gMC.x, gMC.y, 16, 0);
+					empty = 50;
+				}
+				return;
+			}
+
+			if (gMC.up)
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (1 * 0x200), gMC.y - (8 * 0x200), 1);
+					SetCaret(gMC.x - (1 * 0x200), gMC.y - (8 * 0x200), 3, 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (1 * 0x200), gMC.y - (8 * 0x200), 1);
+					SetCaret(gMC.x + (1 * 0x200), gMC.y - (8 * 0x200), 3, 0);
+				}
+			}
+			else if (gMC.down)
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (1 * 0x200), gMC.y + (8 * 0x200), 3);
+					SetCaret(gMC.x - (1 * 0x200), gMC.y + (8 * 0x200), 3, 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (1 * 0x200), gMC.y + (8 * 0x200), 3);
+					SetCaret(gMC.x + (1 * 0x200), gMC.y + (8 * 0x200), 3, 0);
+				}
+			}
+			else
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (6 * 0x200), gMC.y, 0);
+					SetCaret(gMC.x - (12 * 0x200), gMC.y, 3, 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (6 * 0x200), gMC.y, 2);
+					SetCaret(gMC.x + (12 * 0x200), gMC.y, 3, 0);
+				}
+			}
+		}
+		else
+		{
+			if (!UseArmsEnergy(1))
+			{
+				PlaySoundObject(37, 1);
+				
+				if (empty == 0)
+				{
+					SetCaret(gMC.x, gMC.y, 16, 0);
+					empty = 50;
+				}
+				return;
+			}
+			
+			if (gMC.up)
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (1 * 0x200), gMC.y - (8 * 0x200), 1);
+					SetCaret(gMC.x - (1 * 0x200), gMC.y - (8 * 0x200), 3, 0);
+					SetBullet(bul_no, gMC.x + (3 * 0x200), gMC.y, 1);
+					SetBullet(bul_no, gMC.x - (3 * 0x200), gMC.y, 1);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (1 * 0x200), gMC.y - (8 * 0x200), 1);
+					SetCaret(gMC.x + (1 * 0x200), gMC.y - (8 * 0x200), 3, 0);
+					SetBullet(bul_no, gMC.x + (3 * 0x200), gMC.y, 1);
+					SetBullet(bul_no, gMC.x - (3 * 0x200), gMC.y, 1);
+				}
+			}
+			else if (gMC.down)
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (1 * 0x200), gMC.y + (8 * 0x200), 3);
+					SetCaret(gMC.x - (1 * 0x200), gMC.y + (8 * 0x200), 3, 0);
+					SetBullet(bul_no, gMC.x + (3 * 0x200), gMC.y, 3);
+					SetBullet(bul_no, gMC.x - (3 * 0x200), gMC.y, 3);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (1 * 0x200), gMC.y + (8 * 0x200), 3);
+					SetCaret(gMC.x + (1 * 0x200), gMC.y + (8 * 0x200), 3, 0);
+					SetBullet(bul_no, gMC.x - (3 * 0x200), gMC.y, 3);
+					SetBullet(bul_no, gMC.x + (3 * 0x200), gMC.y, 3);
+				}
+			}
+			else
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (6 * 0x200), gMC.y + (1 * 0x200), 0);
+					SetCaret(gMC.x - (12 * 0x200), gMC.y + (1 * 0x200), 3, 0);
+					SetBullet(bul_no, gMC.x, gMC.y - (8 * 0x200), 0);
+					SetBullet(bul_no, gMC.x + (4 * 0x200), gMC.y - (1 * 0x200), 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (6 * 0x200), gMC.y + (1 * 0x200), 2);
+					SetCaret(gMC.x + (12 * 0x200), gMC.y + (1 * 0x200), 3, 0);
+					SetBullet(bul_no, gMC.x, gMC.y - (8 * 0x200), 2);
+					SetBullet(bul_no, gMC.x - (4 * 0x200), gMC.y - (1 * 0x200), 2);
+				}
+			}
+		}
+		
+		PlaySoundObject(32, 1);
+	}
+}
+
 //Spur
 s32 spur_charge;
 
@@ -134,7 +345,7 @@ void ShootBullet()
 			//ShootBullet_Machinegun1(gArmsData[gSelectedArms].level);
 			break;
 		case 5:
-			//ShootBullet_Missile(gArmsData[gSelectedArms].level, FALSE);
+			ShootBullet_Missile(gArmsData[gSelectedArms].level, FALSE);
 			break;
 		case 7:
 			switch (gArmsData[gSelectedArms].level)
@@ -165,7 +376,7 @@ void ShootBullet()
 			}
 			break;
 		case 10:
-			//ShootBullet_Missile(gArmsData[gSelectedArms].level, TRUE);
+			ShootBullet_Missile(gArmsData[gSelectedArms].level, TRUE);
 			break;
 		case 12:
 			//ShootBullet_Nemesis(gArmsData[gSelectedArms].level);

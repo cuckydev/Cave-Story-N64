@@ -9,11 +9,15 @@
 #include "caret.h"
 #include "bullet.h"
 #include "back.h"
+#include "fade.h"
 #include "valueview.h"
 
 //Stage table
 #include "data/stage/pens1.inc.c"
 #include "data/stage/eggs.inc.c"
+#include "data/stage/eggx.inc.c"
+#include "data/stage/egg6.inc.c"
+#include "data/stage/eggr.inc.c"
 #include "data/stage/mimi.inc.c"
 #include "data/stage/cave.inc.c"
 #include "data/stage/start.inc.c"
@@ -22,13 +26,20 @@
 #include "data/stage/cemet.inc.c"
 #include "data/stage/plant.inc.c"
 #include "data/stage/shelt.inc.c"
+#include "data/stage/comu.inc.c"
 #include "data/stage/mibox.inc.c"
+#include "data/stage/egend1.inc.c"
+#include "data/stage/cthu.inc.c"
+#include "data/stage/egg1.inc.c"
+#include "data/stage/pens2.inc.c"
 #include "data/stage/kings.inc.c"
 #include "data/stage/pole.inc.c"
 
 #include "data/tilesets/prt_pens.inc.c"
 #include "data/tilesets/prt_cave.inc.c"
 #include "data/tilesets/prt_eggs.inc.c"
+#include "data/tilesets/prt_eggx.inc.c"
+#include "data/tilesets/prt_eggin.inc.c"
 #include "data/tilesets/prt_store.inc.c"
 #include "data/tilesets/prt_white.inc.c"
 #include "data/tilesets/prt_mimi.inc.c"
@@ -47,9 +58,9 @@ struct
 	{NULL, NULL, "Null", NULL, 4},
 	{&pens1_data, &prt_pens, "Arthur's House", &bk_blue, 1},
 	{&eggs_data, &prt_eggs, "Egg Corridor", &bk_green, 1},
-	{NULL, NULL, "Egg No. 00", NULL, 4},
-	{NULL, NULL, "Egg No. 06", NULL, 4},
-	{NULL, NULL, "Egg Observation Room", NULL, 4},
+	{&eggx_data, &prt_eggx, "Egg No. 00", NULL, 4},
+	{&egg6_data, &prt_eggin, "Egg No. 06", NULL, 4},
+	{&eggr_data, &prt_store, "Egg Observation Room", NULL, 4},
 	{NULL, NULL, "Grasstown", NULL, 4},
 	{NULL, NULL, "Santa's House", NULL, 4},
 	{NULL, NULL, "Chaco's House", NULL, 4},
@@ -63,12 +74,12 @@ struct
 	{&cemet_data, &prt_mimi, "Graveyard", NULL, 4},
 	{&plant_data, &prt_mimi, "Yamashita Farm", &bk_green, 1},
 	{&shelt_data, &prt_store, "Shelter", NULL, 4},
-	{NULL, NULL, "Assembly Hall", NULL, 4},
+	{&comu_data, &prt_pens, "Assembly Hall", NULL, 4},
 	{&mibox_data, &prt_mimi, "Save Point", NULL, 4},
-	{NULL, NULL, "Side Room", NULL, 4},
-	{NULL, NULL, "Cthulhu's Abode", NULL, 4},
-	{NULL, NULL, "Egg No. 01", NULL, 4},
-	{NULL, NULL, "Arthur's House", NULL, 4},
+	{&egend1_data, &prt_store, "Side Room", NULL, 4},
+	{&cthu_data, &prt_store, "Cthulhu's Abode", NULL, 4},
+	{&egg1_data, &prt_eggin, "Egg No. 01", NULL, 4},
+	{&pens2_data, &prt_pens, "Arthur's House", &bk_blue, 1},
 	{NULL, NULL, "Power Room", NULL, 4},
 	{NULL, NULL, "Save Point", NULL, 4},
 	{NULL, NULL, "Execution Chamber", NULL, 4},
@@ -151,7 +162,15 @@ void TransferStage(s32 no, s32 w, s32 x, s32 y)
 	const StageData *stage_data = gTMT[no].stage_data;
 	const TilesetData *tileset_data = gTMT[no].tileset_data;
 	if (stage_data == NULL || tileset_data == NULL)
+	{
+		ReadyMapName(gTMT[no].name);
+		InitNpChar();
+		ClearBullet();
+		InitCaret();
+		ClearValueView();
+		StartTextScript(50);
 		return;
+	}
 	
 	//Move character
 	SetMyCharPosition(x * 0x10 * 0x200, y * 0x10 * 0x200);

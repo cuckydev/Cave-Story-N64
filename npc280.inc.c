@@ -1,8 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "caret.h"
-#include "draw.h"
-
 //NPC 298 - Opening Doctor
 #include "data/bitmap/npc_openingdoctor.inc.c"
 

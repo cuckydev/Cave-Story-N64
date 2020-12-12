@@ -862,6 +862,12 @@ TSC_RESULT TextScriptProc()
 						gTS.p_read += 8;
 						bExit = TRUE;
 					}
+					else if (IS_COMMAND('S','F','M'))
+					{
+						SetFadeMask();
+						gTS.p_read += 4;
+						bExit = TRUE;
+					}
 					else if (IS_COMMAND('M','N','A'))
 					{
 						StartMapName();

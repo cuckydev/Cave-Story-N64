@@ -50,6 +50,13 @@ GameMode ModeOpening_Proc()
 			return GameMode_Opening;
 		}
 		
+		//Run text script
+		switch (TextScriptProc())
+		{
+			default:
+				break;
+		}
+		
 		//Update everything
 		ActNpChar();
 		//ActBossChar();
@@ -64,8 +71,6 @@ GameMode ModeOpening_Proc()
 		ActCaret();
 		MoveFrame3();
 		ProcFade();
-		
-		TextScriptProc();
 	}
 	else
 	{

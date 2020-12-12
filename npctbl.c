@@ -1,5 +1,30 @@
 #include "npctbl.h"
-#include "npcxxx.h"
+#include "game.h"
+#include "mychar.h"
+#include "mycparam.h"
+#include "caret.h"
+#include "triangle.h"
+#include "draw.h"
+#include "sound.h"
+#include "frame.h"
+#include "flash.h"
+#include "map.h"
+#include "back.h"
+
+#include "npc000.inc.c"
+#include "npc020.inc.c"
+#include "npc040.inc.c"
+#include "npc060.inc.c"
+#include "npc080.inc.c"
+#include "npc100.inc.c"
+#include "npc120.inc.c"
+#include "npc140.inc.c"
+#include "npc200.inc.c"
+#include "npc220.inc.c"
+#include "npc260.inc.c"
+#include "npc280.inc.c"
+#include "npc300.inc.c"
+#include "npc340.inc.c"
 
 const NPC_FUNC gpNpcFuncTbl[] = {
 	{Npc000_Act, NULL}, //000,
@@ -10,12 +35,12 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{Npc005_Act, Npc005_Put}, //005,
 	{Npc006_Act, Npc006_Put}, //006,
 	{Npc007_Act, Npc007_Put}, //007,
-	{NULL, NULL}, //008,
+	{Npc008_Act, Npc008_Put}, //008,
 	{NULL, NULL}, //009,
 	{NULL, NULL}, //010,
-	{NULL, NULL}, //011,
+	{Npc011_Act, Npc011_Put}, //011,
 	{Npc012_Act, Npc012_Put}, //012,
-	{NULL, NULL}, //013,
+	{Npc013_Act, Npc013_Put}, //013,
 	{NULL, NULL}, //014,
 	{Npc015_Act, Npc015_Put}, //015,
 	{Npc016_Act, Npc016_Put}, //016,
@@ -27,11 +52,11 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{Npc022_Act, Npc022_Put}, //022,
 	{Npc023_Act, Npc023_Put}, //023,
 	{NULL, NULL}, //024,
-	{NULL, NULL}, //025,
+	{Npc025_Act, Npc025_Put}, //025,
 	{NULL, NULL}, //026,
 	{NULL, NULL}, //027,
 	{NULL, NULL}, //028,
-	{NULL, NULL}, //029,
+	{Npc029_Act, Npc029_Put}, //029,
 	{Npc030_Act, Npc030_Put}, //030,
 	{NULL, NULL}, //031,
 	{Npc032_Act, Npc032_Put}, //032,
@@ -40,11 +65,11 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{NULL, NULL}, //035,
 	{NULL, NULL}, //036,
 	{Npc037_Act, Npc037_Put}, //037,
-	{NULL, NULL}, //038,
+	{Npc038_Act, Npc038_Put}, //038,
 	{NULL, Npc039_Put}, //039,
 	{NULL, NULL}, //040,
 	{Npc041_Act, Npc041_Put}, //041,
-	{NULL, NULL}, //042,
+	{Npc042_Act, Npc042_Put}, //042,
 	{Npc043_Act, Npc043_Put}, //043,
 	{NULL, NULL}, //044,
 	{NULL, NULL}, //045,
@@ -60,7 +85,7 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{NULL, NULL}, //055,
 	{NULL, NULL}, //056,
 	{NULL, NULL}, //057,
-	{NULL, NULL}, //058,
+	{Npc058_Act, Npc058_Put}, //058,
 	{Npc059_Act, Npc059_Put}, //059,
 	{Npc060_Act, Npc060_Put}, //060,
 	{Npc061_Act, Npc061_Put}, //061,
@@ -85,16 +110,16 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{Npc080_Act, Npc080_Put}, //080,
 	{Npc081_Act, Npc081_Put}, //081,
 	{NULL, NULL}, //082,
-	{NULL, NULL}, //083,
-	{NULL, NULL}, //084,
-	{NULL, NULL}, //085,
-	{NULL, NULL}, //086,
+	{Npc083_Act, Npc083_Put}, //083,
+	{Npc084_Act, Npc084_Put}, //084,
+	{Npc085_Act, Npc085_Put}, //085,
+	{Npc086_Act, Npc086_Put}, //086,
 	{Npc087_Act, Npc087_Put}, //087,
-	{NULL, NULL}, //088,
-	{NULL, NULL}, //089,
+	{Npc088_Act, Npc088_Put}, //088,
+	{Npc089_Act, Npc089_Put}, //089,
 	{NULL, NULL}, //090,
 	{Npc091_Act, Npc091_Put}, //091,
-	{NULL, NULL}, //092,
+	{Npc092_Act, Npc092_Put}, //092,
 	{NULL, NULL}, //093,
 	{NULL, NULL}, //094,
 	{NULL, NULL}, //095,
@@ -118,7 +143,7 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{NULL, NULL}, //113,
 	{NULL, NULL}, //114,
 	{NULL, NULL}, //115,
-	{NULL, NULL}, //116,
+	{NULL, Npc116_Put}, //116,
 	{NULL, NULL}, //117,
 	{NULL, NULL}, //118,
 	{NULL, Npc119_Put}, //119,
@@ -127,7 +152,7 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{NULL, NULL}, //122,
 	{NULL, NULL}, //123,
 	{NULL, NULL}, //124,
-	{NULL, NULL}, //125,
+	{Npc125_Act, NULL}, //125,
 	{NULL, NULL}, //126,
 	{NULL, NULL}, //127,
 	{NULL, NULL}, //128,
@@ -153,7 +178,7 @@ const NPC_FUNC gpNpcFuncTbl[] = {
 	{NULL, NULL}, //148,
 	{NULL, NULL}, //149,
 	{Npc150_Act, Npc150_Put}, //150,
-	{NULL, NULL}, //151,
+	{Npc151_Act, Npc151_Put}, //151,
 	{NULL, NULL}, //152,
 	{NULL, NULL}, //153,
 	{NULL, NULL}, //154,

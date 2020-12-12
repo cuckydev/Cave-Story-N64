@@ -1,8 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "caret.h"
-#include "draw.h"
-
 //NPC 300 - Demon Crown
 #include "data/bitmap/npc_demoncrown.inc.c"
 

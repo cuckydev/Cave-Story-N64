@@ -6,6 +6,7 @@
 #include "draw.h"
 #include "sound.h"
 #include "valueview.h"
+#include "armsitem.h"
 #include <string.h>
 
 #define SHOW_UNIMPLEMENTED_NPCS
@@ -18,9 +19,9 @@ s32 gCurlyShoot_y;
 s32 gSuperXpos;
 s32 gSuperYpos;
 
+//NPC functions
 #include "data/npc_tbl.inc.c"
 
-//NPC functions
 static void SetUniqueParameter(NPCHAR *npc)
 {
 	s32 code = npc->code_char;
@@ -200,7 +201,6 @@ BOOL SetBulletObject(s32 x, s32 y, s32 val)
 	
 	memset(tamakazu_ari, 0, sizeof(tamakazu_ari));
 	
-	/*
 	for (n = 0; n < 8; n++)
 	{
 		switch (gArmsData[n].code)
@@ -218,7 +218,6 @@ BOOL SetBulletObject(s32 x, s32 y, s32 val)
 				break;
 		}
 	}
-	*/
 	
 	if (t == 0)
 		return FALSE;

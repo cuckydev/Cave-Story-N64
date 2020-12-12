@@ -1,9 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "draw.h"
-#include "mychar.h"
-#include "sound.h"
-
 //NPC 111 - Quote teleporting out
 #include "data/bitmap/mychar.inc.c"
 
@@ -153,6 +147,18 @@ void Npc112_Put(NPCHAR *npc, s32 x, s32 y)
 	
 	LoadTLUT_CI4(mychar_tlut);
 	LoadTex_CI4(176, 16, mychar_tex + (88 * 16) * ((((gMC.equip & EQUIP_MIMIGA_MASK) != 0) * 2) + (npc->direct != 0)));
+	PutBitmap(&rect, x, y);
+}
+
+//NPC 116 - Red petals
+#include "data/bitmap/npc_redpetals.inc.c"
+
+void Npc116_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect = {0, 0, 48, 16};
+	
+	LoadTLUT_CI4(npc_redpetals_tlut);
+	LoadTex_CI4(48, 16, npc_redpetals_tex);
 	PutBitmap(&rect, x, y);
 }
 

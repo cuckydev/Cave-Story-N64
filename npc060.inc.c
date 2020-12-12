@@ -1,14 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "mychar.h"
-#include "mycparam.h"
-#include "frame.h"
-#include "map.h"
-#include "draw.h"
-#include "flash.h"
-#include "triangle.h"
-#include "sound.h"
-
 //NPC 060 - Toroko
 #include "data/bitmap/npc_toroko.inc.c"
 
@@ -395,7 +384,7 @@ void Npc061_Put(NPCHAR *npc, s32 x, s32 y)
 }
 
 //NPC 062 - Kazuma at Computer
-#include "data/bitmap/npc_computeruser.inc.c"
+#include "data/bitmap/npc_computerkazuma.inc.c"
 
 void Npc062_Act(NPCHAR *npc)
 {
@@ -459,8 +448,8 @@ void Npc062_Put(NPCHAR *npc, s32 x, s32 y)
 		{32, 0, 48, 24},
 	};
 	
-	LoadTLUT_CI4(npc_computeruser_tlut);
-	LoadTex_CI4(48, 48, npc_computeruser_tex);
+	LoadTLUT_CI4(npc_computerkazuma_tlut);
+	LoadTex_CI4(48, 24, npc_computerkazuma_tex);
 	PutBitmap(&rect[npc->ani_no], x, y);
 }
 
@@ -590,8 +579,6 @@ void Npc063_Put(NPCHAR *npc, s32 x, s32 y)
 }
 
 //NPC 064 - First Cave Critter
-#include "data/bitmap/npc_critter.inc.c"
-
 void Npc064_Act(NPCHAR *npc)
 {
 	switch (npc->act_no)
@@ -1054,8 +1041,6 @@ void Npc067_Put(NPCHAR *npc, s32 x, s32 y)
 }
 
 //NPC 068 - Balrog (running)
-#include "data/bitmap/npc_balrog.inc.c"
-
 void Npc068_Act(NPCHAR *npc)
 {
 	switch (npc->act_no)

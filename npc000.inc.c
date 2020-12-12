@@ -1,13 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "triangle.h"
-#include "draw.h"
-#include "sound.h"
-#include "mychar.h"
-#include "frame.h"
-#include "map.h"
-#include "back.h"
-
 //NPC 000 - Null
 void Npc000_Act(NPCHAR *npc)
 {
@@ -702,6 +692,157 @@ void Npc007_Put(NPCHAR *npc, s32 x, s32 y)
 	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
 }
 
+//NPC 008 - Bettle following you
+void Npc008_Act(NPCHAR *npc)
+{
+	//Move
+	switch (npc->act_no)
+	{
+		case 0:
+			if (gMC.x < npc->x + (16 * 0x200) && gMC.x > npc->x - (16 * 0x200))
+			{
+				npc->bits |= NPC_SHOOTABLE;
+				npc->ym = -0x100;
+				npc->tgt_y = npc->y;
+				npc->act_no = 1;
+				npc->damage = 2;
+				
+				if (npc->direct == 0)
+				{
+					npc->x = gMC.x + (256 * 0x200);
+					npc->xm = -0x2FF;
+				}
+				else
+				{
+					npc->x = gMC.x - (256 * 0x200);
+					npc->xm = 0x2FF;
+				}
+			}
+			else
+			{
+				npc->bits &= ~NPC_SHOOTABLE;
+				npc->damage = 0;
+				npc->xm = 0;
+				npc->ym = 0;
+				return;
+			}
+			break;
+			
+		case 1:
+			if (npc->x > gMC.x)
+			{
+				npc->direct = 0;
+				npc->xm -= 0x10;
+			}
+			else
+			{
+				npc->direct = 2;
+				npc->xm += 0x10;
+			}
+			
+			if (npc->xm > 0x2FF)
+				npc->xm = 0x2FF;
+			if (npc->xm < -0x2FF)
+				npc->xm = -0x2FF;
+			
+			if (npc->y < npc->tgt_y)
+				npc->ym += 8;
+			else
+				npc->ym -= 8;
+			
+			if (npc->ym > 0x100)
+				npc->ym = 0x100;
+			if (npc->ym < -0x100)
+				npc->ym = -0x100;
+			
+			if (npc->shock)
+			{
+				npc->x += npc->xm / 2;
+				npc->y += npc->ym / 2;
+			}
+			else
+			{
+				npc->x += npc->xm;
+				npc->y += npc->ym;
+			}
+			break;
+	}
+	
+	//Animate
+	if (++npc->ani_wait > 1)
+	{
+		npc->ani_wait = 0;
+		npc->ani_no++;
+	}
+	if (npc->ani_no > 1)
+		npc->ani_no = 0;
+}
+
+void Npc008_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][2] = {
+		{
+			{80, 0,  96, 16},
+			{96, 0, 112, 16},
+		},
+		{
+			{80, 16,  96, 32},
+			{96, 16, 112, 32},
+		}
+	};
+	
+	if (npc->act_no != 0)
+	{
+		LoadTLUT_CI4(npc_beetle_tlut);
+		LoadTex_CI4(112, 32, npc_beetle_tex);
+		PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+	}
+}
+
+//NPC 011 - Igor's projectile
+#include "data/bitmap/npc_igorprojectile.inc.c"
+
+void Npc011_Act(NPCHAR *npc)
+{
+	//Delete when hitting a wall
+	if (npc->flag & 0xFF)
+	{
+		SetCaret(npc->x, npc->y, 2, 0);
+		npc->cond = 0;
+	}
+	
+	npc->y += npc->ym;
+	npc->x += npc->xm;
+	
+	//Animate
+	if (++npc->ani_wait > 1)
+	{
+		npc->ani_wait = 0;
+		if (++npc->ani_no > 2)
+			npc->ani_no = 0;
+	}
+	
+	//Delete after 150 frames
+	if (++npc->count1 > 150)
+	{
+		SetCaret(npc->x, npc->y, 2, 0);
+		npc->cond = 0;
+	}
+}
+
+void Npc011_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 16, 16},
+		{16, 0, 32, 16},
+		{32, 0, 48, 16},
+	};
+	
+	LoadTLUT_CI4(npc_igorprojectile_tlut);
+	LoadTex_CI4(48, 16, npc_igorprojectile_tex);
+	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
 //NPC 012 - Balrog (cutscene)
 #include "data/bitmap/npc_balrog.inc.c"
 
@@ -998,7 +1139,7 @@ void Npc012_Put(NPCHAR *npc, s32 x, s32 y)
 	{
 		if (npc->act_no == 71)
 		{
-			rect.left += ((npc->direct != 0) ? 40 : 0) + (npc->act_wait % 2);
+			rect.left = ((npc->direct != 0) ? 40 : 0) + (npc->act_wait % 2);
 			rect.top = 0;
 			rect.right = ((npc->direct != 0) ? 80 : 40);
 			rect.bottom = npc->act_wait / 2;
@@ -1014,6 +1155,34 @@ void Npc012_Put(NPCHAR *npc, s32 x, s32 y)
 		LoadTex_CI4(80, 24, npc_balrog_tex + (40 * 24) * frame[npc->ani_no]);
 		PutBitmap(&rect, x, y);
 	}
+}
+
+//NPC 013 - Forcefield
+#include "data/bitmap/npc_forcefield.inc.c"
+
+void Npc013_Act(NPCHAR *npc)
+{
+	if (++npc->ani_wait > 0)
+	{
+		npc->ani_wait = 0;
+		npc->ani_no++;
+	}
+	if (npc->ani_no > 3)
+		npc->ani_no = 0;
+}
+
+void Npc013_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[] = {
+		{ 0, 0, 16, 16},
+		{16, 0, 32, 16},
+		{32, 0, 48, 16},
+		{48, 0, 64, 16},
+	};
+	
+	LoadTLUT_CI4(npc_forcefield_tlut);
+	LoadTex_CI4(64, 16, npc_forcefield_tex);
+	PutBitmap(&rect[npc->ani_no], x, y);
 }
 
 //NPC 015 - Closed Chest

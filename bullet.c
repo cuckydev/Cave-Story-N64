@@ -99,13 +99,13 @@ static const struct
 	{NULL, NULL, 2},
 	{NULL, NULL, 3},
 	//Missile Launcher
-	{NULL, NULL, 1},
-	{NULL, NULL, 2},
-	{NULL, NULL, 3},
+	{Bullet_MissileLauncher_Act, Bullet_MissileLauncher_Put, 1},
+	{Bullet_MissileLauncher_Act, Bullet_MissileLauncher_Put, 2},
+	{Bullet_MissileLauncher_Act, Bullet_MissileLauncher_Put, 3},
 	//Missile Launcher explosion
-	{NULL, NULL, 1},
-	{NULL, NULL, 2},
-	{NULL, NULL, 3},
+	{Bullet_Bom_Act, NULL, 1},
+	{Bullet_Bom_Act, NULL, 2},
+	{Bullet_Bom_Act, NULL, 3},
 	//Bubbline
 	{NULL, NULL, 0},
 	{NULL, NULL, 0},

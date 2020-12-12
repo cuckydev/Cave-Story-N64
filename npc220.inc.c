@@ -1,6 +1,3 @@
-#include "npcxxx.h"
-#include "draw.h"
-
 //NPC 234 - Picked red flowers
 #include "data/bitmap/npc_pickedredflowers.inc.c"
 

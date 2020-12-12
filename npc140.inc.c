@@ -1,12 +1,4 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "mychar.h"
-#include "draw.h"
-#include "sound.h"
-
 //NPC 150 - Quote
-#include "data/bitmap/mychar.inc.c"
-
 void Npc150_Act(NPCHAR *npc)
 {
 	s32 i;
@@ -103,7 +95,7 @@ void Npc150_Act(NPCHAR *npc)
 			if (npc->ani_no > 6)
 				npc->ani_no = 3;
 			break;
-
+			
 		case 80:
 			npc->ani_no = 8;
 			break;
@@ -174,4 +166,53 @@ void Npc150_Put(NPCHAR *npc, s32 x, s32 y)
 	{
 		PutBitmap(&rect[npc->ani_no], x, y);
 	}
+}
+
+//NPC 151 - Blue Robot (standing)
+#include "data/bitmap/npc_bluerobot.inc.c"
+
+void Npc151_Act(NPCHAR *npc)
+{
+	//Animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 1:
+			if (Random(0, 100) == 0)
+			{
+				npc->act_no = 2;
+				npc->act_wait = 0;
+				npc->ani_no = 1;
+			}
+			break;
+			
+		case 2:
+			if (++npc->act_wait > 16)
+			{
+				npc->act_no = 1;
+				npc->ani_no = 0;
+			}
+			break;
+	}
+}
+
+void Npc151_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][2] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+		}
+	};
+	LoadTLUT_CI4(npc_bluerobot_tlut);
+	LoadTex_CI4(64, 32, npc_bluerobot_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
 }

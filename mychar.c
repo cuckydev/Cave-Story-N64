@@ -114,18 +114,9 @@ void AnimationMyChar(BOOL bKey)
 void ShowMyChar(BOOL bShow)
 {
 	if (bShow)
-	{
 		gMC.cond &= ~2;
-		//hacky solution to fix some transitional issues
-		gMC.y++;
-		HitMyCharMap();
-		HitMyCharNpChar();
-		AnimationMyChar(FALSE);
-	}
 	else
-	{
 		gMC.cond |= 2;
-	}
 }
 
 #include "data/bitmap/mychar.inc.c"

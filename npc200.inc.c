@@ -1,7 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "draw.h"
-
 //NPC 211 - Spikes (small)
 #include "data/bitmap/npc_spikes.inc.c"
 

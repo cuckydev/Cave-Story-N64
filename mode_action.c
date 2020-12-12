@@ -31,6 +31,22 @@ GameMode ModeAction_Proc()
 {
 	s32 fx, fy;
 	
+	//Run text script
+	switch (TextScriptProc())
+	{
+		case TSCR_Restart:
+			return GameMode_Opening;
+		case TSCR_MiniMap:
+			minimap_return = GameMode_Action;
+			return GameMode_MiniMap;
+		case TSCR_StageSelect:
+			return GameMode_StageSelect;
+		case TSCR_DownIsland:
+			return GameMode_DownIsland;
+		default:
+			break;
+	}
+	
 	if (g_GameFlags & 1)
 	{
 		//Update game
@@ -85,22 +101,6 @@ GameMode ModeAction_Proc()
 			RotationArmsRev();
 	}
 	
-	//Run text script
-	switch (TextScriptProc())
-	{
-		case TSCR_Restart:
-			return GameMode_Opening;
-		case TSCR_MiniMap:
-			minimap_return = GameMode_Action;
-			return GameMode_MiniMap;
-		case TSCR_StageSelect:
-			return GameMode_StageSelect;
-		case TSCR_DownIsland:
-			return GameMode_DownIsland;
-		default:
-			break;
-	}
-	
 	return GameMode_Action;
 }
 
@@ -111,19 +111,22 @@ void ModeAction_Draw()
 	GetFramePosition(&fx, &fy);
 	
 	//Draw map
-	UpdateMapPlane(fx, fy);
-	PutBack(fx, fy);
-	PutStage_Back(fx, fy);
-	PutNpChar(fx, fy);
-	PutBullet(fx, fy);
-	PutMyChar(fx, fy);
-	PutStage_Front(fx, fy);
-	PutFlash();
-	PutCaret(fx, fy);
-	PutValueView(fx, fy);
+	if (!gFade.bMask)
+	{
+		UpdateMapPlane(fx, fy);
+		PutBack(fx, fy);
+		PutStage_Back(fx, fy);
+		PutNpChar(fx, fy);
+		PutBullet(fx, fy);
+		PutMyChar(fx, fy);
+		PutStage_Front(fx, fy);
+		PutFlash();
+		PutCaret(fx, fy);
+		PutValueView(fx, fy);
+		PutBossLife(); //Not sure why this is drawn before fade
+	}
 	
 	//Draw HUD
-	PutBossLife();
 	PutFade();
 	PutMapName(FALSE);
 	if (g_GameFlags & 2)

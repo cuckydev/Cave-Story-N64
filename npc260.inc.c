@@ -1,7 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "draw.h"
-
 //NPC 278 - Littles
 #include "data/bitmap/npc_littles.inc.c"
 

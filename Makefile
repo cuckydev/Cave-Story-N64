@@ -46,19 +46,6 @@ CODEFILES = \
 	npchar.c \
 	npchit.c \
 	npctbl.c \
-	npc000.c \
-	npc020.c \
-	npc040.c \
-	npc060.c \
-	npc080.c \
-	npc100.c \
-	npc140.c \
-	npc200.c \
-	npc220.c \
-	npc260.c \
-	npc280.c \
-	npc300.c \
-	npc340.c \
 	bosslife.c \
 	bullet.c \
 	bulhit.c \

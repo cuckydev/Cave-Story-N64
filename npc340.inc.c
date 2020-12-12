@@ -1,8 +1,3 @@
-#include "npcxxx.h"
-#include "game.h"
-#include "mychar.h"
-#include "draw.h"
-
 //NPC 359 - Water Droplet Generator
 void Npc359_Act(NPCHAR *npc)
 {

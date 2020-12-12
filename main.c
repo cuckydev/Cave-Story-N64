@@ -16,7 +16,7 @@ static u16 error_blink = 0;
 //#define MEM_DEBUG
 //#define GLIST_DEBUG
 //#define FRAME_DEBUG
-#define NPC_DEBUG
+//#define NPC_DEBUG
 
 #ifdef NPC_DEBUG
 static u32 npcs_implemented;

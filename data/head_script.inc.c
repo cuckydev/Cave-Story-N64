@@ -64,6 +64,10 @@ You were never seen again...<NOD<CLRWant to retry?<YNJ0049<CLO\n\
 #0049\n\
 <CLO<FAO0004<ESC\n\
 \n\
+#0050\n\
+<PRI<HMC<SFM<FMU<MSGThe game's content ends here.<NOD<CMU0000\n\
+Hope you enjoyed!<NOD<ESC<END\n\
+\n\
 \n\
 XX: head.tsc   4000 - 4099\n\
 4000:Almond";
