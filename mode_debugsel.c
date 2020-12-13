@@ -770,15 +770,15 @@ GameMode ModeDebugSel_Proc()
 		sy += ((s32)((selected_profile * 24) - 120) - sy) / 8;
 		
 		//Fade in background
-		if (col < 0x20)
-			col += 2;
+		if (col < 0x40)
+			col += 4;
 	}
 	else
 	{
 		//Fade and scroll
 		sy += (-320 - sy) / 8;
 		if (col > 0x00)
-			col -= 2;
+			col -= 4;
 		if (!(--black_time & 0x80))
 		{
 			//Load selected profile
@@ -796,7 +796,7 @@ void ModeDebugSel_Draw()
 	s32 y;
 	
 	//Draw background
-	CortBox(&grcFull, RGB(col, col, col));
+	CortBox(&grcFull, RGB(0x00, col, col));
 	
 	//Draw all selections
 	for (i = 0; profiles[i].profile_data; i++)
