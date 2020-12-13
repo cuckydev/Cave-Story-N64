@@ -3,7 +3,7 @@ include $(ROOT)/usr/include/make/PRdefs
 N64KITDIR	= c:/nintendo/n64kit
 
 TARGET		= cave
-CODEFILES	= \
+CODEFILES = \
 	main.c \
 	mem.c \
 	draw.c \
@@ -16,15 +16,31 @@ CODEFILES	= \
 	mode_opening.c \
 	mode_title.c \
 	mode_action.c \
+	mode_camp.c \
+	mode_minimap.c \
+	mode_stageselect.c \
+	mode_debugsel.c \
 	profile.c \
 	textscr.c \
 	flags.c \
 	mychar.c \
+	mycparam.c \
 	mychit.c \
 	npchar.c \
+	npchit.c \
+	npctbl.c \
+	bosslife.c \
+	bullet.c \
+	bulhit.c \
+	bullets.c \
 	caret.c \
 	carets.c \
+	valueview.c \
+	armsitem.c \
+	shoot.c \
+	selstage.c \
 	stage.c \
+	back.c \
 	map.c \
 	mapname.c \
 	fade.c \
@@ -39,7 +55,7 @@ DATAFILES   =
 ############################################################################
 
 
-OPTIMIZER	= -g
+OPTIMIZER	= -O1
 
 NUSYSINCDIR  = $(N64KITDIR)/nusys/include
 NUSYSLIBDIR  = $(N64KITDIR)/nusys/lib
@@ -58,9 +74,7 @@ LCINCS =	-I. -I$(NUSYSINCDIR) -I$(NUSTDINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS =	-G 0
 LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) $(NUAUDIOLIB) -lnustd -lnusys -lgultra_rom -L$(GCCDIR)/mipse/lib -lkmc
 
-NUAUDIOLIB = -lnualstl_n_d -ln_gmus_d -ln_gaudio_sc
-OPTIMIZER =	-g
-
+NUAUDIOLIB = -lnualstl_n -ln_gmus -ln_gaudio_sc
 CODESEGMENT	= codesegment.o
 OBJECTS		= $(CODESEGMENT) $(DATAOBJECTS)
 CODEOBJECTS = $(CODEFILES:.c=.o) $(OBJECTFILES) $(NUSYSLIBDIR)/nusys.o

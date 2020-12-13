@@ -17,7 +17,10 @@ typedef struct RECT2
 #define TRUE 1
 #define FALSE 0
 
-//TODO: how do I check if aligned is available?
-#define ALIGNED8 __attribute__((aligned(8)))
+#ifdef NEWGCC
+	#define ALIGNED8 __attribute__((aligned(8)))
+#else
+	#define ALIGNED8
+#endif
 
 #endif

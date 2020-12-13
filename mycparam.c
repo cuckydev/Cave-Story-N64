@@ -270,9 +270,10 @@ void AddMaxLifeMyChar(s32 val)
 
 void DamageMyChar(s32 damage)
 {
+	s32 lv, arms_code;
+	
 	if (!(g_GameFlags & 2))
 		return;
-	
 	if (gMC.shock)
 		return;
 	
@@ -302,8 +303,8 @@ void DamageMyChar(s32 damage)
 		{
 			gArmsData[gSelectedArms].level--;
 			
-			int lv = gArmsData[gSelectedArms].level - 1;
-			int arms_code = gArmsData[gSelectedArms].code;
+			lv = gArmsData[gSelectedArms].level - 1;
+			arms_code = gArmsData[gSelectedArms].code;
 			
 			gArmsData[gSelectedArms].exp = gArmsLevelTable[arms_code].exp[lv] + gArmsData[gSelectedArms].exp;
 			

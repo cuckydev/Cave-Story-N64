@@ -16,10 +16,8 @@ BOOL gGoodEEPROM;
 
 static const char *profile_code = "CS64rv03";
 
-#ifdef __GNUC__
+#ifdef NEWGCC
 	_Static_assert((sizeof(PROFILE_DATA) & 0x7) == 0, "PROFILE_DATA size must be aligned to 8 bytes");
-#else
-	typedef char GLUE2(static_assertion_failed, __LINE__)[((sizeof(PROFILE_DATA) & 0x7) == 0) ? 1 : -1]
 #endif
 
 //Profile functions

@@ -62,18 +62,6 @@ void (*mode_quit[GameMode_Num])() = {
 	ModeDebugSel_Quit,
 };
 
-static void Error_InvalidGameMode()
-{
-	char text[0x80];
-	
-	//Draw red screen (scary!)
-	CortBox(&grcFull, RGB(0xFF, 0x00, 0x00));
-	
-	//Draw error text
-	sprintf(text, "INVALID GAME MODE (%d)", mode);
-	PutText((SCREEN_WIDTH - GetTextWidth(text)) / 2, (SCREEN_HEIGHT - 10) / 2, text, RGB(0xFF, 0xFF, 0xFF));
-}
-
 //Game functions
 s32 Random(s32 min, s32 max)
 {
@@ -181,6 +169,4 @@ void Game_Draw()
 	//Draw mode
 	if (mode_draw[mode] != NULL)
 		mode_draw[mode]();
-	else
-		Error_InvalidGameMode();
 }

@@ -73,7 +73,8 @@ u8 GetMiniMapPixel(u16 x, u16 y)
 void WriteMiniMapLine(u16 y)
 {
 	u8 *p = mapsurf + mapsurf_pitch * y;
-	for (u16 x = 0; x < ((map_w + 1) >> 1); x++)
+	u16 x;
+	for (x = 0; x < ((map_w + 1) >> 1); x++)
 		*p++ = (GetMiniMapPixel(x << 1, y) << 4) | GetMiniMapPixel((x << 1) | 1, y);
 }
 

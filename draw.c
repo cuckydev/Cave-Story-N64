@@ -71,6 +71,7 @@ void InitDirectDraw(NUGfxFunc vblank_callback)
 	
 	//Initialize NuSys
 	nuGfxInit();
+	nuGfxDisplayOff();
 	nuGfxFuncSet(vblank_callback);
 }
 
