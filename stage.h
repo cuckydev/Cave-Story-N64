@@ -5,16 +5,6 @@
 #include "npchar.h"
 #include "map.h"
 
-//Stage structures
-typedef struct
-{
-	u16 width, height;
-	const u8 *map;
-	u32 events;
-	const EVENT *event;
-	const char *script;
-} StageData;
-
 //Stage globals
 extern s32 gStageNo;
 

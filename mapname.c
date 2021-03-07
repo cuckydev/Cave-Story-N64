@@ -2,15 +2,15 @@
 #include "draw.h"
 #include <string.h>
 
-static const char *map_name = NULL;
+static char map_name[0x20];
 static u8 map_wait = 0;
 
 void ReadyMapName(const char *name)
 {
 	if (name[0] == 'u' && name[1] == '\0')
-		map_name = "Studio Pixel presents"; //original translation puts 2 spaces before this text
+		strcpy(map_name, "Studio Pixel presents"); //original translation puts 2 spaces before this text
 	else
-		map_name = name;
+		strcpy(map_name, name);
 	map_wait = 0;
 }
 

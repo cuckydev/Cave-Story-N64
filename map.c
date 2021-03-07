@@ -9,9 +9,9 @@ static u8 *map_data = NULL;
 static u16 map_width;
 static u16 map_length;
 
-static u8 *map_tileset_tex;
-static u16 *map_tileset_tlut;
-static u8 map_attr[0x100];
+static ALIGNED8 u8 map_tileset_tex[0x8000];
+static ALIGNED8 u16 map_tileset_tlut[16];
+static ALIGNED8 u8 map_attr[0x100];
 
 //Map planes
 #define VIEW_W ((SCREEN_WIDTH + 15) / 16)
@@ -112,12 +112,14 @@ void LoadMapData(u16 width, u16 length, const u8 *data)
 	map_plane_dirty = TRUE;
 }
 
-void LoadTilesetData(u8 *tex, u16 *tlut, const u8 *attr)
+void LoadTilesetData(u32 rom_addr)
 {
-	//Copy attribute data and use tileset
-	map_tileset_tex = tex;
-	map_tileset_tlut = tlut;
-	memcpy(map_attr, attr, 0x100 * sizeof(*map_attr));
+	//Read from ROM directly to buffers
+	nuPiReadRom(rom_addr, map_tileset_tex, 0x8000);
+	nuPiReadRom(rom_addr + 0x8000, map_tileset_tlut, 16 * 2);
+	nuPiReadRom(rom_addr + 0x8020, map_attr, 0x100);
+	
+	//Mark map plane as dirty
 	map_plane_dirty = TRUE;
 }
 

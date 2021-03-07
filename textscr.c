@@ -63,7 +63,7 @@ s32 GetTextScriptNo(const char *a)
 	b += (*a++ - '0') * 1000;
 	b += (*a++ - '0') * 100;
 	b += (*a++ - '0') * 10;
-	b += (*a++   - '0');
+	b += (*a++ - '0');
 	return b;
 }
 
@@ -75,7 +75,7 @@ BOOL JumpTextScriptEvent(const char *script, s32 no)
 	while (1)
 	{
 		//Check if we are still in the proper range
-		if (*gTS.p_read == '\0')
+		if (*gTS.p_read == 0)
 			return FALSE;
 		
 		//Check if we are at an event

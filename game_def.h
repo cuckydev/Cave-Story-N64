@@ -18,9 +18,11 @@ typedef struct RECT2
 #define FALSE 0
 
 #ifdef NEWGCC
-	#define ALIGNED8 __attribute__((aligned(8)))
+	#define ALIGNED8  __attribute__((aligned(8)))
+	#define ALIGNED16 __attribute__((aligned(16)))
 #else
 	#define ALIGNED8
+	#define ALIGNED16
 #endif
 
 #endif

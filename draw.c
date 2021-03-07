@@ -71,13 +71,8 @@ void InitDirectDraw(NUGfxFunc vblank_callback)
 	
 	//Initialize NuSys
 	nuGfxInit();
-	nuGfxDisplayOff();
+	osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
 	nuGfxFuncSet(vblank_callback);
-}
-
-void StartDirectDraw()
-{
-	//Turn on display
 	nuGfxDisplayOn();
 }
 
@@ -132,6 +127,17 @@ static void SetRenderState(RenderState next_render_state)
 			gDPSetPrimDepth(glistp++, 0, 0);
 			gDPSetTexturePersp(glistp++, G_TP_NONE);
 			gDPSetTextureLUT(glistp++, G_TT_RGBA16);
+			gDPPipeSync(glistp++);
+			break;
+		case RS_Copy:
+			gDPSetCycleType(glistp++, G_CYC_COPY);
+			gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
+			gDPSetRenderMode(glistp++, G_RM_NOOP, G_RM_NOOP2);
+			
+			gDPSetDepthSource(glistp++, G_ZS_PIXEL);
+			gDPSetPrimDepth(glistp++, 0, 0);
+			gDPSetTexturePersp(glistp++, G_TP_NONE);
+			gDPSetTextureLUT(glistp++, G_TT_NONE);
 			gDPPipeSync(glistp++);
 			break;
 		default:
@@ -208,6 +214,57 @@ void LoadTex_CI8(u32 width, u32 height, u8 *tex)
 		gDPPipeSync(glistp++);
 		prev_tex = tex;
 	}
+}
+
+void LoadTex_C16(u32 width, u32 height, u8 *tex)
+{
+	#ifdef ALIGN_DEBUG
+	if ((size_t)tex & 0xF)
+	{ while (1) {;} }
+	#endif
+	if (tex != prev_tex)
+	{
+		gDPLoadTextureBlock(glistp++, 
+			tex,
+			G_IM_FMT_RGBA,
+			G_IM_SIZ_16b,
+			width, height,
+			0,
+			G_TX_WRAP, G_TX_WRAP,
+			G_TX_NOMASK, G_TX_NOMASK,
+			G_TX_NOLOD, G_TX_NOLOD
+		);
+		gDPPipeSync(glistp++);
+		prev_tex = tex;
+	}
+}
+
+void CopyBitmap(const RECT *src, s32 x, s32 y)
+{
+	//Get source rect dimensions
+	s32 src_w = src->right - src->left;
+	s32 src_h = src->bottom - src->top;
+	if (src_w <= 0 || src_h <= 0)
+		return;
+	if (x <= -src_w || y <= -src_h || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
+		return;
+	s32 cleft = -x;
+	if (cleft < 0)
+		cleft = 0;
+	s32 ctop = -y;
+	if (ctop < 0)
+		ctop = 0;
+	
+	//Render texrect
+	SetRenderState(RS_Copy);
+	gSPTextureRectangle(glistp++, 
+		(x + cleft) << 2, (y + ctop) << 2, 
+		(x + src_w - 1) << 2, (y + src_h - 1) << 2,
+		G_TX_RENDERTILE, 
+		(src->left + cleft) << 5, (src->top + ctop) << 5, 
+		4 << 10, 1 << 10
+	);
+	gDPPipeSync(glistp++);
 }
 
 void PutBitmap(const RECT *src, s32 x, s32 y)

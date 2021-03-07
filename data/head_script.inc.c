@@ -64,26 +64,5 @@ You were never seen again...<NOD<CLRWant to retry?<YNJ0049<CLO\n\
 #0049\n\
 <CLO<FAO0004<ESC\n\
 \n\
-#0050\n\
-<PRI<HMC<SFM<FMU<WAI0025<CMU0041<MSG<SLS<TUR\n\
-                   DEMO END<WAI0090\n\
- <WAI0060\n\
- <WAI0001\n\
-Original game by Studio Pixel<WAI0001\n\
- <WAI0060\n\
- <WAI0001\n\
-Ported to N64 by CuckyDev<WAI0001\n\
- <WAI0060\n\
- <WAI0001\n\
-English Translation by Aeon Genesis<WAI0001\n\
- <WAI0060\n\
- <WAI0001\n\
-Tested by Fazana and Buu342<WAI0001\n\
- <WAI0060\n\
- <WAI0001\n\
- <WAI0001<MSG\n\
-Thank you for playing!<NOD<CLO<WAI0025<ESC<END\n\
-\n\
-\n\
 XX: head.tsc   4000 - 4099\n\
 4000:Almond";

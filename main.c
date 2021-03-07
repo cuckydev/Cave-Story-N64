@@ -9,6 +9,8 @@
 #include "profile.h"
 #include "npctbl.h"
 
+static BOOL run_game;
+
 static const char *cont_error = "NO CONTROLLER";
 static const char *eeprom_error = "16K EEPROM REQUIRED FOR SAVING";
 static u16 error_blink = 0;
@@ -22,8 +24,13 @@ static u16 error_blink = 0;
 static u32 npcs_implemented;
 #endif
 
+extern u8 *stage_map;
+
 void VBlankCallback(int pending)
 {
+	if (!run_game)
+		return;
+	
 	const char *error;
 	#if (defined(MEM_DEBUG) || defined(GLIST_DEBUG) || defined(FRAME_DEBUG) || defined(NPC_DEBUG))
 		char debug[0x80];
@@ -106,9 +113,12 @@ void VBlankCallback(int pending)
 	}
 }
 
-static u8 mem_heap[0x4000];
+static u8 mem_heap[0x10000];
 void mainproc(void)
 {
+	//Don't run game until initialized
+	run_game = FALSE;
+	
 	#ifdef NPC_DEBUG
 		//Get NPCs implemented
 		npcs_implemented = 0;
@@ -129,7 +139,7 @@ void mainproc(void)
 	
 	//Start game
 	InitGame();
-	StartDirectDraw();
+	run_game = TRUE;
 	
 	while (1);
 }

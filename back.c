@@ -7,10 +7,9 @@ BACK gBack;
 s32 gWaterY;
 
 //Back functions
-BOOL InitBack(const BACK_TEX *tex, s32 type)
+BOOL InitBack(BACK_DRAW draw, s32 type)
 {
-	if (tex != NULL)
-		memcpy(&gBack.tex, tex, sizeof(BACK_TEX));
+	gBack.draw = draw;
 	gBack.type = type;
 	gWaterY = 240 * 0x10 * 0x200;
 }
@@ -32,20 +31,23 @@ void ActBack()
 
 void PutBack(s32 fx, s32 fy)
 {
-	s32 x, y;
-	RECT rect = {0, 0, gBack.tex.width, gBack.tex.height};
-	
 	switch (gBack.type)
 	{
 		case 1:
+			if (gBack.draw != NULL)
+				gBack.draw(fx / 2 / 0x200, fy / 2 / 0x200);
+			/*
 			LoadTLUT_CI4(gBack.tex.tlut);
 			LoadTex_CI4(gBack.tex.width, gBack.tex.height, gBack.tex.tex);
 			for (y = -((fy / 2 / 0x200) % gBack.tex.height); y < SCREEN_HEIGHT; y += gBack.tex.height)
 				for (x = -((fx / 2 / 0x200) % gBack.tex.width); x < SCREEN_WIDTH; x += gBack.tex.width)
 					PutBitmap(&rect, x, y);
+			*/
 			break;
 		case 4:
 			CortBox(&grcFull, RGB(0x00, 0x00, 0x20));
+			break;
+		default:
 			break;
 	}
 }

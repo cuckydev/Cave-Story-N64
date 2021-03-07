@@ -11,187 +11,257 @@
 #include "back.h"
 #include "fade.h"
 #include "valueview.h"
+#include "mem.h"
 
-//Stage table
-#include "data/stage/pens1.inc.c"
-#include "data/stage/eggs.inc.c"
-#include "data/stage/eggx.inc.c"
-#include "data/stage/egg6.inc.c"
-#include "data/stage/eggr.inc.c"
-#include "data/stage/mimi.inc.c"
-#include "data/stage/cave.inc.c"
-#include "data/stage/start.inc.c"
-#include "data/stage/barr.inc.c"
-#include "data/stage/pool.inc.c"
-#include "data/stage/cemet.inc.c"
-#include "data/stage/plant.inc.c"
-#include "data/stage/shelt.inc.c"
-#include "data/stage/comu.inc.c"
-#include "data/stage/mibox.inc.c"
-#include "data/stage/egend1.inc.c"
-#include "data/stage/cthu.inc.c"
-#include "data/stage/egg1.inc.c"
-#include "data/stage/pens2.inc.c"
-#include "data/stage/kings.inc.c"
-#include "data/stage/pole.inc.c"
+#include <string.h>
 
-#include "data/tilesets/prt_pens.inc.c"
-#include "data/tilesets/prt_cave.inc.c"
-#include "data/tilesets/prt_eggs.inc.c"
-#include "data/tilesets/prt_eggx.inc.c"
-#include "data/tilesets/prt_eggin.inc.c"
-#include "data/tilesets/prt_store.inc.c"
-#include "data/tilesets/prt_white.inc.c"
-#include "data/tilesets/prt_mimi.inc.c"
+//Stages
+#define STAGE_START(name)_##name##SegmentRomStart
+#define STAGE_END(name)_##name##SegmentRomEnd
 
+#define INC_STAGE(name) extern u8 STAGE_START(name)[]; extern u8 STAGE_END(name)[];
+#define REF_STAGE(name) STAGE_START(name), STAGE_END(name)
+#define NULL_STAGE() NULL, NULL
+
+INC_STAGE(pens1)
+INC_STAGE(eggs)
+INC_STAGE(eggx)
+INC_STAGE(egg6)
+INC_STAGE(eggr)
+INC_STAGE(mimi)
+INC_STAGE(cave)
+INC_STAGE(start)
+INC_STAGE(barr)
+INC_STAGE(pool)
+INC_STAGE(cemet)
+INC_STAGE(plant)
+INC_STAGE(shelt)
+INC_STAGE(comu)
+INC_STAGE(mibox)
+INC_STAGE(egend1)
+INC_STAGE(cthu)
+INC_STAGE(egg1)
+INC_STAGE(pens2)
+INC_STAGE(kings)
+INC_STAGE(pole)
+
+//Tilesets
+#define TILESET_START(name)_##name##SegmentRomStart
+
+#define INC_TILESET(name) extern u8 TILESET_START(name)[];
+#define REF_TILESET(name) TILESET_START(name)
+#define NULL_TILESET() NULL
+
+INC_TILESET(prt_pens)
+INC_TILESET(prt_cave)
+INC_TILESET(prt_eggs)
+INC_TILESET(prt_eggx)
+INC_TILESET(prt_eggin)
+INC_TILESET(prt_store)
+INC_TILESET(prt_white)
+INC_TILESET(prt_mimi)
+
+//Backgrounds
 #include "data/back/bk_blue.inc.c"
 #include "data/back/bk_green.inc.c"
 
 struct 
 {
-	const StageData *stage_data;
-	const TilesetData *tileset_data;
+	const u8 *stage_start, *stage_end;
+	const u8 *tileset_start;
 	const char *name;
-	const BACK_TEX *back_tex;
+	BACK_DRAW back_draw;
 	s32 back_type;
 } gTMT[] = {
-	{NULL, NULL, "Null", NULL, 4},
-	{&pens1_data, &prt_pens, "Arthur's House", &bk_blue, 1},
-	{&eggs_data, &prt_eggs, "Egg Corridor", &bk_green, 1},
-	{&eggx_data, &prt_eggx, "Egg No. 00", NULL, 4},
-	{&egg6_data, &prt_eggin, "Egg No. 06", NULL, 4},
-	{&eggr_data, &prt_store, "Egg Observation Room", NULL, 4},
-	{NULL, NULL, "Grasstown", NULL, 4},
-	{NULL, NULL, "Santa's House", NULL, 4},
-	{NULL, NULL, "Chaco's House", NULL, 4},
-	{NULL, NULL, "Labyrinth I", NULL, 4},
-	{NULL, NULL, "Sand Zone", NULL, 4},
-	{&mimi_data, &prt_mimi, "Mimiga Village", &bk_blue, 1},
-	{&cave_data, &prt_cave, "First Cave", NULL, 4},
-	{&start_data, &prt_cave, "Start Point", NULL, 4},
-	{&barr_data, &prt_mimi, "Shack", NULL, 4},
-	{&pool_data, &prt_mimi, "Reservoir", &bk_blue, 1},
-	{&cemet_data, &prt_mimi, "Graveyard", NULL, 4},
-	{&plant_data, &prt_mimi, "Yamashita Farm", &bk_green, 1},
-	{&shelt_data, &prt_store, "Shelter", NULL, 4},
-	{&comu_data, &prt_pens, "Assembly Hall", NULL, 4},
-	{&mibox_data, &prt_mimi, "Save Point", NULL, 4},
-	{&egend1_data, &prt_store, "Side Room", NULL, 4},
-	{&cthu_data, &prt_store, "Cthulhu's Abode", NULL, 4},
-	{&egg1_data, &prt_eggin, "Egg No. 01", NULL, 4},
-	{&pens2_data, &prt_pens, "Arthur's House", &bk_blue, 1},
-	{NULL, NULL, "Power Room", NULL, 4},
-	{NULL, NULL, "Save Point", NULL, 4},
-	{NULL, NULL, "Execution Chamber", NULL, 4},
-	{NULL, NULL, "Gum", NULL, 4},
-	{NULL, NULL, "Sand Zone Residence", NULL, 4},
-	{NULL, NULL, "Grasstown Hut", NULL, 4},
-	{NULL, NULL, "Main Artery", NULL, 4},
-	{NULL, NULL, "Small Room", NULL, 4},
-	{NULL, NULL, "Jenka's House", NULL, 4},
-	{NULL, NULL, "Deserted House", NULL, 4},
-	{NULL, NULL, "Sand Zone Storehouse", NULL, 4},
-	{NULL, NULL, "Jenka's House", NULL, 4},
-	{NULL, NULL, "Sand Zone", NULL, 4},
-	{NULL, NULL, "Labyrinth H", NULL, 4},
-	{NULL, NULL, "Labyrinth W", NULL, 4},
-	{NULL, NULL, "Camp", NULL, 4},
-	{NULL, NULL, "Clinic Ruins", NULL, 4},
-	{NULL, NULL, "Labyrinth Shop", NULL, 4},
-	{NULL, NULL, "Labyrinth B", NULL, 4},
-	{NULL, NULL, "Boulder Chamber", NULL, 4},
-	{NULL, NULL, "Labyrinth M", NULL, 4},
-	{NULL, NULL, "Dark Place", NULL, 4},
-	{NULL, NULL, "Core", NULL, 4},
-	{NULL, NULL, "Waterway", NULL, 4},
-	{NULL, NULL, "Egg Corridor?", NULL, 4},
-	{NULL, NULL, "Cthulhu's Abode?", NULL, 4},
-	{NULL, NULL, "Egg Observation Room?", NULL, 4},
-	{NULL, NULL, "Egg No. 00", NULL, 4},
-	{NULL, NULL, "Outer Wall", NULL, 4},
-	{NULL, NULL, "Side Room", NULL, 4},
-	{NULL, NULL, "Storehouse", NULL, 4},
-	{NULL, NULL, "Plantation", NULL, 4},
-	{NULL, NULL, "Jail No. 1", NULL, 4},
-	{NULL, NULL, "Hideout", NULL, 4},
-	{NULL, NULL, "Rest Area", NULL, 4},
-	{NULL, NULL, "Teleporter", NULL, 4},
-	{NULL, NULL, "Jail No. 2", NULL, 4},
-	{NULL, NULL, "Balcony", NULL, 4},
-	{NULL, NULL, "Final Cave", NULL, 4},
-	{NULL, NULL, "Throne Room", NULL, 4},
-	{NULL, NULL, "The King's Table", NULL, 4},
-	{NULL, NULL, "Prefab Building", NULL, 4},
-	{NULL, NULL, "Last Cave (Hidden)", NULL, 4},
-	{NULL, NULL, "Black Space", NULL, 4},
-	{NULL, NULL, "Little House", NULL, 4},
-	{NULL, NULL, "Balcony", NULL, 4},
-	{NULL, NULL, "Fall", NULL, 4},
-	{&kings_data, &prt_white, "u", NULL, 4},
-	{NULL, NULL, "Waterway Cabin", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "Prefab House", NULL, 4},
-	{NULL, NULL, "Sacred Ground - B1", NULL, 4},
-	{NULL, NULL, "Sacred Ground - B2", NULL, 4},
-	{NULL, NULL, "Sacred Ground - B3", NULL, 4},
-	{NULL, NULL, "Storage", NULL, 4},
-	{NULL, NULL, "Passage?", NULL, 4},
-	{NULL, NULL, "Passage?", NULL, 4},
-	{NULL, NULL, "Statue Chamber", NULL, 4},
-	{NULL, NULL, "Seal Chamber", NULL, 4},
-	{NULL, NULL, "Corridor", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{&pole_data, &prt_cave, "Hermit Gunsmith", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "Seal Chamber", NULL, 4},
-	{NULL, NULL, "", NULL, 4},
-	{NULL, NULL, "Clock Room", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Null", NULL, 4},
+	{REF_STAGE(pens1), REF_TILESET(prt_pens), "Arthur's House", bk_blue, 1},
+	{REF_STAGE(eggs), REF_TILESET(prt_eggs), "Egg Corridor", bk_green, 1},
+	{REF_STAGE(eggx), REF_TILESET(prt_eggx), "Egg No. 00", NULL, 4},
+	{REF_STAGE(egg6), REF_TILESET(prt_eggin), "Egg No. 06", NULL, 4},
+	{REF_STAGE(eggr), REF_TILESET(prt_store), "Egg Observation Room", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Grasstown", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Santa's House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Chaco's House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Labyrinth I", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sand Zone", NULL, 4},
+	{REF_STAGE(mimi), REF_TILESET(prt_mimi), "Mimiga Village", bk_blue, 1},
+	{REF_STAGE(cave), REF_TILESET(prt_cave), "First Cave", NULL, 4},
+	{REF_STAGE(start), REF_TILESET(prt_cave), "Start Point", NULL, 4},
+	{REF_STAGE(barr), REF_TILESET(prt_mimi), "Shack", NULL, 4},
+	{REF_STAGE(pool), REF_TILESET(prt_mimi), "Reservoir", bk_blue, 1},
+	{REF_STAGE(cemet), REF_TILESET(prt_mimi), "Graveyard", NULL, 4},
+	{REF_STAGE(plant), REF_TILESET(prt_mimi), "Yamashita Farm", bk_green, 1},
+	{REF_STAGE(shelt), REF_TILESET(prt_store), "Shelter", NULL, 4},
+	{REF_STAGE(comu), REF_TILESET(prt_pens), "Assembly Hall", NULL, 4},
+	{REF_STAGE(mibox), REF_TILESET(prt_mimi), "Save Point", NULL, 4},
+	{REF_STAGE(egend1), REF_TILESET(prt_store), "Side Room", NULL, 4},
+	{REF_STAGE(cthu), REF_TILESET(prt_store), "Cthulhu's Abode", NULL, 4},
+	{REF_STAGE(egg1), REF_TILESET(prt_eggin), "Egg No. 01", NULL, 4},
+	{REF_STAGE(pens2), REF_TILESET(prt_pens), "Arthur's House", bk_blue, 1},
+	{NULL_STAGE(), NULL_TILESET(), "Power Room", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Save Point", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Execution Chamber", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Gum", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sand Zone Residence", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Grasstown Hut", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Main Artery", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Small Room", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Jenka's House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Deserted House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sand Zone Storehouse", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Jenka's House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sand Zone", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Labyrinth H", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Labyrinth W", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Camp", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Clinic Ruins", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Labyrinth Shop", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Labyrinth B", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Boulder Chamber", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Labyrinth M", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Dark Place", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Core", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Waterway", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Egg Corridor?", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Cthulhu's Abode?", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Egg Observation Room?", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Egg No. 00", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Outer Wall", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Side Room", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Storehouse", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Plantation", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Jail No. 1", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Hideout", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Rest Area", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Teleporter", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Jail No. 2", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Balcony", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Final Cave", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Throne Room", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "The King's Table", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Prefab Building", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Last Cave (Hidden)", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Black Space", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Little House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Balcony", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Fall", NULL, 4},
+	{REF_STAGE(kings), REF_TILESET(prt_white), "u", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Waterway Cabin", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Prefab House", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sacred Ground - B1", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sacred Ground - B2", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Sacred Ground - B3", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Storage", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Passage?", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Passage?", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Statue Chamber", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Seal Chamber", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Corridor", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{REF_STAGE(pole), REF_TILESET(prt_cave), "Hermit Gunsmith", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Seal Chamber", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "", NULL, 4},
+	{NULL_STAGE(), NULL_TILESET(), "Clock Room", NULL, 4},
 };
 
 //Stage globals
 s32 gStageNo;
 
+//Stage data
+u8 *stage_map = NULL;
+static u8 *stage_script = NULL;
+
 //Stage functions
 void TransferStage(s32 no, s32 w, s32 x, s32 y)
 {
 	//Get stage data
-	const StageData *stage_data = gTMT[no].stage_data;
-	const TilesetData *tileset_data = gTMT[no].tileset_data;
-	if (stage_data == NULL || tileset_data == NULL)
+	const u8 *stage_start = gTMT[no].stage_start;
+	const u8 *stage_end   = gTMT[no].stage_end;
+	const u8 *tileset_start = gTMT[no].tileset_start;
+	if (stage_start == NULL || stage_end == NULL || tileset_start == NULL)
 	{
+		TransferStage(gStageNo, 94, (gMC.x + 0x1000) / 0x2000, (gMC.y + 0x1000) / 0x2000);
+		ShowMyChar(TRUE);
+	}
+	else
+	{
+		//Read stage data
+		u16 i;
+		u16 width, height, events;
+		u32 scr_len;
+		EVENT *event, *eventp;
+		
+		u32 stage_size = ((u32)(stage_end - stage_start) + 0xF) & ~0xF;
+		u8 *buffer = Mem_Alloc(stage_size);
+		u8 *bufferp = buffer;
+		
+		nuPiReadRom((u32)stage_start, buffer, stage_size);
+		
+		//Map data
+		width  = (*bufferp++ << 8) | (*bufferp++ << 0);
+		height = (*bufferp++ << 8) | (*bufferp++ << 0);
+		
+		Mem_Free(stage_map);
+		stage_map = Mem_Alloc(width * height);
+		
+		memcpy(stage_map, bufferp, width * height);
+		bufferp += width * height;
+		
+		//Events
+		events = (*bufferp++ << 8) | (*bufferp++ << 0);
+		event = Mem_Alloc(events * sizeof(EVENT));
+		
+		eventp = event;
+		for (i = 0; i < events; i++, eventp++)
+		{
+			eventp->x          = (*bufferp++ << 8) | (*bufferp++ << 0);
+			eventp->y          = (*bufferp++ << 8) | (*bufferp++ << 0);
+			eventp->code_flag  = (*bufferp++ << 8) | (*bufferp++ << 0);
+			eventp->code_event = (*bufferp++ << 8) | (*bufferp++ << 0);
+			eventp->code_char  = (*bufferp++ << 8) | (*bufferp++ << 0);
+			eventp->bits       = (*bufferp++ << 8) | (*bufferp++ << 0);
+		}
+		
+		//Script
+		scr_len = (*bufferp++ << 24) | (*bufferp++ << 16) | (*bufferp++ << 8) | (*bufferp++ << 0);
+		
+		Mem_Free(stage_script);
+		stage_script = Mem_Alloc(scr_len + 1);
+		
+		memcpy(stage_script, bufferp, scr_len);
+		stage_script[scr_len] = 0;
+		
+		//Free buffer
+		Mem_Free(buffer);
+		
+		//Move character
+		SetMyCharPosition(x * 0x10 * 0x200, y * 0x10 * 0x200);
+		
+		//Load stage data
+		LoadMapData(width, height, stage_map);
+		LoadTilesetData((u32)tileset_start);
+		LoadEvent(events, event);
+		Mem_Free(event);
+		LoadTextScript_Stage(stage_script);
+		InitBack(gTMT[no].back_draw, gTMT[no].back_type);
+		
+		//Initialize map state
 		ReadyMapName(gTMT[no].name);
-		InitNpChar();
+		
+		StartTextScript(w);
+		SetFrameMyChar();
 		ClearBullet();
 		InitCaret();
 		ClearValueView();
-		StartTextScript(50);
-		return;
+		ResetQuake();
+		//InitBossChar(gTMT[no].boss_no);
+		ResetFlash();
+		gStageNo = no;
 	}
-	
-	//Move character
-	SetMyCharPosition(x * 0x10 * 0x200, y * 0x10 * 0x200);
-	
-	//Load stage data
-	LoadMapData(stage_data->width, stage_data->height, stage_data->map);
-	LoadTilesetData(tileset_data->tex, tileset_data->tlut, tileset_data->attr);
-	LoadEvent(stage_data->events, stage_data->event);
-	LoadTextScript_Stage(stage_data->script);
-	InitBack(gTMT[no].back_tex, gTMT[no].back_type);
-	
-	//Initialize map state
-	ReadyMapName(gTMT[no].name);
-	
-	StartTextScript(w);
-	SetFrameMyChar();
-	ClearBullet();
-	InitCaret();
-	ClearValueView();
-	ResetQuake();
-	//InitBossChar(gTMT[no].boss_no);
-	ResetFlash();
-	gStageNo = no;
 }

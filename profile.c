@@ -68,12 +68,12 @@ void InitProfile()
 
 BOOL SaveProfile()
 {
-	static PROFILE_DATA profile;
+	ALIGNED8 PROFILE_DATA profile;
 	
 	if (gGoodEEPROM)
 	{
 		//Set profile data
-		memset(&profile, 0, sizeof(profile));
+		memset(&profile, 0, sizeof(PROFILE_DATA));
 		memcpy(profile.code, profile_code, sizeof(profile.code));
 		profile.stage = gStageNo;
 		profile.music = 0;//gMusicNo;
@@ -100,7 +100,7 @@ BOOL SaveProfile()
 
 BOOL LoadProfile()
 {
-	static PROFILE_DATA profile;
+	ALIGNED8 PROFILE_DATA profile;
 	
 	if (gGoodEEPROM)
 	{
