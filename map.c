@@ -5,7 +5,7 @@
 #include <string.h>
 
 //Map data
-static u8 *map_data = NULL;
+static u8 *map_data;
 static u16 map_width;
 static u16 map_length;
 
@@ -98,17 +98,14 @@ void UpdateMapPlane(s32 fx, s32 fy)
 }
 
 //Map functions
-void LoadMapData(u16 width, u16 length, const u8 *data)
+void LoadMapData(u16 width, u16 length, u8 *data)
 {
-	//Allocate map data
-	if (map_data != NULL)
-		Mem_Free(map_data);
-	map_data = Mem_Alloc(width * length * sizeof(*map_data));
-	
-	//Copy map data
-	memcpy(map_data, data, width * length * sizeof(*map_data));
+	//Use given map data
+	map_data = data;
 	map_width = width;
 	map_length = length;
+	
+	//Mark map plane as dirty
 	map_plane_dirty = TRUE;
 }
 

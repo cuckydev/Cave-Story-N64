@@ -6,7 +6,7 @@
 
 //Map functions
 void UpdateMapPlane(s32 fx, s32 fy);
-void LoadMapData(u16 width, u16 length, const u8 *data);
+void LoadMapData(u16 width, u16 length, u8 *data);
 void LoadTilesetData(u32 rom_addr);
 void GetMapData(u8 **data, s16 *mw, s16 *ml);
 u8 GetAttribute(s32 x, s32 y);
