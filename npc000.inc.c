@@ -799,6 +799,84 @@ void Npc008_Put(NPCHAR *npc, s32 x, s32 y)
 	}
 }
 
+//NPC 009 - Balrog (Drop-in)
+#include "data/bitmap/npc_balrog.inc.c"
+#include "data/bitmap/npc_frogbalrog.inc.c"
+
+void Npc009_Act(NPCHAR *npc)
+{
+	//Move and animate
+	s32 i;
+	
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 2;
+			//Fallthrough
+		case 1:
+			npc->ym += 0x20;
+			
+			if (npc->count1 < 40)
+			{
+				npc->count1++;
+			}
+			else
+			{
+				npc->bits &= ~NPC_IGNORE_SOLIDITY;
+				npc->bits |= NPC_SOLID_SOFT;
+			}
+			
+			if (npc->flag & 8)
+			{
+				for (i = 0; i < 4; ++i)
+					SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
+				npc->act_no = 2;
+				npc->ani_no = 1;
+				npc->act_wait = 0;
+				PlaySoundObject(26, 1);
+				SetQuake(30);
+			}
+			break;
+			
+		case 2:
+			if (++npc->act_wait > 16)
+			{
+				npc->act_no = 3;
+				npc->ani_no = 0;
+				npc->ani_wait = 0;
+			}
+			break;
+	}
+	
+	//Limit speed
+	if (npc->ym > 0x5FF)
+		npc->ym = 0x5FF;
+	if (npc->ym < -0x5FF)
+		npc->ym = -0x5FF;
+	
+	//Move
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc009_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const s32 frame[] = {
+		0/40,
+		80/40,
+		120/40,
+	};
+	static const RECT rect[2] = {
+		{ 0, 0, 40, 24},
+		{40, 0, 80, 24},
+	};
+	
+	LoadTLUT_CI4((gStageNo == 28) ? npc_frogbalrog_tlut : npc_balrog_tlut);
+	LoadTex_CI4(80, 24, ((gStageNo == 28) ? npc_frogbalrog_tex : npc_balrog_tex) + (40 * 24) * frame[npc->ani_no]);
+	PutBitmap(&rect[npc->direct != 0], x, y);
+}
+
 //NPC 011 - Igor's projectile
 #include "data/bitmap/npc_igorprojectile.inc.c"
 
@@ -844,8 +922,6 @@ void Npc011_Put(NPCHAR *npc, s32 x, s32 y)
 }
 
 //NPC 012 - Balrog (cutscene)
-#include "data/bitmap/npc_balrog.inc.c"
-
 void Npc012_Act(NPCHAR *npc)
 {
 	s32 i;
@@ -934,7 +1010,7 @@ void Npc012_Act(NPCHAR *npc)
 			npc->act_wait = 0;
 			npc->count1 = 0;
 			
-			for (i = 0; i < 4; ++i)
+			for (i = 0; i < 4; i++)
 				SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			
 			PlaySoundObject(72, 1);
@@ -1151,8 +1227,8 @@ void Npc012_Put(NPCHAR *npc, s32 x, s32 y)
 			rect.right = ((npc->direct != 0) ? 80 : 40);
 			rect.bottom = 24;
 		}
-		LoadTLUT_CI4(npc_balrog_tlut);
-		LoadTex_CI4(80, 24, npc_balrog_tex + (40 * 24) * frame[npc->ani_no]);
+		LoadTLUT_CI4((gStageNo == 28) ? npc_frogbalrog_tlut : npc_balrog_tlut);
+		LoadTex_CI4(80, 24, ((gStageNo == 28) ? npc_frogbalrog_tex : npc_balrog_tex) + (40 * 24) * frame[npc->ani_no]);
 		PutBitmap(&rect, x, y);
 	}
 }
@@ -1202,7 +1278,7 @@ void Npc015_Act(NPCHAR *npc)
 			if (npc->direct == 2)
 			{
 				npc->ym = -0x200;
-				for (i = 0; i < 4; ++i)
+				for (i = 0; i < 4; i++)
 					SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			}
 			//Fallthrough
@@ -1264,7 +1340,7 @@ void Npc016_Act(NPCHAR *npc)
 			{
 				npc->bits &= ~NPC_INTERACTABLE;
 				npc->ym = -0x200;
-				for (i = 0; i < 4; ++i)
+				for (i = 0; i < 4; i++)
 					SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			}
 			
@@ -1397,7 +1473,7 @@ void Npc018_Act(NPCHAR *npc)
 			break;
 			
 		case 1:
-			for (i = 0; i < 4; ++i)
+			for (i = 0; i < 4; i++)
 				SetNpChar(4, npc->x, npc->y, Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			npc->act_no = 0;
 			npc->ani_no = 0;
@@ -1426,7 +1502,7 @@ void Npc019_Act(NPCHAR *npc)
 	switch (npc->act_no)
 	{
 		case 0:
-			for (i = 0; i < 0x10; ++i)
+			for (i = 0; i < 0x10; i++)
 				SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			npc->y += 10 * 0x200;
 			npc->act_no = 1;

@@ -1,5 +1,6 @@
 #include "sound.h"
 
+//Sound interface
 void InitDirectSound()
 {
 	

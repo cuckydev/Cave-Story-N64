@@ -47,12 +47,12 @@ void MoveCampCursor()
 	s32 arms_num = 0;
 	s32 item_num = 0;
 	while (gArmsData[arms_num].code != 0)
-		++arms_num;
+		arms_num++;
 	while (gItemData[item_num].code != 0)
-		++item_num;
+		item_num++;
 	
 	if (arms_num == 0 && item_num == 0)
-		return;	//Empty inventory
+		return; //Empty inventory
 	
 	//True if we're currently changing cursor position
 	bChange = FALSE;

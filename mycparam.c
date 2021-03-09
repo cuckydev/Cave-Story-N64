@@ -30,8 +30,8 @@ const ARMS_LEVEL gArmsLevelTable[14] =
 //Arms
 void AddExpMyChar(s32 x)
 {
-	int lv = gArmsData[gSelectedArms].level - 1;
-	int arms_code = gArmsData[gSelectedArms].code;
+	s32 lv = gArmsData[gSelectedArms].level - 1;
+	s32 arms_code = gArmsData[gSelectedArms].code;
 
 	gArmsData[gSelectedArms].exp += x;
 
@@ -99,8 +99,8 @@ BOOL IsMaxExpMyChar()
 
 void ZeroArmsEnergy_All()
 {
-	int a;
-
+	s32 a;
+	
 	for (a = 0; a < ARMS_MAX; a++)
 	{
 		gArmsData[a].level = 1;

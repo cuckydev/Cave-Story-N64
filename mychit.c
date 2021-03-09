@@ -732,7 +732,7 @@ void HitMyCharNpChar()
 	if (!(gMC.cond & 0x80) || gMC.cond & 2)
 		return;
 	
-	for (i = 0; i < NPC_MAX; ++i)
+	for (i = 0; i < NPC_MAX; i++)
 	{
 		if (!(gNPC[i].cond & 0x80))
 			continue;

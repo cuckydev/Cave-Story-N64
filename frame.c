@@ -83,7 +83,7 @@ void SetFrameTargetMyChar(s32 wait)
 void SetFrameTargetNpChar(s32 event, s32 wait)
 {
 	s32 i;
-	for (i = 0; i < NPC_MAX; ++i)
+	for (i = 0; i < NPC_MAX; i++)
 		if (gNPC[i].code_event == event)
 			break;
 	

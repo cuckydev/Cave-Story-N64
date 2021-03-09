@@ -13,9 +13,9 @@ void InitBossLife()
 
 BOOL StartBossLife(s32 code_event)
 {
-	int i = 0;
+	s32 i = 0;
 	while (i < NPC_MAX && gNPC[i].code_event != code_event)
-		++i;
+		i++;
 	
 	if (i == NPC_MAX)
 		return FALSE;
@@ -31,8 +31,8 @@ BOOL StartBossLife(s32 code_event)
 
 BOOL StartBossLife2()
 {
-	gBL.flag = TRUE;
-	gBL.pId = NULL;
+	//gBL.flag = TRUE;
+	//gBL.pId = NULL;
 	//gBL.max = gBoss[0].life;
 	//gBL.br = gBoss[0].life;
 	//gBL.pLife = &gBoss[0].life;

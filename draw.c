@@ -99,7 +99,6 @@ void EndFrame()
 	//End display list and execute
 	gDPFullSync(glistp++);
 	gSPEndDisplayList(glistp++);
-	assert((glistp - glist) <= GLIST_LENGTH);
 	nuGfxTaskStart(glist, (s32)(glistp - glist) * sizeof(Gfx), NU_GFX_UCODE_F3DEX2, NU_SC_SWAPBUFFER);
 }
 

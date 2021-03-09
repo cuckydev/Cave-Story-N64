@@ -72,9 +72,9 @@ void VBlankCallback(int pending)
 		
 		#ifdef MEM_DEBUG
 			//Draw memory debug
-			size_t used, size;
-			Mem_GetStat(&used, &size);
-			sprintf(debug, "mem: 0x%X/0x%X", used, size);
+			size_t used, size, max;
+			Mem_GetStat(&used, &size, &max);
+			sprintf(debug, "mem: 0x%X/0x%X max: 0x%X", used, size, max);
 			PutText(17, dbg_y + 1, debug, RGB(0x00, 0x00, 0x00));
 			PutText(16, dbg_y, debug, RGB(0xFF, 0xFF, 0xFF));
 			dbg_y += 16;
@@ -113,7 +113,8 @@ void VBlankCallback(int pending)
 	}
 }
 
-static u8 mem_heap[0x10000];
+static ALIGNED16 u8 mem_heap[0x10000];
+
 void mainproc(void)
 {
 	//Don't run game until initialized

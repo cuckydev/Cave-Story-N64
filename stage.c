@@ -28,6 +28,9 @@ INC_STAGE(eggs)
 INC_STAGE(eggx)
 INC_STAGE(egg6)
 INC_STAGE(eggr)
+INC_STAGE(weed)
+INC_STAGE(santa)
+INC_STAGE(chako)
 INC_STAGE(mimi)
 INC_STAGE(cave)
 INC_STAGE(start)
@@ -42,6 +45,11 @@ INC_STAGE(egend1)
 INC_STAGE(cthu)
 INC_STAGE(egg1)
 INC_STAGE(pens2)
+INC_STAGE(malco)
+INC_STAGE(weeds)
+INC_STAGE(weedd)
+INC_STAGE(frog)
+INC_STAGE(weedb)
 INC_STAGE(kings)
 INC_STAGE(pole)
 
@@ -53,13 +61,15 @@ INC_STAGE(pole)
 #define NULL_TILESET() NULL
 
 INC_TILESET(prt_pens)
-INC_TILESET(prt_cave)
 INC_TILESET(prt_eggs)
 INC_TILESET(prt_eggx)
 INC_TILESET(prt_eggin)
+INC_TILESET(prt_cave)
 INC_TILESET(prt_store)
-INC_TILESET(prt_white)
+INC_TILESET(prt_weed)
+INC_TILESET(prt_barr)
 INC_TILESET(prt_mimi)
+INC_TILESET(prt_white)
 
 //Backgrounds
 #include "data/back/bk_blue.inc.c"
@@ -79,9 +89,9 @@ struct
 	{REF_STAGE(eggx), REF_TILESET(prt_eggx), "Egg No. 00", NULL, 4},
 	{REF_STAGE(egg6), REF_TILESET(prt_eggin), "Egg No. 06", NULL, 4},
 	{REF_STAGE(eggr), REF_TILESET(prt_store), "Egg Observation Room", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Grasstown", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Santa's House", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Chaco's House", NULL, 4},
+	{REF_STAGE(weed), REF_TILESET(prt_weed), "Grasstown", bk_blue, 1},
+	{REF_STAGE(santa), REF_TILESET(prt_barr), "Santa's House", NULL, 4},
+	{REF_STAGE(chako), REF_TILESET(prt_barr), "Chaco's House", bk_blue, 1},
 	{NULL_STAGE(), NULL_TILESET(), "Labyrinth I", NULL, 4},
 	{NULL_STAGE(), NULL_TILESET(), "Sand Zone", NULL, 4},
 	{REF_STAGE(mimi), REF_TILESET(prt_mimi), "Mimiga Village", bk_blue, 1},
@@ -98,12 +108,12 @@ struct
 	{REF_STAGE(cthu), REF_TILESET(prt_store), "Cthulhu's Abode", NULL, 4},
 	{REF_STAGE(egg1), REF_TILESET(prt_eggin), "Egg No. 01", NULL, 4},
 	{REF_STAGE(pens2), REF_TILESET(prt_pens), "Arthur's House", bk_blue, 1},
-	{NULL_STAGE(), NULL_TILESET(), "Power Room", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Save Point", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Execution Chamber", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Gum", NULL, 4},
+	{REF_STAGE(malco), REF_TILESET(prt_barr), "Power Room", NULL, 4},
+	{REF_STAGE(weeds), REF_TILESET(prt_barr), "Save Point", NULL, 4},
+	{REF_STAGE(weedd), REF_TILESET(prt_store), "Execution Chamber", NULL, 4},
+	{REF_STAGE(frog), REF_TILESET(prt_weed), "Gum", bk_green, 2},
 	{NULL_STAGE(), NULL_TILESET(), "Sand Zone Residence", NULL, 4},
-	{NULL_STAGE(), NULL_TILESET(), "Grasstown Hut", NULL, 4},
+	{REF_STAGE(weedb), REF_TILESET(prt_pens), "Grasstown Hut", bk_blue, 1},
 	{NULL_STAGE(), NULL_TILESET(), "Main Artery", NULL, 4},
 	{NULL_STAGE(), NULL_TILESET(), "Small Room", NULL, 4},
 	{NULL_STAGE(), NULL_TILESET(), "Jenka's House", NULL, 4},

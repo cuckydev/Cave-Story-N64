@@ -259,7 +259,7 @@ void HitNpCharMap()
 	u8 atrb;
 	
 	//Iterate through all NPCs performing collision
-	for (i = 0; i < NPC_MAX; ++i)
+	for (i = 0; i < NPC_MAX; i++)
 	{
 		if (!(gNPC[i].cond & 0x80))
 			continue;

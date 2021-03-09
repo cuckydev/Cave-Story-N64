@@ -33,16 +33,17 @@ void PutBack(s32 fx, s32 fy)
 {
 	switch (gBack.type)
 	{
+		case 0:
+			if (gBack.draw != NULL)
+				gBack.draw(0, 0);
+			break;
 		case 1:
 			if (gBack.draw != NULL)
 				gBack.draw(fx / 2 / 0x200, fy / 2 / 0x200);
-			/*
-			LoadTLUT_CI4(gBack.tex.tlut);
-			LoadTex_CI4(gBack.tex.width, gBack.tex.height, gBack.tex.tex);
-			for (y = -((fy / 2 / 0x200) % gBack.tex.height); y < SCREEN_HEIGHT; y += gBack.tex.height)
-				for (x = -((fx / 2 / 0x200) % gBack.tex.width); x < SCREEN_WIDTH; x += gBack.tex.width)
-					PutBitmap(&rect, x, y);
-			*/
+			break;
+		case 2:
+			if (gBack.draw != NULL)
+				gBack.draw(fx / 0x200, fy / 0x200);
 			break;
 		case 4:
 			CortBox(&grcFull, RGB(0x00, 0x00, 0x20));

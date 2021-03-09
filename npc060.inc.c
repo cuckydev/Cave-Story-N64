@@ -687,8 +687,6 @@ void Npc064_Put(NPCHAR *npc, s32 x, s32 y)
 }
 
 //NPC 065 - First Cave Bat
-#include "data/bitmap/npc_bat.inc.c"
-
 void Npc065_Act(NPCHAR *npc)
 {
 	//Movement

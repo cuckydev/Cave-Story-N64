@@ -82,7 +82,7 @@ BOOL JumpTextScriptEvent(const char *script, s32 no)
 		if (*gTS.p_read == '#')
 		{
 			//Check if this is our event
-			int event_no = GetTextScriptNo(++gTS.p_read);
+			s32 event_no = GetTextScriptNo(++gTS.p_read);
 			if (no == event_no)
 				break;
 			if (no < event_no)
@@ -210,7 +210,7 @@ void SetNumberTextScript(s32 index)
 	PlaySoundObject(2, 1);
 	gTS.wait_beam = 0;
 	
-	gTS.p_write += (int)strlen(str);
+	gTS.p_write += (s32)strlen(str);
 }
 
 void ClearTextLine(void)
@@ -220,7 +220,7 @@ void ClearTextLine(void)
 	gTS.line = 0;
 	gTS.p_write = 0;
 	
-	for (i = 0; i < 4; ++i)
+	for (i = 0; i < 4; i++)
 	{
 		gTS.ypos_line[i] = i * 16;
 		memset(text[i], 0, sizeof(text[0]));
@@ -1200,7 +1200,7 @@ TSC_RESULT TextScriptProc()
 			{
 				if ((gTS.wait++ & 0x3) == 0)
 				{
-					for (i = 0; i < 4; ++i)
+					for (i = 0; i < 4; i++)
 					{
 						gTS.ypos_line[i] -= 1;
 						if (gTS.ypos_line[i] == 0)
@@ -1212,7 +1212,7 @@ TSC_RESULT TextScriptProc()
 			}
 			else
 			{
-				for (i = 0; i < 4; ++i)
+				for (i = 0; i < 4; i++)
 				{
 					gTS.ypos_line[i] -= 4;
 					if (gTS.ypos_line[i] == 0)

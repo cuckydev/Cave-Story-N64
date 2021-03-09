@@ -66,6 +66,18 @@ beginseg
 	include "data/tilesets/prt_white.dat"
 endseg
 
+beginseg
+	name "prt_weed"
+	flags RAW
+	include "data/tilesets/prt_weed.dat"
+endseg
+
+beginseg
+	name "prt_barr"
+	flags RAW
+	include "data/tilesets/prt_barr.dat"
+endseg
+
 //Stages
 beginseg
 	name "pens1"
@@ -95,6 +107,24 @@ beginseg
 	name "eggr"
 	flags RAW
 	include "data/stage/eggr.dat"
+endseg
+
+beginseg
+	name "weed"
+	flags RAW
+	include "data/stage/weed.dat"
+endseg
+
+beginseg
+	name "santa"
+	flags RAW
+	include "data/stage/santa.dat"
+endseg
+
+beginseg
+	name "chako"
+	flags RAW
+	include "data/stage/chako.dat"
 endseg
 
 beginseg
@@ -182,6 +212,36 @@ beginseg
 endseg
 
 beginseg
+	name "malco"
+	flags RAW
+	include "data/stage/malco.dat"
+endseg
+
+beginseg
+	name "weeds"
+	flags RAW
+	include "data/stage/weeds.dat"
+endseg
+
+beginseg
+	name "weedd"
+	flags RAW
+	include "data/stage/weedd.dat"
+endseg
+
+beginseg
+	name "frog"
+	flags RAW
+	include "data/stage/frog.dat"
+endseg
+
+beginseg
+	name "weedb"
+	flags RAW
+	include "data/stage/weedb.dat"
+endseg
+
+beginseg
 	name "kings"
 	flags RAW
 	include "data/stage/kings.dat"
@@ -199,13 +259,15 @@ beginwave
 	include "code"
 	
 	//Tilesets
-	include "prt_cave"
-	include "prt_eggin"
+	include "prt_pens"
 	include "prt_eggs"
 	include "prt_eggx"
-	include "prt_mimi"
-	include "prt_pens"
+	include "prt_eggin"
+	include "prt_cave"
 	include "prt_store"
+	include "prt_weed"
+	include "prt_barr"
+	include "prt_mimi"
 	include "prt_white"
 	
 	//Stages
@@ -214,6 +276,9 @@ beginwave
 	include "eggx"
 	include "egg6"
 	include "eggr"
+	include "weed"
+	include "santa"
+	include "chako"
 	include "mimi"
 	include "cave"
 	include "start"
@@ -228,6 +293,11 @@ beginwave
 	include "cthu"
 	include "egg1"
 	include "pens2"
+	include "malco"
+	include "weeds"
+	include "weedd"
+	include "frog"
+	include "weedb"
 	include "kings"
 	include "pole"
 endwave

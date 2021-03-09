@@ -38,14 +38,14 @@ typedef struct
 
 typedef struct
 {
-	signed char damage;
-	signed char life;
-	int life_count;
-	int bbits;
-	int enemyXL;
-	int enemyYL;
-	int blockXL;
-	int blockYL;
+	s8 damage;
+	s8 life;
+	s32 life_count;
+	s32 bbits;
+	s32 enemyXL;
+	s32 enemyYL;
+	s32 blockXL;
+	s32 blockYL;
 	RECT2 view;
 } BULLET_TABLE;
 

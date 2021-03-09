@@ -91,9 +91,9 @@ static const struct
 	{Bullet_PoleStar_Act, Bullet_PoleStar_Put, 2},
 	{Bullet_PoleStar_Act, Bullet_PoleStar_Put, 3},
 	//Fireball
-	{NULL, NULL, 1},
-	{NULL, NULL, 2},
-	{NULL, NULL, 3},
+	{Bullet_FireBall_Act, Bullet_FireBall_Put, 1},
+	{Bullet_FireBall_Act, Bullet_FireBall_Put, 2},
+	{Bullet_FireBall_Act, Bullet_FireBall_Put, 3},
 	//Machine Gun
 	{NULL, NULL, 1},
 	{NULL, NULL, 2},
@@ -152,7 +152,7 @@ static const struct
 void InitBullet()
 {
 	s32 i;
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX; i++)
 		gBul[i].cond = 0;
 }
 
@@ -160,7 +160,7 @@ s32 CountArmsBullet(s32 arms_code)
 {
 	s32 i;
 	s32 count = 0;
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX; i++)
 		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == arms_code)
 			++count;
 	return count;
@@ -170,7 +170,7 @@ s32 CountBulletNum(s32 bullet_code)
 {
 	s32 i;
 	s32 count = 0;
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX; i++)
 		if (gBul[i].cond & 0x80 && gBul[i].code_bullet == bullet_code)
 			++count;
 	return count;
@@ -179,7 +179,7 @@ s32 CountBulletNum(s32 bullet_code)
 void DeleteBullet(s32 code)
 {
 	s32 i;
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX; i++)
 		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == code)
 			gBul[i].cond = 0;
 }
@@ -187,7 +187,7 @@ void DeleteBullet(s32 code)
 void ClearBullet()
 {
 	s32 i;
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX; i++)
 		gBul[i].cond = 0;
 }
 

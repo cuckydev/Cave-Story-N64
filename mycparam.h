@@ -6,7 +6,7 @@
 
 typedef struct
 {
-	int exp[3];
+	s32 exp[3];
 } ARMS_LEVEL;
 
 extern const ARMS_LEVEL gArmsLevelTable[14];

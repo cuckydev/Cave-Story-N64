@@ -107,6 +107,159 @@ void Bullet_PoleStar_Put(BULLET *bul, s32 level, s32 x, s32 y)
 	PutBitmap(&rect[level - 1][bul->direct == 1 || bul->direct == 3], x, y);
 }
 
+//Fireball
+#include "data/bitmap/bullet_fireball.inc.c"
+
+void Bullet_FireBall_Act(BULLET *bul, s32 level)
+{
+	//Move
+	BOOL bBreak;
+	
+	if (++bul->count1 > bul->life_count)
+	{
+		bul->cond = 0;
+		SetCaret(bul->x, bul->y, 3, 0);
+		return;
+	}
+	
+	bBreak = FALSE;
+	if (bul->flag & 2 && bul->flag & 8)
+		bBreak = TRUE;
+	if (bul->flag & 1 && bul->flag & 4)
+		bBreak = TRUE;
+	
+	if (bul->direct == 0 && bul->flag & 1)
+		bul->direct = 2;
+	if (bul->direct == 2 && bul->flag & 4)
+		bul->direct = 0;
+	
+	if (bBreak)
+	{
+		bul->cond = 0;
+		SetCaret(bul->x, bul->y, 2, 0);
+		PlaySoundObject(28, 1);
+		return;
+	}
+	
+	if (bul->act_no == 0)
+	{
+		bul->act_no = 1;
+		
+		switch (bul->direct)
+		{
+			case 0:
+				bul->xm = -0x400;
+				break;
+				
+			case 1:
+				bul->xm = gMC.xm;
+				
+				if (gMC.xm < 0)
+					bul->direct = 0;
+				else
+					bul->direct = 2;
+				
+				if (gMC.direct == 0)
+					bul->xm -= 0x80;
+				else
+					bul->xm += 0x80;
+				bul->ym = -0x5FF;
+				break;
+				
+			case 2:
+				bul->xm = 0x400;
+				break;
+				
+			case 3:
+				bul->xm = gMC.xm;
+				
+				if (gMC.xm < 0)
+					bul->direct = 0;
+				else
+					bul->direct = 2;
+				
+				bul->ym = 0x5FF;
+				break;
+		}
+	}
+	else
+	{
+		if (bul->flag & 8)
+			bul->ym = -0x400;
+		else if (bul->flag & 1)
+			bul->xm = 0x400;
+		else if (bul->flag & 4)
+			bul->xm = -0x400;
+		
+		bul->ym += 85;
+		if (bul->ym > 0x3FF)
+			bul->ym = 0x3FF;
+		
+		bul->x += bul->xm;
+		bul->y += bul->ym;
+		
+		if (bul->flag & 0xD)
+			PlaySoundObject(34, 1);
+	}
+	
+	//Animation
+	bul->ani_no++;
+	
+	if (level == 1)
+	{
+		if (bul->ani_no > 3)
+			bul->ani_no = 0;
+	}
+	else
+	{
+		if (bul->ani_no > 2)
+			bul->ani_no = 0;
+		
+		if (level == 2)
+			SetNpChar(129, bul->x, bul->y, 0, -0x200, bul->ani_no, NULL, 0x100);
+		else
+			SetNpChar(129, bul->x, bul->y, 0, -0x200, bul->ani_no + 3, NULL, 0x100);
+	}
+}
+
+void Bullet_FireBall_Put(BULLET *bul, s32 level, s32 x, s32 y)
+{
+	static const RECT rect1[2][4] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+			{48, 0, 64, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+			{48, 16, 64, 32},
+		}
+	};
+	
+	static const RECT rect2[2][3] = {
+		{
+			{64, 16,  80, 32},
+			{80, 16,  96, 32},
+			{96, 16, 112, 32},
+		},
+		{
+			{96, 16, 112, 32},
+			{80, 16,  96, 32},
+			{64, 16,  80, 32},
+		},
+	};
+	
+	LoadTLUT_CI4(bullet_fireball_tlut);
+	LoadTex_CI4(112, 32, bullet_fireball_tex);
+	if (level == 1)
+		PutBitmap(&rect1[bul->direct != 0][bul->ani_no], x, y);
+	else
+		PutBitmap(&rect2[bul->direct != 0][bul->ani_no], x, y);
+}
+
 //Missile Launcher
 #include "data/bitmap/bullet_missilelauncher.inc.c"
 

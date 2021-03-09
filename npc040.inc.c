@@ -1,3 +1,95 @@
+//NPC 040 - Santa
+#include "data/bitmap/npc_santa.inc.c"
+
+void Npc040_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 1:
+			if (Random(0, 120) == 10)
+			{
+				npc->act_no = 2;
+				npc->act_wait = 0;
+				npc->ani_no = 1;
+			}
+			
+			if (npc->x - (32 * 0x200) < gMC.x && npc->x + (32 * 0x200) > gMC.x && npc->y - (32 * 0x200) < gMC.y && npc->y + (16 * 0x200) > gMC.y)
+			{
+				if (npc->x > gMC.x)
+					npc->direct = 0;
+				else
+					npc->direct = 2;
+			}
+			break;
+			
+		case 2:
+			if (++npc->act_wait > 8)
+			{
+				npc->act_no = 1;
+				npc->ani_no = 0;
+			}
+			break;
+			
+		case 3:
+			npc->act_no = 4;
+			npc->ani_no = 2;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 4:
+			if (++npc->ani_wait > 4)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			
+			if (npc->ani_no > 5)
+				npc->ani_no = 2;
+			
+			if (npc->direct == 0)
+				npc->x -= 1 * 0x200;
+			else
+				npc->x += 1 * 0x200;
+			break;
+			
+		case 5:
+			npc->ani_no = 6;
+			break;
+	}
+}
+
+void Npc040_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][7] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+			{ 0, 0, 16, 16},
+			{48, 0, 64, 16},
+			{ 0, 0, 16, 16},
+			{64, 0, 80, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+			{ 0, 16, 16, 32},
+			{48, 16, 64, 32},
+			{ 0, 16, 16, 32},
+			{64, 16, 80, 32},
+		}
+	};
+	LoadTLUT_CI4(npc_santa_tlut);
+	LoadTex_CI4(80, 32, npc_santa_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
 //NPC 041 - Busted door
 #include "data/bitmap/npc_busteddoor.inc.c"
 

@@ -34,7 +34,7 @@ s32 JudgeHitBulletBlock(s32 x, s32 y, BULLET *bul)
 		SetCaret(bul->x, bul->y, 2, 0);
 		PlaySoundObject(12, 1);
 		
-		for (i = 0; i < 4; ++i)
+		for (i = 0; i < 4; i++)
 			SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, Random(-0x200, 0x200), Random(-0x200, 0x200), 0, NULL, 0x100);
 		
 		ShiftMapParts(x, y);
@@ -53,7 +53,7 @@ s32 JudgeHitBulletBlock2(s32 x, s32 y, unsigned char *atrb, BULLET *bul)
 	
 	if (bul->bbits & 0x40)
 	{
-		for (i = 0; i < 4; ++i)
+		for (i = 0; i < 4; i++)
 		{
 			if (*atrb == 0x41 || *atrb == 0x61)
 				block[i] = TRUE;
@@ -64,7 +64,7 @@ s32 JudgeHitBulletBlock2(s32 x, s32 y, unsigned char *atrb, BULLET *bul)
 	}
 	else
 	{
-		for (i = 0; i < 4; ++i)
+		for (i = 0; i < 4; i++)
 		{
 			if (*atrb == 0x41 || *atrb == 0x43 || *atrb == 0x61)
 				block[i] = TRUE;
@@ -309,7 +309,7 @@ void HitBulletMap()
 	static const s32 offx[4] = {0, 1, 0, 1};
 	static const s32 offy[4] = {0, 0, 1, 1};
 	
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX; i++)
 	{
 		if (!(gBul[i].cond & 0x80))
 			continue;
@@ -330,6 +330,9 @@ void HitBulletMap()
 		{
 			for (j = 0; j < 4; j++)
 			{
+				if (!(gBul[i].cond & 0x80))
+					continue;
+				
 				switch (atrb[j])
 				{
 					case 0x41:

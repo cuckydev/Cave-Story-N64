@@ -45,7 +45,7 @@ void SetValueView(s32 *px, s32 *py, s32 value)
 	BOOL sw;
 	
 	//Find value view slot to use
-	for (i = 0; i < VALUEVIEW_MAX; ++i)
+	for (i = 0; i < VALUEVIEW_MAX; i++)
 	{
 		if (gVV[i].flag && gVV[i].px == px)
 		{

@@ -86,6 +86,85 @@ void ShootBullet_PoleStar(s32 level)
 	}
 }
 
+//Fireball
+void ShootBullet_FireBall(s32 level)
+{
+	s32 bul_no;
+	
+	switch (level)
+	{
+		case 1:
+			if (CountArmsBullet(3) > 1)
+				return;
+			bul_no = 7;
+			break;
+			
+		case 2:
+			if (CountArmsBullet(3) > 2)
+				return;
+			bul_no = 8;
+			break;
+			
+		case 3:
+			if (CountArmsBullet(3) > 3)
+				return;
+			bul_no = 9;
+			break;
+	}
+	
+	if (gKeyTrg & gKeyShot)
+	{
+		if (!UseArmsEnergy(1))
+		{
+			ChangeToFirstArms();
+		}
+		else
+		{
+			if (gMC.up)
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (4 * 0x200), gMC.y - (8 * 0x200), 1);
+					SetCaret(gMC.x - (4 * 0x200), gMC.y - (8 * 0x200), 3, 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (4 * 0x200), gMC.y - (8 * 0x200), 1);
+					SetCaret(gMC.x + (4 * 0x200), gMC.y - (8 * 0x200), 3, 0);
+				}
+			}
+			else if (gMC.down)
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (4 * 0x200), gMC.y + (8 * 0x200), 3);
+					SetCaret(gMC.x - (4 * 0x200), gMC.y + (8 * 0x200), 3, 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (4 * 0x200), gMC.y + (8 * 0x200), 3);
+					SetCaret(gMC.x + (4 * 0x200), gMC.y + (8 * 0x200), 3, 0);
+				}
+			}
+			else
+			{
+				if (gMC.direct == 0)
+				{
+					SetBullet(bul_no, gMC.x - (6 * 0x200), gMC.y + (2 * 0x200), 0);
+					SetCaret(gMC.x - (12 * 0x200), gMC.y + (2 * 0x200), 3, 0);
+				}
+				else
+				{
+					SetBullet(bul_no, gMC.x + (6 * 0x200), gMC.y + (2 * 0x200), 2);
+					SetCaret(gMC.x + (12 * 0x200), gMC.y + (2 * 0x200), 3, 0);
+				}
+			}
+			
+			PlaySoundObject(34, 1);
+		}
+	}
+}
+
 //Missile Launcher
 void ShootBullet_Missile(s32 level, BOOL bSuper)
 {
@@ -339,7 +418,7 @@ void ShootBullet()
 			ShootBullet_PoleStar(gArmsData[gSelectedArms].level);
 			break;
 		case 3:
-			//ShootBullet_FireBall(gArmsData[gSelectedArms].level);
+			ShootBullet_FireBall(gArmsData[gSelectedArms].level);
 			break;
 		case 4:
 			//ShootBullet_Machinegun1(gArmsData[gSelectedArms].level);

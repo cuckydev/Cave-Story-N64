@@ -783,7 +783,7 @@ void Npc088_Act(NPCHAR *npc)
 				SetQuake(30);
 				npc->damage = 0;
 				
-				for (i = 0; i < 4; ++i)
+				for (i = 0; i < 4; i++)
 					SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			}
 			break;
@@ -891,7 +891,7 @@ void Npc089_Act(NPCHAR *npc)
 			else
 				npc->direct = 2;
 			
-			for (i = 0; i < 8; ++i)
+			for (i = 0; i < 8; i++)
 				SetNpChar(4, npc->x + (Random(-12, 12) * 0x200), npc->y + (Random(-12, 12) * 0x200), Random(-341, 341), Random(-0x600, 0), 0, NULL, 0x100);
 			
 			npc->act_no = 1;
@@ -1087,4 +1087,551 @@ void Npc092_Put(NPCHAR *npc, s32 x, s32 y)
 	LoadTLUT_CI4(npc_computersue_tlut);
 	LoadTex_CI4(48, 24, npc_computersue_tex);
 	PutBitmap(&rect[npc->ani_no], x, y);
+}
+
+//NPC 093 - Chaco
+#include "data/bitmap/npc_chaco.inc.c"
+
+void Npc093_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->ani_no = 0;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 1:
+			if (Random(0, 120) == 10)
+			{
+				npc->act_no = 2;
+				npc->act_wait = 0;
+				npc->ani_no = 1;
+			}
+			
+			if (npc->x - (32 * 0x200) < gMC.x && npc->x + (32 * 0x200) > gMC.x && npc->y - (32 * 0x200) < gMC.y && npc->y + (16 * 0x200) > gMC.y)
+			{
+				if (npc->x > gMC.x)
+					npc->direct = 0;
+				else
+					npc->direct = 2;
+			}
+			break;
+			
+		case 2:
+			if (++npc->act_wait > 8)
+			{
+				npc->act_no = 1;
+				npc->ani_no = 0;
+			}
+			break;
+			
+		case 3:
+			npc->act_no = 4;
+			npc->ani_no = 2;
+			npc->ani_wait = 0;
+			//Fallthrough
+		case 4:
+			if (++npc->ani_wait > 4)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 5)
+				npc->ani_no = 2;
+			
+			if (npc->direct == 0)
+				npc->x -= 1 * 0x200;
+			else
+				npc->x += 1 * 0x200;
+			break;
+			
+		case 10:
+			npc->ani_no = 6;
+			
+			if (++npc->act_wait > 200)
+			{
+				npc->act_wait = 0;
+				SetCaret(npc->x, npc->y, 5, 0);
+			}
+			break;
+	}
+}
+
+void Npc093_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][7] = {
+		{
+			{ 0, 0, 16, 16},
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+			{ 0, 0, 16, 16},
+			{48, 0, 64, 16},
+			{ 0, 0, 16, 16},
+			{64, 0, 80, 16},
+		},
+		{
+			{ 0, 16, 16, 32},
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+			{ 0, 16, 16, 32},
+			{48, 16, 64, 32},
+			{ 0, 16, 16, 32},
+			{64,  0, 80, 16},
+		}
+	};
+	
+	LoadTLUT_CI4(npc_chaco_tlut);
+	LoadTex_CI4(80, 32, npc_chaco_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//NPC 094 - Kulala
+#include "data/bitmap/npc_kulala.inc.c"
+
+void Npc094_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->ani_no = 4;
+			
+			if (npc->shock)
+			{
+				npc->ani_no = 0;
+				npc->act_no = 10;
+				npc->act_wait = 0;
+			}
+			break;
+			
+		case 10:
+			npc->bits |= NPC_SHOOTABLE;
+			npc->bits &= ~NPC_INVULNERABLE;
+			
+			if (++npc->act_wait > 40)
+			{
+				npc->act_wait = 0;
+				npc->ani_wait = 0;
+				npc->act_no = 11;
+			}
+			break;
+			
+		case 11:
+			if (++npc->ani_wait > 5)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+			{
+				npc->act_no = 12;
+				npc->ani_no = 3;
+			}
+			break;
+			
+		case 12:
+			npc->ym = -0x155;
+			
+			if (++npc->act_wait > 20)
+			{
+				npc->act_wait = 0;
+				npc->act_no = 10;
+				npc->ani_no = 0;
+			}
+			break;
+			
+		case 20:
+			npc->xm /= 2;
+			npc->ym += 0x20;
+			
+			if (npc->shock == 0)
+			{
+				npc->act_wait = 30;
+				npc->act_no = 10;
+				npc->ani_no = 0;
+			}
+			break;
+	}
+	
+	//Handle invulnerability
+	if (npc->shock)
+	{
+		if (++npc->count2 > 12)
+		{
+			npc->act_no = 20;
+			npc->ani_no = 4;
+			npc->bits &= ~NPC_SHOOTABLE;
+			npc->bits |= NPC_INVULNERABLE;
+		}
+	}
+	else
+	{
+		npc->count2 = 0;
+	}
+	
+	//Gravity and force towards player
+	if (npc->act_no >= 10)
+	{
+		if (npc->flag & 1)
+		{
+			npc->count1 = 50;
+			npc->direct = 2;
+		}
+		if (npc->flag & 4)
+		{
+			npc->count1 = 50;
+			npc->direct = 0;
+		}
+		
+		if (npc->count1 != 0)
+		{
+			npc->count1--;
+			
+			if (npc->direct == 0)
+				npc->xm -= 0x80;
+			else
+				npc->xm += 0x80;
+		}
+		else
+		{
+			npc->count1 = 50;
+			
+			if (npc->x > gMC.x)
+				npc->direct = 0;
+			else
+				npc->direct = 2;
+		}
+		
+		npc->ym += 0x10;
+		if (npc->flag & 8)
+			npc->ym = -0x400;
+	}
+	
+	//Limit speed
+	if (npc->xm > 0x100)
+		npc->xm = 0x100;
+	if (npc->xm < -0x100)
+		npc->xm = -0x100;
+	
+	if (npc->ym > 0x300)
+		npc->ym = 0x300;
+	if (npc->ym < -0x300)
+		npc->ym = -0x300;
+	
+	//Move
+	npc->x += npc->xm;
+	npc->y += npc->ym;
+}
+
+void Npc094_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect = {0, 0, 48, 24};
+	LoadTLUT_CI4(npc_kulala_tlut);
+	LoadTex_CI4(48, 24, npc_kulala_tex + (24 * 24) * npc->ani_no);
+	PutBitmap(&rect, x, y);
+}
+
+//NPC 095 - Jelly
+#include "data/bitmap/npc_jelly.inc.c"
+
+void Npc095_Act(NPCHAR *npc)
+{
+	//Move and animate
+	switch (npc->act_no)
+	{
+		case 0:
+			npc->act_no = 1;
+			npc->act_wait = Random(0, 50);
+			npc->tgt_y = npc->y;
+			npc->tgt_x = npc->x;
+			
+			if (npc->direct == 0)
+				npc->xm = 0x200;
+			else
+				npc->xm = -0x200;
+			//Fallthrough
+		case 1:
+			if (--npc->act_wait > 0)
+				break;
+			npc->act_no = 10;
+			//Fallthrough
+		case 10:
+			if (++npc->act_wait > 10)
+			{
+				npc->act_wait = 0;
+				npc->ani_wait = 0;
+				npc->act_no = 11;
+			}
+			break;
+			
+		case 11:
+			if (++npc->ani_wait > 5)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			
+			if (npc->ani_no == 2)
+			{
+				if (npc->direct == 0)
+					npc->xm -= 0x100;
+				else
+					npc->xm += 0x100;
+				npc->ym -= 0x200;
+			}
+			
+			if (npc->ani_no > 2)
+			{
+				npc->act_no = 12;
+				npc->ani_no = 3;
+			}
+			break;
+			
+		case 12:
+			npc->act_wait++;
+			
+			if (npc->y > npc->tgt_y && npc->act_wait > 10)
+			{
+				npc->act_wait = 0;
+				npc->act_no = 10;
+				npc->ani_no = 0;
+			}
+			break;
+	}
+	
+	//Turn to face original position
+	if (npc->x > npc->tgt_x)
+		npc->direct = 0;
+	else
+		npc->direct = 2;
+	
+	//Turn around when hit walls
+	if (npc->flag & 1)
+	{
+		npc->count1 = 50;
+		npc->direct = 2;
+	}
+	if (npc->flag & 4)
+	{
+		npc->count1 = 50;
+		npc->direct = 0;
+	}
+	
+	//Gravity
+	npc->ym += 0x20;
+	if (npc->flag & 8)
+		npc->ym = -0x400;
+	
+	//Limit speed
+	if (npc->xm > 0x100)
+		npc->xm = 0x100;
+	if (npc->xm < -0x100)
+		npc->xm = -0x100;
+	if (npc->ym > 0x200)
+		npc->ym = 0x200;
+	if (npc->ym < -0x200)
+		npc->ym = -0x200;
+	
+	//Move
+	if (npc->shock)
+	{
+		npc->x += npc->xm / 2;
+		npc->y += npc->ym / 2;
+	}
+	else
+	{
+		npc->x += npc->xm;
+		npc->y += npc->ym;
+	}
+}
+
+void Npc095_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	static const RECT rect[2][4] = {
+		{
+			{16, 0, 32, 16},
+			{32, 0, 48, 16},
+			{48, 0, 64, 16},
+			{64, 0, 80, 16},
+		},
+		{
+			{16, 16, 32, 32},
+			{32, 16, 48, 32},
+			{48, 16, 64, 32},
+			{64, 16, 80, 32},
+		}
+	};
+	
+	LoadTLUT_CI4(npc_jelly_tlut);
+	LoadTex_CI4(80, 32, npc_jelly_tex);
+	PutBitmap(&rect[npc->direct != 0][npc->ani_no], x, y);
+}
+
+//Fans
+#include "data/bitmap/npc_fan.inc.c"
+
+void NpcFan_Put(NPCHAR *npc, s32 x, s32 y)
+{
+	RECT rc;
+	rc.left = npc->ani_no << 4;
+	rc.top = (npc->code_char - 96) << 4;
+	rc.right = rc.left + 16;
+	rc.bottom = rc.top + 16;
+	
+	LoadTLUT_CI4(npc_fan_tlut);
+	LoadTex_CI4(48, 64, npc_fan_tex);
+	PutBitmap(&rc, x, y);
+}
+
+//NPC 096 - Fan (Left)
+void Npc096_Act(NPCHAR *npc)
+{
+	//Blow player
+	switch (npc->act_no)
+	{
+		case 0:
+			if (npc->direct == 2)
+				npc->act_no = 2;
+			else
+				npc->ani_no = 1;
+			//Fallthrough
+		case 1:
+			npc->ani_no = 0;
+			break;
+			
+		case 2:
+			if (++npc->ani_wait > 0)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+				npc->ani_no = 0;
+			
+			if (gMC.x > npc->x - (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.x < npc->x + (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.y > npc->y - (((SCREEN_HEIGHT / 2) + 120) * 0x200) && gMC.y < npc->y + (((SCREEN_HEIGHT / 2) + 120) * 0x200))
+			{
+				if (Random(0, 5) == 1)
+					SetNpChar(199, npc->x, npc->y + (Random(-8, 8) * 0x200), 0, 0, 0, NULL, 0x100);
+			}
+			
+			if (gMC.y < npc->y + (8 * 0x200) && gMC.y > npc->y - (8 * 0x200) && gMC.x < npc->x && gMC.x > npc->x - (96 * 0x200))
+			{
+				gMC.xm -= 0x88;
+				gMC.cond |= 0x20;
+			}
+			break;
+	}
+}
+
+//NPC 097 - Fan (Up)
+void Npc097_Act(NPCHAR *npc)
+{
+	switch (npc->act_no)
+	{
+		case 0:
+			if (npc->direct == 2)
+				npc->act_no = 2;
+			else
+				npc->ani_no = 1;
+			//Fallthrough
+		case 1:
+			npc->ani_no = 0;
+			break;
+			
+		case 2:
+			if (++npc->ani_wait > 0)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+				npc->ani_no = 0;
+			
+			if (gMC.x > npc->x - (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.x < npc->x + (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.y > npc->y - (((SCREEN_HEIGHT / 2) + 120) * 0x200) && gMC.y < npc->y + (((SCREEN_HEIGHT / 2) + 120) * 0x200))
+			{
+				if (Random(0, 5) == 1)
+					SetNpChar(199, npc->x + (Random(-8, 8) * 0x200), npc->y, 0, 0, 1, NULL, 0x100);
+			}
+			
+			if (gMC.x < npc->x + (8 * 0x200) && gMC.x > npc->x - (8 * 0x200) && gMC.y < npc->y && gMC.y > npc->y - (96 * 0x200))
+				gMC.ym -= 0x88;
+			break;
+	}
+}
+
+//NPC 098 - Fan (Right)
+void Npc098_Act(NPCHAR *npc)
+{
+	switch (npc->act_no)
+	{
+		case 0:
+			if (npc->direct == 2)
+				npc->act_no = 2;
+			else
+				npc->ani_no = 1;
+			//Fallthrough
+		case 1:
+			npc->ani_no = 0;
+			break;
+		
+		case 2:
+			if (++npc->ani_wait > 0)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+				npc->ani_no = 0;
+			
+			if (gMC.x > npc->x - (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.x < npc->x + (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.y > npc->y - (((SCREEN_HEIGHT / 2) + 120) * 0x200) && gMC.y < npc->y + (((SCREEN_HEIGHT / 2) + 120) * 0x200))
+			{
+				if (Random(0, 5) == 1)
+					SetNpChar(199, npc->x, npc->y + (Random(-8, 8) * 0x200), 0, 0, 2, NULL, 0x100);
+			}
+			
+			if (gMC.y < npc->y + (8 * 0x200) && gMC.y > npc->y - (8 * 0x200) && gMC.x < npc->x + (96 * 0x200) && gMC.x > npc->x)
+			{
+				gMC.xm += 0x88;
+				gMC.cond |= 0x20;
+			}
+			break;
+	}
+}
+
+//NPC 099 - Fan (Down)
+void Npc099_Act(NPCHAR *npc)
+{
+	switch (npc->act_no)
+	{
+		case 0:
+			if (npc->direct == 2)
+				npc->act_no = 2;
+			else
+				npc->ani_no = 1;
+			//Fallthrough
+		case 1:
+			npc->ani_no = 0;
+			break;
+			
+		case 2:
+			if (++npc->ani_wait > 0)
+			{
+				npc->ani_wait = 0;
+				npc->ani_no++;
+			}
+			if (npc->ani_no > 2)
+				npc->ani_no = 0;
+			
+			if (gMC.x > npc->x - (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.x < npc->x + (((SCREEN_WIDTH / 2) + 160) * 0x200) && gMC.y > npc->y - (((SCREEN_HEIGHT / 2) + 120) * 0x200) && gMC.y < npc->y + (((SCREEN_HEIGHT / 2) + 120) * 0x200))
+			{
+				if (Random(0, 5) == 1)
+					SetNpChar(199, npc->x + (Random(-8, 8) * 0x200), npc->y, 0, 0, 3, NULL, 0x100);
+			}
+			
+			if (gMC.x < npc->x + (8 * 0x200) && gMC.x > npc->x - (8 * 0x200) && gMC.y < npc->y + (96 * 0x200) && gMC.y > npc->y)
+				gMC.ym += 0x88;
+			break;
+	}
 }

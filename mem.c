@@ -14,7 +14,7 @@ typedef struct
 #endif
 
 static Mem_Header *mem = NULL;
-static size_t mem_used, mem_size;
+static size_t mem_used, mem_size, mem_max;
 
 u8 Mem_Init(void *ptr, size_t size)
 {
@@ -26,6 +26,7 @@ u8 Mem_Init(void *ptr, size_t size)
 	mem = (Mem_Header*)MEM_ALIGN(ptr);
 	mem_used = sizeof(Mem_Header);
 	mem_size = size - ((size_t)mem - (size_t)ptr);
+	mem_max = mem_used;
 	
 	//Initial mem header
 	mem->prev = NULL;
@@ -97,6 +98,8 @@ void *Mem_Alloc(size_t size)
 	header->next = new_block;
 	
 	mem_used += new_header->size + sizeof(Mem_Header);
+	if (mem_used > mem_max)
+		mem_max = mem_used;
 	
 	return new_block;
 }
@@ -123,10 +126,12 @@ void Mem_Free(void *ptr)
 	mem_used -= header->size + sizeof(Mem_Header);
 }
 
-void Mem_GetStat(size_t *used, size_t *size)
+void Mem_GetStat(size_t *used, size_t *size, size_t *max)
 {
 	if (used != NULL)
 		*used = mem_used;
 	if (size != NULL)
 		*size = mem_size;
+	if (max != NULL)
+		*max = mem_max;
 }

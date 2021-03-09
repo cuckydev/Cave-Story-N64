@@ -112,7 +112,8 @@ void LoadMapData(u16 width, u16 length, u8 *data)
 void LoadTilesetData(u32 rom_addr)
 {
 	//Read from ROM directly to buffers
-	nuPiReadRom(rom_addr, map_tileset_tex, 0x8000);
+	nuPiReadRom(rom_addr + 0x0000, map_tileset_tex + 0x0000, 0x4000);
+	nuPiReadRom(rom_addr + 0x4000, map_tileset_tex + 0x4000, 0x4000);
 	nuPiReadRom(rom_addr + 0x8000, map_tileset_tlut, 16 * 2);
 	nuPiReadRom(rom_addr + 0x8020, map_attr, 0x100);
 	
@@ -159,7 +160,7 @@ BOOL ChangeMapParts(s32 x, s32 y, u8 no)
 	map_data[x + y * map_width] = no;
 	if (IsTileOnscreen(x, y))
 		PutTile(x, y);
-	for (i = 0; i < 3; ++i)
+	for (i = 0; i < 3; i++)
 		SetNpChar(4, x * 0x200 * 0x10, y * 0x200 * 0x10, 0, 0, 0, NULL, 0);
 	return TRUE;
 }

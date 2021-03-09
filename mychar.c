@@ -938,7 +938,7 @@ void SetMyCharDirect(u8 dir)
 		}
 		else
 		{
-			for (i = 0; i < NPC_MAX; ++i)
+			for (i = 0; i < NPC_MAX; i++)
 				if (gNPC[i].code_event == dir)
 					break;
 			
